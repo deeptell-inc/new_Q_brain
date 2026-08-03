@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.venv/
+venv/
+
+# LaTeX build products (the committed PDFs are the deliverables)
+*.aux
+*.log
+*.out
+*.blg
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.toc
+*Notes.bib
+
+# OS
+.DS_Store
