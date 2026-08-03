@@ -1,0 +1,93 @@
+% Standalone Data Availability Statement (PCCP / RSC)
+% Compile: pdflatex data_availability.tex
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{times}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\hypersetup{colorlinks=true, urlcolor=blue, citecolor=blue}
+\setlength{\parskip}{6pt}
+\setlength{\parindent}{0pt}
+
+\begin{document}
+
+\begin{center}
+{\Large\bfseries Data Availability Statement}\\[0.6em]
+{\small For the manuscript: ``What a radical-pair quantum reservoir would require:
+readable capacity, no quantum advantage, and a nuclear-register criterion''}\\[0.3em]
+{\small Hikaru Wakaura and Taiki Tanimae, QIRI (Quantum Integrated Research Institute Inc.), Tokyo, Japan}\\[0.3em]
+{\small \texttt{h.wakaura@qiri.co.jp}, \texttt{t.tanimae@qiri.co.jp}}
+\end{center}
+
+\vspace{0.8em}
+\hrule
+\vspace{1em}
+
+\noindent\textbf{Code.}
+All results in this work are produced by the open-source Python package
+\texttt{qbscreen} (MIT licence), available at
+\url{https://github.com/deeptell-inc/new_Q_brain}. The package
+implements the exact Liouville-space Haberkorn master equation with electronic
+decoherence and the correlated-pair-birth quantum-reservoir-computing protocol. The
+specific modules are:
+
+\begin{itemize}\setlength{\itemsep}{2pt}
+\item \texttt{qbscreen/master\_equation.py} --- Liouville-space solver and its
+validation against the closed-form coherent limit (ESI, S1);
+\item \texttt{qbscreen/reservoir.py} --- reservoir Hamiltonian and propagator, and
+the out-of-sample information-processing capacity (IPC) and memory capacity (MC)
+estimators (trained on the first half of each run, scored on the held-out second
+half);
+\item \texttt{qbscreen/corrected\_injection.py} --- the chemically consistent
+correlated-pair birth channel $\rho_{\mathrm e}(s)=s\,|S\rangle\langle S|
++(1-s)P_{\mathrm T}/3$ and its S--$\mathrm{T}_0$ coherent variant, together with the
+single-electron-reset control that reproduces the artifact it replaces;
+\item \texttt{qbscreen/readout\_routes.py} --- the seven biologically accessible
+readout routes with recombination active, the product-weighted CIDNP observable, the
+turnover clock, and the nuclear-register depolarisation parameter $q$;
+\item \texttt{qbscreen/final\_numbers.py} --- protocol-consistent recomputation of
+every headline quantity reported in the main text and ESI;
+\item \texttt{qbscreen/qrc\_benchmarks.py} --- classical echo-state-network
+baselines, the NARMA2 benchmark, and the coherence-time scan;
+\item \texttt{manuscript/make\_schematic.py} and
+\texttt{manuscript/make\_fig\_criterion.py} --- Figs.~1--3.
+\end{itemize}
+
+\noindent\textbf{Data.}
+All numerical outputs underlying the figures and tables are provided as JSON files in
+\texttt{simulation\_results/} of the repository, principally
+\texttt{final\_numbers.json}, \texttt{corrected\_injection.json},
+\texttt{readout\_routes.json}, \texttt{register\_reuse.json},
+\texttt{grid\_convergence.json}, \texttt{qrc\_benchmarks.json} and
+\texttt{cryptochrome\_reality.json}. No experimental data were generated; the study
+is entirely computational. Every reported capacity is out of sample, is quoted with
+its shuffled-input null floor, and is shown to be converged in sample length; values
+are means over $4$--$10$ input realisations with the stated standard deviations;
+the turnover-clock scan uses a single realisation, since the quantity of interest
+there is the ratio of memory capacities across pause lengths on the same input.
+
+\noindent\textbf{Reproducibility.}
+The central claims---the agreement of the Liouville-space solver with the coherent
+limit, the Dambre capacity bound, the correlated-pair-birth readout capacities, and
+the nuclear-register reuse criterion---are covered by an automated test suite
+(\texttt{qbscreen/tests/}; 28 tests, all passing). All figures and numbers can be
+regenerated from a clean checkout with
+\begin{quote}\small
+\texttt{pip install -e .}\\
+\texttt{python -m pytest qbscreen/tests/ -q}\\
+\texttt{python -m qbscreen.final\_numbers}\\
+\texttt{python -m qbscreen.readout\_routes}
+\end{quote}
+
+\noindent\textbf{Software.}
+Python~3, NumPy ($\ge1.24$), SciPy ($\ge1.10$) and Matplotlib ($\ge3.7$). No
+proprietary software is required.
+
+\vspace{1.5em}
+\hrule
+\vspace{1em}
+
+\noindent\textit{This statement follows the Royal Society of Chemistry Data Sharing
+Policy: \url{https://www.rsc.org/journals-books-databases/about-journals/data-sharing-policy/}}
+
+\end{document}

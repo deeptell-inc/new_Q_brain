@@ -1,0 +1,302 @@
+\documentclass[aps,prx,reprint,superscriptaddress,nofootinbib,floatfix]{revtex4-2}
+
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb}
+\usepackage{bm}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,allcolors=blue]{hyperref}
+\usepackage{float}
+
+\graphicspath{{figures/}{../figures/}}
+
+\renewcommand{\thesection}{S\arabic{section}}
+\renewcommand{\theequation}{S\arabic{equation}}
+\renewcommand{\thetable}{S\arabic{table}}
+\renewcommand{\thefigure}{S\arabic{figure}}
+
+\begin{document}
+
+\title{Supplemental Material:\\
+What a radical-pair quantum reservoir would require}
+
+\author{Hikaru Wakaura}
+\affiliation{QIRI (Quantum Integrated Research Institute Inc.), Tokyo, Japan}
+\author{Taiki Tanimae}
+\affiliation{QIRI (Quantum Integrated Research Institute Inc.), Tokyo, Japan}
+
+\date{\today}
+
+\maketitle
+
+Every number below is computed under the single protocol used in the main text ---
+correlated-pair birth, converged time grid, out-of-sample capacity estimation ---
+so that no quantity is carried over from a superseded calculation. The sections cover
+(S1) validation of the Liouville-space solver, (S2) the capacity estimator and its
+controls, (S3) the injection map and why a single-electron reset fails, (S4) the
+chemically accessible readout routes and their grid convergence, (S5) the coherence
+fraction at matched hopping rate, (S6) classical baselines, (S7) the turnover clock
+and the register-reuse criterion, and (S8) the spin parameters. All are reproducible
+from the open \texttt{qbscreen} package.
+
+\section{Liouville-space solver and the coherent limit}
+\label{sec:solver}
+The propagator is $e^{\mathcal{L}\tau}$ of the Haberkorn master equation assembled in
+Liouville space with the column-stacking convention
+$\mathrm{vec}(A\rho B)=(B^{\!\top}\!\otimes A)\,\mathrm{vec}(\rho)$; the
+time-integrated singlet yield follows from a single linear solve,
+\begin{equation}
+\Phi_S = k_S\,\mathrm{vec}(P_S)^{\dagger}\,(-\mathcal{L})^{-1}\,\mathrm{vec}(\rho_0).
+\label{eq:yield}
+\end{equation}
+Adding the decoherence term must not corrupt the coherent dynamics. For
+$1/T_2^e\to0$ with $k_S=k_T=k$, Eq.~\eqref{eq:yield} must reproduce the closed-form
+eigenbasis result
+$\Phi_S^{\mathrm{coh}}=k\big[\sum_m P_{mm}\rho_{mm}/k+\mathrm{Re}\sum_{m\neq n}
+P_{mn}\rho_{nm}/(k+i\omega_{mn})\big]$. For a two-electron-plus-nucleus model at
+$B=0.9$~mT, $A=200$~MHz and $k=1~\mu\mathrm{s}^{-1}$ the two agree to better than
+$10^{-6}$; this is asserted as a unit test.
+
+\section{Capacity estimator and its controls}
+\label{sec:capacity}
+For a target $y_k$ of the input history the capacity is the out-of-sample squared
+multiple correlation: a ridge readout ($\lambda=10^{-6}$) is fitted on the first half
+of the run and scored on the held-out second half. The totals are
+$\mathrm{MC}=\sum_{d\ge0}C[s_{k-d}]$ and
+$\mathrm{IPC}=\mathrm{MC}+\sum_{\rm nonlin}C[y]$ over the degree-2 Legendre family
+(diagonal targets to $d_{\max}=14$, cross targets for $d_1<d_2\le6$).
+
+\paragraph*{Null floor.} Scoring the same feature matrices against targets built from
+an \emph{independent} input sequence, for which the true capacity is zero, returns
+$+0.010$ for the estimator used here. The same sum without the $\max(0,\cdot)$ clip
+returns $-1.49$, i.e.\ it is far more biased, in the opposite direction. We therefore
+retain the clip and quote the floor rather than removing it.
+
+\paragraph*{Convergence.} The capacity is converged in the length $L$ of the driving
+sequence (six seeds, engineered point): $\mathrm{IPC}=5.28\pm0.26$, $5.60\pm0.20$,
+$5.87\pm0.19$ and $5.84\pm0.10$ for $L=600$, $1200$, $2400$ and $4800$, i.e.\ flat
+beyond $L\approx2400$. Under the superseded single-electron-reset protocol the same
+estimator did \emph{not} converge, rising from $5.9$ to $8.1$ over the same range;
+convergence is a property of the corrected drive, not of the estimator.
+
+\paragraph*{The Dambre bound is not an independence test.} $\mathrm{IPC}\le
+n_{\rm obs}$ holds asymptotically for an orthonormal target family but is violated in
+finite samples: for $X=s$ ($n_{\rm obs}=1$, $T=1200$) the estimator returns $1.011$
+on average and exceeds the bound in $30$ of $30$ seeds. Satisfying the inequality
+therefore does not demonstrate that the readout observables are independent, and we
+make no such argument anywhere in this work.
+
+\section{The injection map}
+\label{sec:injection}
+A protocol that resets only the input electron to a product state while retaining the
+reduced state of the rest is not a chemical process. For a separated pair ($J=0$) it
+destroys the electron--electron correlation on every cycle, and since
+$\langle P_S\rangle=\tfrac14-\langle \bm S_1\!\cdot\!\bm S_2\rangle$ with
+$\langle \bm S_2\rangle=0$, the singlet probability is pinned at exactly $1/4$
+independently of the input. We replace it by correlated-pair birth: the nuclei are
+retained and the electron pair is recreated as
+$\rho_e(s)=s\,|S\rangle\langle S|+(1-s)P_T/3$, or as a coherent $S$--$T_0$
+superposition. Table~\ref{tab:inject} gives the consequence at the cryptochrome point
+($B=50~\mu$T, $J=0$, $\tau=1~\mu$s, six seeds, kinetic-only readout).
+
+\begin{table}[H]
+\caption{\label{tab:inject}The injection map and the capacity it permits.}
+\begin{ruledtabular}
+\begin{tabular}{lcc}
+injection & max.\ flux spread & IPC \\
+\hline
+single-electron reset (superseded) & $2.7\times10^{-14}$ & $0.000\pm0.000$ \\
+correlated-pair birth, $S/T$ & $4.9\times10^{-1}$ & $2.941\pm0.108$ \\
+correlated-pair birth, $S$--$T_0$ & $4.3\times10^{-1}$ & $3.116\pm0.209$ \\
+\end{tabular}
+\end{ruledtabular}
+\end{table}
+
+Under the superseded map the spread of the observable is at the level of machine
+precision: the readout is a constant, and the vanishing capacity is an identity of
+the map rather than a statement about spin chemistry.
+
+\section{Chemically accessible readout routes}
+\label{sec:routes}
+Recombination is switched on ($k_S=1$, $k_T=0.2~\mu\mathrm{s}^{-1}$) so that the
+observable is the yield actually formed,
+$Y_X=k_X\!\int_0^\tau\!\mathrm{Tr}[P_X\rho(t)]\,\mathrm{d}t$, sampled at five
+laboratory times. CIDNP is the product-weighted nuclear polarisation,
+$\langle I_z\rangle_{\rm prod}=\int k_S\mathrm{Tr}[I_zP_S\rho]\,\mathrm{d}t\,/
+\int k_S\mathrm{Tr}[P_S\rho]\,\mathrm{d}t$: the polarisation carried away by the
+recombined molecule, not that of the surviving pair.
+
+\begin{table}[H]
+\caption{\label{tab:routes}Capacity recovered by chemically accessible observables
+(six seeds).}
+\begin{ruledtabular}
+\begin{tabular}{lcc}
+readout route & channels & IPC \\
+\hline
+end-point singlet yield & 1 & $1.017$ \\
+both exit channels, end point & 2 & $1.374$ \\
+three micro-environments (different $\tau$) & 3 & $2.557$ \\
+time-resolved kinetics, one product pool & 5 & $2.008$ \\
+\quad $+$ accumulated downstream pool & 10 & $2.706$ \\
+\quad $+$ CIDNP on the product & 8 & $4.650$ \\
+\end{tabular}
+\end{ruledtabular}
+\end{table}
+
+\paragraph*{Time-grid convergence.} A $40$~MHz hyperfine coupling has a $25$~ns
+period, so a coarse grid under-samples the dynamics and inflates the time-resolved
+capacities. Table~\ref{tab:grid} shows convergence from $n_t=48$ onward; the main
+text uses $n_t=96$ ($\mathrm{d}t\approx10$~ns).
+
+\begin{table}[H]
+\caption{\label{tab:grid}Convergence in the number of time steps per cycle (six seeds, $L=700$, the same protocol as Table~\ref{tab:routes}).}
+\begin{ruledtabular}
+\begin{tabular}{lccc}
+$n_t$ & $\mathrm{d}t$ (ns) & kinetics IPC & $+$CIDNP IPC \\
+\hline
+24 & 41.7 & 2.756 & 4.879 \\
+48 & 20.8 & 2.050 & 4.614 \\
+96 & 10.4 & 2.008 & 4.650 \\
+192 & 5.2 & 1.988 & 4.656 \\
+\end{tabular}
+\end{ruledtabular}
+\end{table}
+
+\paragraph*{Why CIDNP is not an optional extra channel.} The reduced state of either
+electron of a newly born pair is maximally mixed for every input, because both
+$|S\rangle\langle S|$ and $P_T/3$ carry zero one-electron polarisation; the input
+resides entirely in the two-electron correlation. With $J=0$ the radicals do not
+interact, so nothing transfers that correlation to a nucleus. Consistently, with
+recombination switched off the cryptochrome-point capacity is $1.01$, the memoryless
+floor. Spin-selective recombination is what converts the singlet--triplet correlation
+into a population difference and so writes the input into the nuclear register: in a
+separated pair it is the write mechanism, not merely the read mechanism.
+
+\section{Coherence fraction at matched hopping rate}
+\label{sec:coh}
+An all-spin pure-dephasing rate $\gamma$ is added in the $S_z$ product basis. Taking
+$\gamma\to\infty$ at fixed $\tau$ measures Zeno freezing rather than a classical
+limit, because the golden-rule transfer rate scales as $|H_{ij}|^2/\gamma$; we
+therefore hold rate\,$\times\,\tau$ fixed by scaling $\tau\propto\gamma$, whereupon
+the capacity saturates.
+
+\begin{table}[H]
+\caption{\label{tab:coh}Incoherent limit at matched hopping rate (six seeds).}
+\begin{ruledtabular}
+\begin{tabular}{lcc}
+$\gamma$ (MHz) & $\tau$ (ns) & IPC \\
+\hline
+0 (coherent) & 50 & $5.421$ \\
+$10^{3}$ & $10^{3}$ & $0.999$ \\
+$5\times10^{3}$ & $5\times10^{3}$ & $0.998$ \\
+$2\times10^{4}$ & $2\times10^{4}$ & $0.998$ \\
+\end{tabular}
+\end{ruledtabular}
+\end{table}
+
+The saturation value $1.00$ is the memoryless floor, so the coherence fraction is
+$(5.421-0.999)/5.421=0.82$.
+
+\section{Classical baselines}
+\label{sec:esn}
+Tanh echo-state networks (spectral radius $0.9$, input scale $0.6$) are driven by the
+same input and scored with the same estimator (eight seeds, $L=1200$).
+
+\begin{table}[H]
+\caption{\label{tab:esn}The quantum reservoir against matched classical reservoirs.}
+\begin{ruledtabular}
+\begin{tabular}{lc}
+reservoir (readout features) & IPC \\
+\hline
+quantum, 5 spins (12 observables) & $5.593\pm0.191$ \\
+ESN, 5 nodes (5 linear) & $4.552\pm0.325$ \\
+ESN, 5 nodes (12: 5 linear $+$ 7 quadratic) & $9.414\pm0.860$ \\
+ESN, 12 nodes (12 linear) & $10.366\pm0.590$ \\
+\end{tabular}
+\end{ruledtabular}
+\end{table}
+
+Matched by physical unit the quantum system is ahead; matched by readout dimension it
+is behind. We report both and claim no advantage. Which accounting is fair depends on
+a cost model for non-commuting measurements against multiplications that we do not
+have.
+
+\section{Turnover clock and the register-reuse criterion}
+\label{sec:clock}
+The memory horizon is $\mathrm{MC}$ times the cycle time. Because the nuclei leave in
+the diamagnetic product, where nuclear relaxation is of order $0.1$--$1$~s, the cycle
+time is the turnover interval $T_{\rm d}$ and not the radical-pair lifetime. We
+insert a pause between turnovers and relax the register with probability
+$q=1-\exp(-T_{\rm d}/T_{1n})$, taking $T_{1n}=1$~s.
+
+\begin{table}[H]
+\caption{\label{tab:clock}The horizon follows the turnover interval.}
+\begin{ruledtabular}
+\begin{tabular}{lcccc}
+$T_{\rm d}$ & $q$ & MC (5 ch) & MC (8 ch) & horizon (8 ch) \\
+\hline
+$1~\mu$s & $10^{-6}$ & $1.948$ & $2.818$ & $5.6~\mu$s \\
+$1$~ms & $10^{-3}$ & $1.948$ & $2.818$ & $2.8$~ms \\
+$10$~ms & $10^{-2}$ & $1.947$ & $2.817$ & $28$~ms \\
+$100$~ms & $9.5\times10^{-2}$ & $1.944$ & $2.800$ & $280$~ms \\
+\end{tabular}
+\end{ruledtabular}
+\end{table}
+
+The capacity changes by $0.2\%$ across five decades of turnover interval, so the
+horizon simply tracks it. Table~\ref{tab:reuse} isolates the requirement that
+actually binds: how much depolarisation of the register between turnovers the memory
+tolerates.
+
+\begin{table}[H]
+\caption{\label{tab:reuse}The criterion: memory against register depolarisation $q$.}
+\begin{ruledtabular}
+\begin{tabular}{lccc}
+$q$ & $T_{\rm d}/T_{1n}$ & MC (5 ch) & MC (8 ch) \\
+\hline
+0.00 & 0 & $1.984$ & $2.890$ \\
+0.30 & 0.36 & $1.958$ & $2.667$ \\
+0.50 & 0.69 & $1.927$ & $2.288$ \\
+0.70 & 1.20 & $1.788$ & $2.030$ \\
+0.90 & 2.30 & $1.218$ & $1.977$ \\
+1.00 & $\infty$ & $1.002$ & $1.002$ \\
+\end{tabular}
+\end{ruledtabular}
+\end{table}
+
+Memory is essentially intact while the turnover interval is shorter than the nuclear
+relaxation time ($q\lesssim0.5$) and collapses to the memoryless floor
+$\mathrm{MC}=1.00$ when every turnover starts from a fresh molecule.
+
+\section{Spin parameters}
+\label{sec:params}
+Each radical carries its own nuclei; they are not shared, which is what a spatially
+separated pair means. The Hamiltonian therefore contains three hyperfine terms, two
+on the first radical and one on the second. An earlier version of the code accepted a
+fourth hyperfine argument that was never added to the Hamiltonian and had no effect on
+any result; it has been removed rather than left in place.
+
+\begin{table}[H]
+\caption{\label{tab:params}Hyperfine assignment at the cryptochrome point. Values are
+representative isotropic magnitudes of the dominant FAD$^{\bullet-}$ and
+TrpH$^{\bullet+}$ couplings; the full anisotropic tensors are given by Lee
+\textit{et al.}, J.~R.~Soc.~Interface \textbf{11}, 20131063 (2014), and the
+flavin-radical ENDOR couplings by Schleicher \textit{et al.}, Sci.~Rep.\
+\textbf{11}, 18395 (2021).}
+\begin{ruledtabular}
+\begin{tabular}{lccc}
+coupling & radical / nucleus & (mT) & (MHz) \\
+\hline
+$A_{e_1a}$ & FAD$^{\bullet-}$, $^{14}$N5 & $\sim0.50$ & $14$ \\
+$A_{e_1b}$ & FAD$^{\bullet-}$, $^{14}$N10 & $\sim0.18$ & $5$ \\
+$A_{e_2a}$ & TrpH$^{\bullet+}$, H$\beta$1 & $\sim1.43$ & $40$ \\
+\end{tabular}
+\end{ruledtabular}
+\end{table}
+
+The engineered operating point uses $A_{e_1a}=80$, $A_{e_1b}=40$, $A_{e_2a}=15$~MHz,
+$J=2$~MHz, $B=1$~mT and $\tau=T_2^e=50$~ns. The conclusions depend on these
+magnitudes lying in the few--$40$~MHz range typical of flavin and tryptophan
+radicals, not on the precise values; the register criterion of Sec.~\ref{sec:clock}
+is independent of the hyperfine assignment altogether.
+
+\end{document}

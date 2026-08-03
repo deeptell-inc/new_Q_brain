@@ -1,0 +1,688 @@
+\documentclass[aps,prx,reprint,superscriptaddress,nofootinbib,floatfix]{revtex4-2}
+
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb}
+\usepackage{bm}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,allcolors=blue]{hyperref}
+\usepackage{mhchem}
+\usepackage{float}
+
+\graphicspath{{figures/}{../figures/}}
+
+\begin{document}
+
+\title{What a radical-pair quantum reservoir would require:\\
+readable capacity, no quantum advantage, and a nuclear-register criterion}
+
+\author{Hikaru Wakaura}
+\author{Taiki Tanimae}
+\affiliation{QIRI (Quantum Integrated Research Institute Inc.),
+1--16--3, Akasaka, Minato-ku, Tokyo 107--0061, Japan.\\
+Correspondence:\ h.wakaura@qiri.co.jp
+(ORCID 0000-0001-8381-8323), t.tanimae@qiri.co.jp}  
+  
+ 
+\date{\today}     
+
+\begin{abstract} 
+The radical-pair mechanism, by which a field as weak as the Earth's alters a
+chemical reaction, underlies the leading model of avian magnetoreception. Whether
+the electron--nuclear spin coherence behind this sensing could also support
+biological \emph{computation}---a ``quantum brain''---has been conjectured for
+decades but never made quantitative. We treat a cryptochrome-type radical pair as a
+reservoir computer, solving the radical-pair master equation with electronic
+decoherence and driving it as a real turnover does---by the birth of a
+spin-correlated pair whose singlet character encodes the input. Three results
+follow, none of them the expected one. First, the reservoir is \emph{readable by
+ordinary chemistry}: the time-resolved yield of one product pool gives an
+out-of-sample information-processing capacity of $2.0$, and the nuclear
+polarisation the product carries away raises it to $4.7$, with no spectroscopy
+whatever. Second, there is no quantum advantage: a
+classical network given the same number of readout features matches the five-spin
+reservoir. Third, and decisively, the memory horizon is set \emph{not} by the
+microsecond radical-pair lifetime but by the turnover interval, because the nuclear
+register survives recombination in the diamagnetic product. A physiological
+$1$--$100$~ms turnover changes the memory capacity by $<0.2\%$ and places the
+horizon at $3$--$280$~ms, inside the neural band. The binding constraint is
+therefore chemical, not temporal, and falsifiable: the \emph{same} nuclear register
+must be reused from one turnover to the next, failing which the capacity collapses
+to a memoryless read-back. This replaces a timescale argument, which needs no
+quantum mechanics, with a criterion that does.
+\end{abstract}  
+
+\maketitle 
+
+\section{Introduction}  
+
+The radical-pair mechanism (RPM) is the only experimentally established way in
+which a magnetic field as weak as the geomagnetic field ($\sim50~\mu$T) can change
+the outcome of a chemical reaction~\cite{Steiner1989,Hore2016,Timmel1998}. A spin-correlated
+pair born in a singlet electronic state undergoes coherent singlet--triplet (S--T)
+interconversion driven by hyperfine fields; because recombination is
+spin-selective, a field that re-tunes this interconversion alters the product
+yields. The mechanism underlies the leading model of avian magnetoreception, where
+the photoreceptor cryptochrome hosts a flavin--tryptophan radical
+pair~\cite{Ritz2000,Maeda2012,Hore2016,Xu2021,Hiscock2016}.
+
+The success of the RPM has repeatedly motivated a bolder conjecture: that
+spin coherence in biomolecules might support not merely sensing but
+\emph{information processing}---a ``quantum brain''~\cite{Fisher2015,Kerskens2022},
+a proposal long contested on decoherence grounds~\cite{Tegmark2000} and part of the
+broader programme of quantum biology~\cite{Lambert2013,Cao2020}.
+A concrete, named instance is the \emph{three-layer quantum-brain
+hypothesis}~\cite{Wakaura2025,Wakaura2026}, which posits a layered architecture---a
+long-lived nuclear-spin memory (Layer~1), a radical-pair read/write interface
+(Layer~2), and classical neuronal transduction (Layer~3)---and which, in its most
+recent form, already reframes the proposal from quantum \emph{computation} to
+quantum \emph{reservoir dynamics}. The present paper is the quantitative test of
+that architecture as a reservoir, and the bound it returns. A companion study from
+this program places the conjecture on quantitative footing from the sensing side. Solving the radical-pair master equation with electronic
+decoherence explicitly included, it finds that the active-site radical pairs of
+the principal neurotransmitter-metabolising flavoenzymes (monoamine oxidase A/B,
+D-amino-acid oxidase) are magnetically inert ($<10^{-4}\%$ field effect): their
+large exchange coupling ($|J|\sim0.75$~GHz) and picosecond lifetimes each
+independently forbid weak-field S--T mixing. Only a \emph{spatially separated}
+radical pair, as in cryptochrome---with $J\approx0$ and a microsecond
+lifetime---sustains the coherence required for weak-field
+sensitivity~\cite{Efimova2008,Companion2026}. This premise is a standard result of
+radical-pair compass theory~\cite{Efimova2008,Hore2016} and is logically
+independent of the companion analysis; we take the existence of a long-coherence
+separated radical pair as our self-contained starting point.
+
+This sharp dichotomy invites the question we address here. The separated radical
+pair is singled out because it preserves long-lived electron--nuclear spin
+coherence. \emph{Is that coherence good for anything besides sensing the
+geomagnetic field?} We argue the question is best posed not as gate-model quantum
+computation but as \emph{reservoir} computing, and we answer it with the chemistry
+left in: driven, read and clocked as a turnover actually is. We state at the outset
+the load-bearing caveat: whether a \emph{neuronal} cryptochrome forms a
+light- or reaction-driven separated radical pair at all is unestablished---the
+mammalian CRY1/CRY2 proteins are primarily circadian transcriptional
+regulators~\cite{Partch2014}---so every biological conclusion below is conditional
+on the existence of such a pair. The spin-dynamics results (capacity, classical
+baselines, the register criterion) do not depend on that condition and stand on
+their own.
+
+\paragraph*{Why a reservoir, not a gate.}
+Gate-model quantum computation treats decoherence as the adversary and demands
+error correction; a warm, wet, $10^{10}$-copy biomolecular ensemble cannot meet
+that bar. Reservoir computing (RC) inverts the relationship. An RC system feeds a
+time-dependent input into a fixed nonlinear dynamical ``reservoir'' and trains only
+a \emph{linear} readout of its state~\cite{Maass2002,Jaeger2004}. RC \emph{requires}
+dissipation: the echo-state / fading-memory property---that the influence of past
+inputs decays---is supplied precisely by relaxation~\cite{Fujii2017,Nakajima2019}.
+The molecular-spin and NMR communities have demonstrated quantum RC explicitly in
+nuclear- and electron-spin ensembles~\cite{Fujii2017,Nakajima2019,Martinez2021},
+part of a broad physical-reservoir-computing effort~\cite{Tanaka2019}.
+In this system the fading memory is supplied not by electronic dephasing---removing
+it entirely leaves the capacity and the memory kernel essentially unchanged---but by
+the turnover itself: each cycle discards the electron pair and keeps only the
+nuclei, which is a dissipative, non-unitary map. It is the openness of the chemical
+cycle, not the decoherence of the electrons, that makes the system a reservoir.
+
+Our contribution is to answer that question with the chemistry left in, and the
+answer overturns three natural expectations. (i)~We drive the reservoir as a real
+turnover does---nuclei retained, a new spin-correlated pair created each
+cycle---rather than by resetting a single electron, and read it through the products
+a downstream reaction could actually use. (ii)~We compare against classical
+reservoirs matched by readout dimension, and find no quantum advantage, which we
+report rather than argue around. (iii)~We show that the timescale objection usually
+raised against this system rests on identifying the reservoir's clock with the
+radical-pair lifetime, and replace it with a chemical criterion---reuse of the
+nuclear register---that is sharper, falsifiable, and, unlike a comparison of two
+timescales, actually requires the quantum treatment.
+
+The physical correspondence we adopt, adapting the spin-RC framework of Fujii and
+Nakajima~\cite{Fujii2017}, maps the reservoir-computing elements onto the radical
+pair as follows: the long-$T_2$ memory nodes are the nuclear spins ($^{31}$P,
+$^1$H); the nonlinear read/write head is the radical-pair electron system; the
+read/write channel is the hyperfine coupling; and the fading memory (echo-state
+property) is supplied by the electronic $T_2^e$ together with inter-cycle nuclear
+dephasing. These are exactly the three layers of the hypothesis above: Layer~1
+(nuclear-spin memory), Layer~2 (the radical-pair interface), and Layer~3 (the
+classical readout/transduction that trains the linear map).
+
+The paper is organized as follows. Section~\ref{sec:results} establishes the
+reservoir's capacity and its convergence, localises that capacity in spin coherence,
+compares it against matched classical baselines, and then asks what a chemical
+readout recovers; it closes with the reservoir's clock and the nuclear-register
+criterion. Section~\ref{sec:discussion} places the result among quantum-brain
+proposals and states the limitations. The model, protocol, and capacity definitions
+are collected in Appendix~\ref{app:methods}.
+
+\section{Results}\label{sec:results}
+
+\begin{figure}[htbp]
+\includegraphics[width=\columnwidth]{fig_schematic.pdf}
+\caption{\label{fig:schematic}
+\textbf{The reservoir and the quantity that decides its reach.}
+(a)~A cryptochrome-type separated radical pair ($J\approx0$, lifetime
+$\tau\sim\mu$s) is the same molecule in two roles: long electronic coherence makes
+it a weak-field magnetosensor, while the dissipation of an open cycle supplies the
+fading memory a reservoir needs. (b)~The nuclei are the register: they are not
+consumed by recombination and therefore persist from one turnover to the next,
+whereas the electron pair is created afresh each cycle. The memory horizon is
+consequently $\mathrm{MC}\times T_{\mathrm{turnover}}$, not
+$\mathrm{MC}\times\tau$---and it reaches the neural band only if that register is
+genuinely reused.}
+\end{figure}
+
+We drive the reservoir the way a real turnover does. Each cycle the nuclei are
+retained and a \emph{new} spin-correlated electron pair is created whose singlet
+character encodes the input,
+$\rho_e(s)=s\,|S\rangle\langle S|+(1-s)P_T/3$; the pair then evolves under the
+Liouville-space master equation with electronic dephasing and, where the readout
+requires it, spin-selective recombination. This replaces the reset of a single
+electron used in earlier treatments, which is not a chemical process and which---for
+a separated pair---destroys the electron--electron correlation every cycle. All
+capacities are out-of-sample (trained on the first half of a run, scored on the
+held-out second half) and are means over $6$--$8$ input realisations. Model,
+protocol and estimator are given in Appendix~\ref{app:methods}.
+
+\subsection{Capacity of the reservoir}
+
+With a twelve-observable readout the five-spin reservoir attains
+\begin{equation*}
+\mathrm{MC}=3.9,\qquad \mathrm{IPC}=5.6\pm0.2 ,
+\end{equation*}
+of which $1.7$ units are nonlinear. Unlike the single-electron-reset protocol, the
+estimate is converged in the length of the driving sequence: repeating at
+$L=600,1200,2400,4800$ gives $\mathrm{IPC}=5.28,5.60,5.87,5.84$, i.e.\ flat to
+within the seed-to-seed scatter beyond $L\approx2400$. The memory kernel decays
+over $\sim4$ cycles, the signature of the fading-memory property.
+
+\subsection{The capacity is largely coherent}
+
+To ask how much of this is quantum we add an all-spin pure-dephasing rate $\gamma$
+in the $S_z$ product basis and take the incoherent limit at \emph{matched hopping
+rate}: since the golden-rule transfer rate scales as $|H_{ij}|^2/\gamma$, holding
+rate$\,\times\,\tau$ fixed requires $\tau\propto\gamma$. Doing so, the capacity
+saturates at $\mathrm{IPC}=1.00$ for $\gamma=10^{3},5\times10^{3},2\times10^{4}$~MHz
+--- exactly the memoryless floor, i.e.\ instantaneous read-back of the input with no
+memory at all. Against the coherent value $5.42$ this is a coherence fraction
+\begin{equation}
+\frac{\mathrm{IPC}_{\gamma=0}-\mathrm{IPC}_{\rm incoh}}{\mathrm{IPC}_{\gamma=0}}
+=0.82 .
+\end{equation}
+Taking the limit at fixed $\tau$ instead, as is sometimes done, measures Zeno
+freezing rather than the classical limit and inflates this number; we avoid that.
+
+\subsection{There is no quantum advantage}
+
+A capacity is only meaningful against a classical reference, and the comparison must
+be symmetric in what is read out. Driving tanh echo-state networks (ESNs) with the
+same input and scoring them with the \emph{same} estimator:
+
+\begin{center}
+\begin{tabular}{lc}
+\hline
+reservoir (readout features) & IPC \\
+\hline
+quantum, 5 spins (12 observables) & $5.59\pm0.19$ \\
+ESN, 5 nodes (5 linear features)  & $4.55\pm0.32$ \\
+ESN, 5 nodes (12 features: $5$ linear $+7$ quadratic) & $9.41\pm0.86$ \\
+ESN, 12 nodes (12 linear features) & $10.37\pm0.59$ \\
+\hline
+\end{tabular}
+\end{center}
+
+Matched by \emph{physical unit} the quantum reservoir is modestly ahead
+($5.59$ vs $4.55$), but matched by \emph{readout dimension}---the resource that
+actually sets the Dambre ceiling---a classical system of the same size is well ahead
+($9.41$ vs $5.59$). We therefore make no claim of quantum advantage. Which
+accounting is the fair one depends on a cost model for non-commuting measurements
+versus multiplications that we do not have; we report the numbers and leave the
+claim unmade.
+
+\subsection{Biology can read the reservoir}
+
+\begin{figure}[htbp]
+\includegraphics[width=\columnwidth]{fig_readout.pdf}
+\caption{\label{fig:readout}
+\textbf{Readout is not the bottleneck.} Capacity recovered by chemically accessible
+observables at the cryptochrome operating point ($B=50~\mu$T, $J=0$, $\tau=1~\mu$s),
+with spin-selective recombination switched on so that the observable is the product
+actually formed. The dotted line is the memoryless floor ($\mathrm{IPC}=1$): a
+readout at that level reports the current input and nothing else. Ordinary reaction
+kinetics clear it; adding the nuclear polarisation carried away by the product
+(CIDNP) more than doubles the capacity again. No spectroscopy is involved.}
+\end{figure}
+
+Biology has no EPR spectrometer; it has products. We therefore restrict the readout
+to observables a downstream reaction could plausibly use, with recombination
+switched on so that the quantity read is the yield actually produced,
+$Y_X=k_X\!\int_0^\tau\!\mathrm{Tr}[P_X\rho(t)]\,dt$ (Fig.~\ref{fig:readout}):
+
+\begin{center}
+\begin{tabular}{lcc}
+\hline
+readout route & channels & IPC \\
+\hline
+end-point singlet yield & 1 & $1.02$ \\
+both exit channels, end point & 2 & $1.37$ \\
+three micro-environments (different $\tau$) & 3 & $2.56$ \\
+time-resolved kinetics of one product pool & 5 & $2.01$ \\
+\quad + accumulated downstream pool & 10 & $2.71$ \\
+\quad + CIDNP polarisation on the product & 8 & $\mathbf{4.65}$ \\
+\hline
+\end{tabular}
+\end{center}
+
+Two things follow. First, the readout is not the limiting resource: time-resolved
+product kinetics alone clear the memoryless floor by a factor of two, and the
+nuclear polarisation the product carries away raises the capacity to $4.65$ without
+any spectroscopic access whatsoever. Second, a single scalar end-point yield gives
+$\mathrm{IPC}=1.02$, which saturates its own one-observable bound but consists
+almost entirely of the zero-delay term: it reports the present input and remembers
+nothing. Claims about reservoir behaviour should not be based on it.
+
+The mechanism behind the CIDNP column is worth stating, because it also explains a
+negative result. The reduced state of \emph{either} electron of a newly born pair is
+maximally mixed for every input, since both $|S\rangle\langle S|$ and $P_T/3$ have
+zero one-electron polarisation; the input lives entirely in the two-electron
+correlation. With $J=0$ the two radicals do not interact, so nothing can transfer
+that correlation to a nucleus---and indeed, with recombination switched off, the
+cryptochrome-point capacity is $1.01$, the memoryless floor. It is
+\emph{spin-selective recombination} that converts the singlet--triplet correlation
+into a population difference and so writes the input into the nuclear register. In a
+separated radical pair, recombination is not merely how the reservoir is read; it is
+how it is written.
+
+\subsection{The clock is the turnover, not the pair lifetime}
+
+\begin{figure}[htbp]
+\includegraphics[width=\columnwidth]{fig_criterion.pdf}
+\caption{\label{fig:criterion}
+\textbf{(a)} The memory horizon $\mathrm{MC}\times T_{\rm turnover}$ against the
+turnover interval. Because the nuclear register survives recombination, inserting a
+physiological pause leaves the memory capacity essentially unchanged and moves the
+horizon into the neural band (shaded). The dotted line is where the horizon would
+sit if the clock were the radical-pair lifetime.
+\textbf{(b)} The criterion. As the nuclear register is depolarised between
+turnovers with probability $q$, the capacity falls to the memoryless floor: at
+$q=1$---a fresh molecule each cycle---$\mathrm{MC}=1.00$ and there is no memory.}
+\end{figure}
+
+The horizon over which a reservoir remembers is $\mathrm{MC}$ multiplied by its
+cycle time. It is natural, and it is what the submitted version of this work did, to
+identify that cycle time with the radical-pair lifetime $\tau\sim1~\mu$s and
+conclude that a $3~\mu$s horizon puts the system $10^3$--$10^5$ below neural
+timescales. That identification is wrong, and its own model says so. The carrier of
+the memory is the nuclear register, and nuclei are not consumed by recombination:
+they leave in the diamagnetic product, where nuclear relaxation times are of order
+$0.1$--$1$~s. The cycle time of the reservoir is therefore the interval between
+turnovers.
+
+Inserting a pause $T_{\rm d}$ between turnovers and relaxing the register with
+probability $q=1-\exp(-T_{\rm d}/T_{1n})$ (with $T_{1n}=1$~s) gives
+Fig.~\ref{fig:criterion}(a):
+
+\begin{center}
+\begin{tabular}{lccc}
+\hline
+$T_{\rm d}$ & $q$ & MC (8 ch) & horizon \\
+\hline
+$1~\mu$s & $10^{-6}$ & $2.818$ & $5.6~\mu$s \\
+$1$~ms & $10^{-3}$ & $2.818$ & $2.8$~ms \\
+$10$~ms & $10^{-2}$ & $2.817$ & $28$~ms \\
+$100$~ms & $9.5\times10^{-2}$ & $2.800$ & $280$~ms \\
+\hline
+\end{tabular}
+\end{center}
+
+The memory capacity changes by $0.2\%$ across five orders of magnitude in the
+turnover interval, so the horizon simply tracks it, and a perfectly ordinary
+enzymatic or photocycle turnover of $1$--$100$~ms places it squarely in the neural
+band. The timescale argument does not survive; the same spin physics runs on a slow
+clock.
+
+\subsection{The criterion: reuse of the nuclear register}
+
+What replaces it is a chemical requirement, and a sharper one. Everything above
+assumes that the register the reservoir writes into is the \emph{same} register on
+the next turnover. Relaxing that assumption by depolarising the nuclei with
+probability $q$ between cycles gives Fig.~\ref{fig:criterion}(b):
+memory is essentially intact for $q\lesssim0.5$ (that is, while the turnover
+interval is shorter than the nuclear relaxation time), degrades through
+$q\approx0.7$--$0.9$, and at $q=1$---a fresh molecule every cycle---collapses to
+$\mathrm{MC}=1.00$, the memoryless floor, for every readout we tested.
+
+This is the constraint that actually decides whether a radical pair can serve as a
+biological reservoir:
+
+\begin{quote}
+\emph{The same nuclear register must be re-used across successive turnovers, and
+successive turnovers must be driven by distinct input samples. Given that, the
+memory horizon is $\mathrm{MC}\times T_{\rm turnover}$, bounded above by
+$\mathrm{MC}\times T_{1n}\sim1$~s; without it, the system retains nothing.}
+\end{quote}
+
+Unlike a comparison of two timescales---which requires no quantum mechanics at
+all---this criterion is a statement about a spin register and can only be evaluated
+by the kind of analysis performed here. It is also directly falsifiable by chemistry:
+it fails if the radical pair is regenerated on a fresh molecule each turnover, or if
+the relevant nuclear relaxation in the diamagnetic intermediate is faster than the
+turnover rate.
+
+\section{Discussion}\label{sec:discussion}
+
+\paragraph*{What changed, and why it matters.}
+Three claims that are natural to make about this system---that a scalar chemical
+readout is too impoverished to be useful, that a spin reservoir of a few spins beats
+a classical system of the same size, and that microsecond radical-pair lifetimes put
+biological computation out of reach---all fail when the model is driven as a real
+turnover and compared symmetrically. The readout is not the bottleneck; the quantum
+advantage is not there; and the timescale gap is an artifact of identifying the
+reservoir clock with the pair lifetime rather than the turnover interval. What
+remains is a single, sharp, chemical criterion.
+
+\paragraph*{Relation to prior work.}
+Quantum reservoir computing in spin ensembles is established, including the use of
+dissipation as a resource and the exponential-state-space
+argument.\cite{Fujii2017,Nakajima2019,Martinez2021,Mujal2021,Tanaka2019} We do not
+claim these as new, and---having found no advantage under a symmetric
+comparison---we do not add to them. Our contribution is to take a chemically
+realised radical pair, drive and read it as chemistry actually would, and convert a
+long-standing qualitative conjecture\cite{Fisher2015,Kerskens2022,Tegmark2000} into a
+criterion that experiment can test. The result also sharpens why CIDNP matters here:
+in a separated pair it is not an optional extra channel but the mechanism by which
+information reaches the nuclei at all.
+
+\paragraph*{Limitations.}
+The model is a five-spin reduction with isotropic hyperfine couplings; the full
+anisotropic tensor set of the cryptochrome pair\cite{Lee2014,Schleicher2021} is not
+treated, and $^{14}$N is modelled as spin-$1/2$. The capacity estimator uses
+degree-$2$ targets, so higher-order nonlinear capacity is not counted. Whether a
+\emph{neuronal} cryptochrome forms a separated radical pair at all is
+unestablished---CRY1/CRY2 are primarily circadian transcriptional
+regulators\cite{Partch2014}---so the biological reading of our criterion is
+conditional. The spin-dynamics results do not depend on that condition.
+
+\paragraph*{What would settle it.}
+The criterion is addressable in vitro before it is addressable in a neuron.
+Covalently linked donor--bridge--acceptor radical pairs have synthetically tunable
+exchange coupling and lifetime and are read by transient EPR and optical/CIDNP
+spectroscopy.\cite{Wasielewski2006,Wasielewski2020,Hore2016} Repeatedly cycling such
+a system and asking whether the product yield of turnover $k$ depends on the input
+at turnover $k-1$, $k-2$, \ldots{} measures the memory horizon directly, and varying
+the interval between cycles tests the register-reuse criterion where it is sharpest.
+
+\section{Conclusion}
+
+Driven and read as a chemical turnover rather than as an abstract quantum channel, a
+cryptochrome-type radical pair is a reservoir whose output ordinary chemistry can
+recover: time-resolved product kinetics give $\mathrm{IPC}=2.0$ and the nuclear
+polarisation carried off by the product raises this to $4.7$, with no spectroscopic
+access required. Eighty-two per cent of the capacity is coherent in origin, and yet
+there is no quantum advantage---a classical network with the same number of readout
+features matches or exceeds it. The obstacle usually invoked, a microsecond memory
+horizon, does not survive scrutiny: the register is nuclear and survives
+recombination, so the clock is the turnover interval and a physiological
+$1$--$100$~ms turnover places the horizon at $3$--$280$~ms. What decides the question
+instead is whether the same nuclear register is reused from one turnover to the
+next; if it is not, the capacity falls to a memoryless $\mathrm{MC}=1$. We offer that
+criterion, rather than a timescale comparison, as the thing to test.
+
+\begin{acknowledgments}
+We thank the reviewers of the companion sensing study, whose insistence on
+decoherence-explicit treatment shaped the methodology used here. All numerical
+results are reproducible from the open-source \texttt{qbscreen} package.
+\end{acknowledgments}
+
+\section*{Author contributions}
+H.W. conceived the study, developed the master-equation and reservoir code, ran the
+simulations, and wrote the manuscript. T.T. contributed to the spin-dynamics
+formulation and the analysis of the nuclear-register criterion. Both authors
+reviewed the results and approved the manuscript.
+
+\appendix
+
+\section{Model and methods}
+\label{app:methods}
+
+\subsection{Reservoir Hamiltonian}
+We model the reservoir as $N=5$ spins---two radical-pair electrons
+$(e_1,e_2)$ and three nuclei ($^{31}$P and two $^1$H)---with Hamiltonian
+(in MHz)
+\begin{align}
+H &= \omega_e\,(S_z^{e_1}+S_z^{e_2})
+   + \sum_{\mu=x,y,z}\Big[
+     A_P\,S_\mu^{e_1}I_\mu^{P}
+   + A_{H_1}S_\mu^{e_1}I_\mu^{H_1} \nonumber\\
+&\quad
+   + A_{e_2}S_\mu^{e_2}I_\mu^{H_2}
+   + J\,S_\mu^{e_1}S_\mu^{e_2}\Big],
+\label{eq:H}
+\end{align}
+where $\omega_e=g_e\mu_B B/h$ is the electron Zeeman frequency. Each radical carries
+its own nuclei---they are not shared, which is what a spatially separated pair
+means---and the exchange $J$ links the two electrons. At the engineered operating
+point we use $A_{e_1a}=80$, $A_{e_1b}=40$, $A_{e_2a}=15$~MHz, $J=2$~MHz and
+$B=1$~mT: representative molecular-spin-RC values chosen to give effective hyperfine
+writing, not a fit to a specific protein. For the cryptochrome point we set $J=0$,
+$B=50~\mu$T and $\tau=1~\mu$s, with hyperfine magnitudes representative of the
+dominant FAD$^{\bullet-}$ and TrpH$^{\bullet+}$ couplings~\cite{Lee2014,Schleicher2021}.
+The conclusions are not fine-tuned to these numbers: the capacity varies by less
+than $\sim20\%$ over an order-of-magnitude scan of $T_2^e$, and the register
+criterion of Sec.~\ref{sec:results} is independent of the hyperfine assignment.
+
+\subsection{Master equation and propagator}
+Each reservoir update is the completely positive, trace-preserving map
+$\rho\mapsto e^{\mathcal{L}\tau}\rho$ generated by the Haberkorn master
+equation~\cite{Haberkorn1976} (whose spin-selective recombination operator we adopt
+in its standard form~\cite{Jones2010}) with electronic pure dephasing,
+\begin{equation}
+\frac{d\rho}{dt}
+ = -i[H,\rho]
+ - \tfrac12\{k_S P_S + k_T P_T,\rho\}
+ + \sum_{i}\frac{1}{T_2^e}\!\left(S_z^i\rho S_z^i-\tfrac14\rho\right),
+\label{eq:me}
+\end{equation}
+solved exactly in Liouville space. The third term---the electronic decoherence
+that the companion sensing analysis showed to be decisive---is here the source of
+fading memory. We verified that, in the limit $1/T_2^e\to0$ and $k_S=k_T$, the
+Liouville-space solver reproduces the closed-form coherent Green's-function singlet
+yield to machine precision (Supplemental Material). Within an update step no
+recombination acts ($k_S=k_T=0$); the readout step uses the spin-selective term.
+
+\subsection{Reservoir protocol}
+We use the standard temporal-QRC protocol~\cite{Fujii2017}. At step $k$ the input
+electron is reset to the input-encoded pure state
+$|\psi(s_k)\rangle=\sqrt{1-s_k}\,|0\rangle+\sqrt{s_k}\,|1\rangle$ while the
+reservoir (the remaining electron plus nuclei) is retained; the full state evolves
+for a fixed lifetime $\tau$ under $e^{\mathcal{L}\tau}$ ($\tau=50$~ns,
+$T_2^e=50$~ns at the operating point); a set of observables is read out, and a
+linear (ridge) readout is trained on them. Inputs $s_k$ are i.i.d.\ uniform on
+$[0,1]$; the first $\sim100$ steps are discarded as washout.
+
+This protocol has a natural chemical reading that addresses its physical
+realizability. The ``reset'' of the input electron is not an applied operation but
+the \emph{birth of a new radical pair}: each catalytic or photochemical cycle
+creates a fresh spin-correlated electron pair whose initial state encodes the
+instantaneous input (e.g.\ a substrate-flux- or light-dependent singlet/triplet
+bias), while the surrounding nuclei---which are not consumed by recombination---carry
+spin polarisation across cycles. The reservoir is thus a \emph{persistent nuclear
+bath repeatedly interrogated by transient electron pairs}, which is precisely the
+radical-pair situation, not an artificial gate sequence. The washout discards
+initial transients, so the reported capacities are independent of the initial spin
+state---a direct consequence of the fading-memory (echo-state) property and the
+reason no thermal-population fine-tuning is needed.
+
+\subsection{Capacity measures}
+We quantify the reservoir with two information-theoretic benchmarks. The linear
+\emph{memory capacity}~\cite{Jaeger2002}
+$\mathrm{MC}=\sum_{d\ge0} r^2(s_{k-d})$ sums the squared multiple correlation for
+reconstructing delayed inputs. The \emph{information processing
+capacity}~\cite{Dambre2012} adds nonlinear functions of the input history,
+$\mathrm{IPC}=\mathrm{MC}+\sum_{\text{nonlinear}}C$, evaluated here through
+degree-2 Legendre targets (diagonal $P_2(s_{k-d})$ and cross
+$s_{k-d_1}s_{k-d_2}$ terms). A fundamental theorem~\cite{Dambre2012} bounds the
+total capacity by the number of linearly independent readout observables,
+$\mathrm{IPC}\le n_\mathrm{obs}$; we use this bound throughout as a correctness
+anchor and as the key to interpreting the ensemble results.
+
+All results are reproducible from the open \texttt{qbscreen} package
+(\texttt{reservoir.py}, \texttt{ensemble.py}, \texttt{quantum\_vs\_classical.py};
+28/28 tests pass).
+
+
+\section{Data and code availability}
+All analyses are implemented in the open \texttt{qbscreen} package,
+\texttt{https://github.com/deeptell-inc/new\_Q\_brain}. The corrected
+correlated-pair-birth injection is in \texttt{qbscreen/corrected\_injection.py}; the
+chemically accessible readout routes, the turnover-clock scan and the
+register-reuse criterion are in \texttt{qbscreen/readout\_routes.py}; the
+protocol-consistent capacity, coherence fraction and classical baselines are in
+\texttt{qbscreen/final\_numbers.py}; the master-equation solver is in
+\texttt{qbscreen/master\_equation.py}. Numerical outputs are in
+\texttt{simulation\_results/}. The capacity bound and the agreement of the solver
+with the closed-form coherent limit are checked in \texttt{qbscreen/tests/}
+(28 tests, all passing).  
+           
+\begin{thebibliography}{99}  
+          
+\bibitem{Steiner1989} U.~E. Steiner and T.~Ulrich,
+\textit{Magnetic field effects in chemical kinetics and related phenomena},
+Chem. Rev. \textbf{89}, 51 (1989).
+ 
+\bibitem{Hore2016} P.~J. Hore and H.~Mouritsen,
+\textit{The radical-pair mechanism of magnetoreception},
+Annu. Rev. Biophys. \textbf{45}, 299 (2016).
+
+\bibitem{Ritz2000} T.~Ritz, S.~Adem, and K.~Schulten,
+\textit{A model for photoreceptor-based magnetoreception in birds},
+Biophys. J. \textbf{78}, 707 (2000).
+
+\bibitem{Maeda2012} K.~Maeda \textit{et al.},
+\textit{Magnetically sensitive light-induced reactions in cryptochrome are
+consistent with its proposed role as a magnetoreceptor},
+Proc. Natl. Acad. Sci. USA \textbf{109}, 4774 (2012).
+
+\bibitem{Xu2021} J.~Xu \textit{et al.},
+\textit{Magnetic sensitivity of cryptochrome 4 from a migratory songbird},
+Nature \textbf{594}, 535 (2021).
+
+\bibitem{Fisher2015} M.~P.~A. Fisher,
+\textit{Quantum cognition: The possibility of processing with nuclear spins in the
+brain}, Ann. Phys. \textbf{362}, 593 (2015).
+
+\bibitem{Kerskens2022} C.~M. Kerskens and D.~López Pérez,
+\textit{Experimental indications of non-classical brain functions},
+J. Phys. Commun. \textbf{6}, 105001 (2022).
+
+\bibitem{Buzsaki2004} G.~Buzsáki and A.~Draguhn,
+\textit{Neuronal oscillations in cortical networks},
+Science \textbf{304}, 1926 (2004).
+
+\bibitem{Tegmark2000} M.~Tegmark,
+\textit{Importance of quantum decoherence in brain processes},
+Phys. Rev. E \textbf{61}, 4194 (2000).
+
+\bibitem{Lambert2013} N.~Lambert, Y.-N. Chen, Y.-C. Cheng, C.-M. Li, G.-Y. Chen,
+and F.~Nori, \textit{Quantum biology}, Nat. Phys. \textbf{9}, 10 (2013).
+
+\bibitem{Cao2020} J.~Cao \textit{et al.},
+\textit{Quantum biology revisited}, Sci. Adv. \textbf{6}, eaaz4888 (2020).
+
+\bibitem{Hiscock2016} H.~G. Hiscock \textit{et al.},
+\textit{The quantum needle of the avian magnetic compass},
+Proc. Natl. Acad. Sci. USA \textbf{113}, 4634 (2016).
+
+\bibitem{Tanaka2019} G.~Tanaka \textit{et al.},
+\textit{Recent advances in physical reservoir computing: A review},
+Neural Netw. \textbf{115}, 100 (2019).
+
+\bibitem{Wasielewski2020} M.~R. Wasielewski \textit{et al.},
+\textit{Exploiting chemistry and molecular systems for quantum information science},
+Nat. Rev. Chem. \textbf{4}, 490 (2020).
+
+\bibitem{Partch2014} C.~L. Partch, C.~B. Green, and J.~S. Takahashi,
+\textit{Molecular architecture of the mammalian circadian clock},
+Trends Cell Biol. \textbf{24}, 90 (2014).
+
+\bibitem{Timmel1998} C.~R. Timmel, U.~Till, B.~Brocklehurst, K.~A. McLauchlan,
+and P.~J. Hore, \textit{Effects of weak magnetic fields on free radical
+recombination reactions}, Mol. Phys. \textbf{95}, 71 (1998).
+
+\bibitem{Jones2010} J.~A. Jones and P.~J. Hore,
+\textit{Spin-selective reactions of radical pairs act as quantum measurements},
+Chem. Phys. Lett. \textbf{488}, 90 (2010).
+
+\bibitem{HoreBroadhurst1993} P.~J. Hore and R.~W. Broadhurst,
+\textit{Photo-CIDNP of biopolymers},
+Prog. Nucl. Magn. Reson. Spectrosc. \textbf{25}, 345 (1993).
+
+\bibitem{Wakaura2025} H.~Wakaura,
+\textit{Systematic screening of brain neurotransmitter enzymes for radical-pair
+mechanism competence identifies candidates for magnetic field sensitivity},
+Research Square preprint, doi:10.21203/rs.3.rs-9278975/v1 (2025).
+
+\bibitem{Wakaura2026} H.~Wakaura,
+\textit{Motional narrowing rescues entanglement in biological radical-pair systems:
+quantum error correction and reservoir computing beyond the breaking threshold},
+Research Square preprint, doi:10.21203/rs.3.rs-9493052/v1 (2026).
+
+\bibitem{Lee2014} A.~A. Lee, J.~C.~S. Lau, H.~J. Hogben, T.~Biskup, D.~R. Kattnig,
+and P.~J. Hore,
+\textit{Alternative radical pairs for cryptochrome-based magnetoreception},
+J. R. Soc. Interface \textbf{11}, 20131063 (2014).
+
+\bibitem{Schleicher2021} E.~Schleicher \textit{et al.},
+\textit{Selective $^{13}$C labelling reveals the electronic structure of
+flavocoenzyme radicals}, Sci. Rep. \textbf{11}, 18395 (2021).
+
+\bibitem{Efimova2008} O.~Efimova and P.~J. Hore,
+\textit{Role of exchange and dipolar interactions in the radical pair model of the
+avian magnetic compass}, Biophys. J. \textbf{94}, 1565 (2008).
+
+\bibitem{Companion2026} H.~Wakaura and T.~Tanimae,
+\textit{Electronic decoherence and exchange coupling preclude weak-field
+magnetosensitivity of neurotransmitter-metabolising flavoenzymes}
+(companion manuscript, 2026).
+
+\bibitem{Maass2002} W.~Maass, T.~Natschläger, and H.~Markram,
+\textit{Real-time computing without stable states: A new framework for neural
+computation based on perturbations}, Neural Comput. \textbf{14}, 2531 (2002).
+
+\bibitem{Jaeger2004} H.~Jaeger and H.~Haas,
+\textit{Harnessing nonlinearity: Predicting chaotic systems and saving energy in
+wireless communication}, Science \textbf{304}, 78 (2004).
+
+\bibitem{Fujii2017} K.~Fujii and K.~Nakajima,
+\textit{Harnessing disordered-ensemble quantum dynamics for machine learning},
+Phys. Rev. Applied \textbf{8}, 024030 (2017).
+
+\bibitem{Nakajima2019} K.~Nakajima \textit{et al.},
+\textit{Boosting computational power through spatial multiplexing in quantum
+reservoir computing}, Phys. Rev. Applied \textbf{11}, 034021 (2019).
+
+\bibitem{Martinez2021} R.~Martínez-Peña \textit{et al.},
+\textit{Dynamical phase transitions in quantum reservoir computing},
+Phys. Rev. Lett. \textbf{127}, 100502 (2021).
+
+\bibitem{Mujal2021} P.~Mujal, R.~Martínez-Peña, J.~Nokkala, J.~García-Beni,
+G.~L. Giorgi, M.~C. Soriano, and R.~Zambrini,
+\textit{Opportunities in quantum reservoir computing and extreme learning
+machines}, Adv. Quantum Technol. \textbf{4}, 2100027 (2021).
+
+\bibitem{Haberkorn1976} R.~Haberkorn,
+\textit{Density matrix description of spin-selective radical pair reactions},
+Mol. Phys. \textbf{32}, 1491 (1976).
+
+\bibitem{Jaeger2002} H.~Jaeger,
+\textit{Short term memory in echo state networks},
+GMD Report 152, German National Research Center for Information Technology (2002).
+
+\bibitem{Dambre2012} J.~Dambre, D.~Verstraeten, B.~Schrauwen, and S.~Massar,
+\textit{Information processing capacity of dynamical systems},
+Sci. Rep. \textbf{2}, 514 (2012).
+
+\bibitem{Wasielewski2006} M.~R. Wasielewski,
+\textit{Energy, charge, and spin transport in molecules and self-assembled
+nanostructures inspired by photosynthesis},
+J. Org. Chem. \textbf{71}, 5051 (2006).
+
+\end{thebibliography}
+
+\end{document}

@@ -1,0 +1,81 @@
+\documentclass[11pt]{letter}
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{hyperref}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{8pt}
+\signature{Hikaru Wakaura}
+\address{QIRI, Quantum Integrated Research Institute Inc.\\ Tokyo 107-0061, Japan\\ \texttt{h.wakaura@qiri.co.jp}}
+\begin{document}
+\begin{letter}{The Editors\\ \textit{Physical Chemistry Chemical Physics}}
+
+\opening{Dear Editors,}
+
+On behalf of my co-author, I am submitting the manuscript \textbf{``What a
+radical-pair quantum reservoir would require: readable capacity, no quantum
+advantage, and a nuclear-register criterion''} for consideration as a research
+article in \textit{PCCP}.
+
+This is a re-submission, and I should say plainly what happened. It supersedes
+manuscript \textbf{CP-ART-06-2026-002404}, which we asked to withdraw during review
+after discovering ourselves that one of its central numerical results was an
+artifact of our simulation protocol rather than a property of the spin chemistry.
+The present manuscript is the corrected and substantially extended analysis. Its
+conclusions differ from the withdrawn version in three places, and in each case the
+corrected answer is the more interesting one. We are grateful for the opportunity to
+put the corrected work before the journal.
+
+The question is whether the spin chemistry of a cryptochrome-type radical pair can
+\emph{process} information---posed, as it must be for a warm and noisy system, as
+reservoir computing rather than gate-model computation. We solve the Liouville-space
+Haberkorn master equation with electronic decoherence and, crucially, drive the
+reservoir the way a real turnover does: the nuclei are retained and a new
+spin-correlated pair is born each cycle, its singlet character encoding the input.
+Resetting a single electron instead---the natural abstraction, and the one used in
+the withdrawn version---destroys the electron--electron correlation and, for a
+separated pair, pins the singlet probability at exactly $1/4$ regardless of input.
+That is the artifact, and correcting it changes the physics.
+
+Three results follow. \textbf{First}, the reservoir is readable by ordinary
+chemistry. The time-resolved yield of one product pool gives an out-of-sample
+information-processing capacity of $2.0$, and the nuclear polarisation the product
+carries away raises it to $4.7$, with no spectroscopic access of any kind. Readout
+is not the bottleneck, as we had previously concluded. The mechanism behind that
+number is itself worth reporting to a physical-chemistry readership: because either
+electron of a newly born pair is maximally mixed for every input, spin-selective
+recombination is what \emph{writes} the input into the nuclear register. In a
+separated pair, CIDNP is not an optional additional channel; it is the write
+mechanism.
+
+\textbf{Second}, there is no quantum advantage. A classical echo-state network given
+the same number of readout features matches or exceeds the five-spin reservoir. We
+report this rather than argue around it.
+
+\textbf{Third}, the timescale objection usually raised against this system does not
+survive. It rests on identifying the reservoir's clock with the microsecond
+radical-pair lifetime, but the memory is carried by the nuclear register, which is
+not consumed by recombination and departs in the diamagnetic product. Inserting a
+physiological $1$--$100$~ms turnover leaves the memory capacity unchanged to within
+$0.2\%$ and places the horizon at $3$--$280$~ms, inside the neural band. What
+replaces the timescale argument is a sharper and falsifiable chemical criterion: the
+\emph{same} nuclear register must be reused from one turnover to the next, failing
+which the capacity collapses to a memoryless read-back. Unlike a comparison of two
+timescales, which requires no quantum mechanics at all, this criterion can only be
+evaluated by the kind of spin-dynamical analysis performed here---and it is directly
+testable in synthetic donor--bridge--acceptor radical pairs by cycling the system and
+asking whether the yield at one turnover depends on the input at the previous one.
+
+The work is entirely computational. All code and numerical outputs are openly
+released in the \texttt{qbscreen} package, every capacity is reported out of sample
+with its null floor and its convergence in sample length, and the central claims are
+covered by an automated test suite (28 tests, all passing). A companion study on the
+corresponding weak-field magnetosensing analysis is under consideration elsewhere;
+the two are physically independent and we are glad to share it. This manuscript is
+not under consideration at any other journal. The authors declare no competing
+interests and the study received no specific funding.
+
+Thank you for considering this re-submission.
+
+\closing{Yours sincerely,}
+
+\end{letter}
+\end{document}
