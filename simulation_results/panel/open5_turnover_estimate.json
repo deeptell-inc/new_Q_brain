@@ -194,5 +194,106 @@
         "tau_crit_wet_ns": 5.459781765937805
       }
     }
-  }
+  },
+  "robustness": [
+    {
+      "variation": "as published, hydration 1.3",
+      "mass_kDa": 60.0,
+      "n_partners": 1,
+      "tau_c_ns": 15.243007897844024,
+      "T1_ms": 2.442117708093426,
+      "ceiling_ms": 5.491393876416881,
+      "in_band": false
+    },
+    {
+      "variation": "hydration 1.0",
+      "mass_kDa": 60.0,
+      "n_partners": 1,
+      "tau_c_ns": 11.725390690649245,
+      "T1_ms": 3.174752837310202,
+      "ceiling_ms": 7.141222448480914,
+      "in_band": false
+    },
+    {
+      "variation": "hydration 1.6",
+      "mass_kDa": 60.0,
+      "n_partners": 1,
+      "tau_c_ns": 18.760625105038798,
+      "T1_ms": 1.98422078220434,
+      "ceiling_ms": 4.4624863530949295,
+      "in_band": false
+    },
+    {
+      "variation": "viscosity x2",
+      "mass_kDa": 60.0,
+      "n_partners": 1,
+      "tau_c_ns": 30.486015795688047,
+      "T1_ms": 1.2210593718176157,
+      "ceiling_ms": 2.7460559111725895,
+      "in_band": false
+    },
+    {
+      "variation": "viscosity x4",
+      "mass_kDa": 60.0,
+      "n_partners": 1,
+      "tau_c_ns": 60.972031591376094,
+      "T1_ms": 0.6105307214503402,
+      "ceiling_ms": 1.373462480355765,
+      "in_band": false
+    },
+    {
+      "variation": "120 kDa dimer",
+      "mass_kDa": 120.0,
+      "n_partners": 1,
+      "tau_c_ns": 30.486015795688047,
+      "T1_ms": 1.2210593718176157,
+      "ceiling_ms": 2.7460559111725895,
+      "in_band": false
+    },
+    {
+      "variation": "2 dipolar partners",
+      "mass_kDa": 60.0,
+      "n_partners": 2,
+      "tau_c_ns": 15.243007897844024,
+      "T1_ms": 1.221058854046713,
+      "ceiling_ms": 2.746055838511563,
+      "in_band": false
+    },
+    {
+      "variation": "3 dipolar partners",
+      "mass_kDa": 60.0,
+      "n_partners": 3,
+      "tau_c_ns": 15.243007897844024,
+      "T1_ms": 0.814039236031142,
+      "ceiling_ms": 1.8316076933434302,
+      "in_band": false
+    },
+    {
+      "variation": "memory threshold 0.2",
+      "mass_kDa": 60.0,
+      "n_partners": 1,
+      "tau_c_ns": 15.243007897844024,
+      "T1_ms": 2.442117708093426,
+      "ceiling_ms": 5.491393876416881,
+      "in_band": false
+    },
+    {
+      "variation": "memory threshold 1.0",
+      "mass_kDa": 60.0,
+      "n_partners": 1,
+      "tau_c_ns": 15.243007897844024,
+      "T1_ms": 2.442117708093426,
+      "ceiling_ms": 4.115970424762969,
+      "in_band": false
+    },
+    {
+      "variation": "+ bath (f=0.54)",
+      "mass_kDa": 60.0,
+      "n_partners": 1,
+      "tau_c_ns": 15.243007897844024,
+      "T1_ms": 1.5840608871810518,
+      "ceiling_ms": 3.5648545938048892,
+      "in_band": false
+    }
+  ]
 }

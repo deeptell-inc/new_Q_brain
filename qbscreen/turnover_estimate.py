@@ -217,6 +217,61 @@ def feasible_region(min_memory=0.5, band=(1e-2, 1.0), return_boundaries=False,
     return rows
 
 
+def robustness(min_memory=0.5, band=(1e-2, 1.0)):
+    """Every variation of the ceiling we can motivate, in one table.
+
+    Several of these were computed while answering referee points and never
+    reported, which is the weakest possible place to leave them: a reader who
+    wonders whether the exclusion survives a dimer, a crowded cytoplasm or a
+    second dipolar partner should not have to ask.
+    """
+    import numpy as np
+    from qbscreen.relaxation_estimate import (dipolar_T1, tau_rot2_protein, GEOM,
+                                              sum_ext_for, bath_ratio_from_water)
+    with open("simulation_results/register_reuse.json") as f:
+        reuse = json.load(f)
+    qs = np.array([r["q_nuc"] for r in reuse])
+    mcs = np.array([r["MC_8"] for r in reuse])
+    Tds = np.logspace(-4, 1, 6000)
+    g = GEOM["Trp H-beta (CH2, geminal partner)"]
+    f_bath = bath_ratio_from_water()
+    base = tau_rot2_protein(60.0)
+
+    def ceiling(tau_s, n=1, sx=0.0, mm=min_memory):
+        T1 = dipolar_T1(g["r"], tau_s, 50e-6, n_partners=n, S2=1.0, sum_ext=sx)
+        best = 0.0
+        for Td in Tds:
+            m = float(np.interp(1 - np.exp(-Td / T1), qs, mcs)) - 1.0
+            if m > mm:
+                best = max(best, m * Td)
+        return float(T1), float(best)
+
+    cases = [
+        ("as published, hydration 1.3", base, 1, 0.0, min_memory),
+        ("hydration 1.0", tau_rot2_protein(60.0, hydration=1.0), 1, 0.0, min_memory),
+        ("hydration 1.6", tau_rot2_protein(60.0, hydration=1.6), 1, 0.0, min_memory),
+        ("viscosity x2", tau_rot2_protein(60.0, eta_pa_s=1.38e-3), 1, 0.0, min_memory),
+        ("viscosity x4", tau_rot2_protein(60.0, eta_pa_s=2.76e-3), 1, 0.0, min_memory),
+        ("120 kDa dimer", tau_rot2_protein(120.0), 1, 0.0, min_memory),
+        ("2 dipolar partners", base, 2, 0.0, min_memory),
+        ("3 dipolar partners", base, 3, 0.0, min_memory),
+        ("memory threshold 0.2", base, 1, 0.0, 0.2),
+        ("memory threshold 1.0", base, 1, 0.0, 1.0),
+        ("+ bath (f=0.54)", base, 1, sum_ext_for(g, f_bath), min_memory),
+    ]
+    rows = []
+    print("\n  robustness of the horizon ceiling")
+    print(f"    {'variation':34s} {'tau_c(ns)':>10s} {'T1(ms)':>8s} {'ceiling(ms)':>12s}")
+    for label, tau, n, sx, mm in cases:
+        T1, c = ceiling(tau, n, sx, mm)
+        rows.append(dict(variation=label, mass_kDa=120.0 if "120" in label else 60.0,
+                         n_partners=n, tau_c_ns=float(tau * 1e9),
+                         T1_ms=T1 * 1e3, ceiling_ms=c * 1e3,
+                         in_band=bool(c >= band[0])))
+        print(f"    {label:34s} {tau*1e9:10.2f} {T1*1e3:8.3f} {c*1e3:12.2f}")
+    return rows
+
+
 if __name__ == "__main__":
     os.makedirs(OUT, exist_ok=True)
     out = {"light_driven": light_driven(), "reaction_driven": reaction_driven()}
@@ -227,6 +282,7 @@ if __name__ == "__main__":
     # the intermolecular bath. The old "feasible only for tau_c <= 5 ns" was the
     # last true point of a grid that never sampled between 5 and 10 ns.
     out["critical_tau_c"] = bounds
+    out["robustness"] = robustness()
     with open(f"{OUT}/open5_turnover_estimate.json", "w") as f:
         json.dump(out, f, indent=2)
     print(f"\n  [checkpoint] {OUT}/open5_turnover_estimate.json")

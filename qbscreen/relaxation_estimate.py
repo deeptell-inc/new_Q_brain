@@ -98,12 +98,30 @@ def quadrupolar_T1(chi_hz, tau_c, B_tesla, eta=0.0, gamma=GAMMA_N14, I=1.0):
     return 1.0 / rate
 
 
-def tau_c_protein(mass_kda, T_kelvin=310.0, eta_pa_s=0.69e-3, hydration=1.3):
-    """Stokes-Einstein-Debye correlation time for a globular protein."""
+def tau_rot2_protein(mass_kda, T_kelvin=310.0, eta_pa_s=0.69e-3, hydration=1.3):
+    """RANK-2 Stokes-Einstein-Debye correlation time for a globular protein.
+
+    Rank 2 is the one NMR relaxation wants: the dipolar spectral densities are
+    built from rank-2 spherical harmonics. For a sphere tau_l = 1/(l(l+1)D_r),
+    so tau_1 = 3 tau_2 -- the dielectric/fluorescence-anisotropy convention is
+    three times longer than this.
+
+    The rank is in the name because the two are easy to interchange and the
+    consequence is large in the wrong direction: feeding the rank-1 value
+    (45.7 ns for 60 kDa) into J() gives T1 = 0.81 ms instead of 2.44 ms and a
+    horizon ceiling of 1.8 ms instead of 5.5 ms. That error would strengthen the
+    paper's exclusion, which is exactly why an interface should prevent it
+    rather than a reader catching it.
+    """
     # 1 kDa = 1 kg/mol, so the mass of one molecule is mass_kda / N_A kilograms.
     v_bar = 0.73e-3                                   # m^3/kg, partial specific volume
     V = mass_kda / 6.02214076e23 * v_bar * hydration
-    return eta_pa_s * V / (KB * T_kelvin)
+    return eta_pa_s * V / (KB * T_kelvin)          # = 1/(6 D_r), rank 2
+
+
+# Retained so existing callers keep working; the rank-explicit name is the
+# one to use in new code.
+tau_c_protein = tau_rot2_protein
 
 
 # ─────────────────────────────────────────────────────────────────────
