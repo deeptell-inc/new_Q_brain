@@ -120,64 +120,64 @@
     {
       "tau_c_ns": 0.01,
       "T1_s": 3.7225214250344085,
-      "window": "5.3 - 550 ms",
-      "max_horizon_s": 8.371561607745107,
+      "window": "5.4 - 557 ms",
+      "max_horizon_s": 9.188100554346153,
       "feasible": true
     },
     {
       "tau_c_ns": 0.05,
       "T1_s": 0.7445042850079687,
-      "window": "5.3 - 977 ms",
-      "max_horizon_s": 1.675532277446606,
+      "window": "5.4 - 977 ms",
+      "max_horizon_s": 1.8735783216709834,
       "feasible": true
     },
     {
       "tau_c_ns": 0.1,
       "T1_s": 0.37225214250568267,
-      "window": "5.3 - 1.1e+03 ms",
-      "max_horizon_s": 0.83758285050633,
+      "window": "5.4 - 1.34e+03 ms",
+      "max_horizon_s": 0.9369291751302021,
       "feasible": true
     },
     {
       "tau_c_ns": 0.5,
       "T1_s": 0.07445042851200623,
-      "window": "5.4 - 220 ms",
-      "max_horizon_s": 0.16749293719251518,
+      "window": "5.4 - 268 ms",
+      "max_horizon_s": 0.18736487179148806,
       "feasible": true
     },
     {
       "tau_c_ns": 1.0,
       "T1_s": 0.037225214272987,
-      "window": "5.5 - 110 ms",
-      "max_horizon_s": 0.08377296398055024,
+      "window": "5.6 - 134 ms",
+      "max_horizon_s": 0.09367698846094767,
       "feasible": true
     },
     {
       "tau_c_ns": 2.0,
       "T1_s": 0.018612607170461263,
-      "window": "5.9 - 55.1 ms",
-      "max_horizon_s": 0.041881725169597615,
+      "window": "6 - 67.2 ms",
+      "max_horizon_s": 0.04684549433557568,
       "feasible": true
     },
     {
       "tau_c_ns": 5.0,
       "T1_s": 0.007445042963294257,
-      "window": "9.8 - 22 ms",
-      "max_horizon_s": 0.016743267039676272,
+      "window": "9.8 - 26.9 ms",
+      "max_horizon_s": 0.018740306984011895,
       "feasible": true
     },
     {
       "tau_c_ns": 10.0,
       "T1_s": 0.0037225216514859636,
       "window": "NONE",
-      "max_horizon_s": 0.00837428204470478,
+      "max_horizon_s": 0.009368475586315905,
       "feasible": false
     },
     {
       "tau_c_ns": 15.2,
       "T1_s": 0.002449027597518667,
       "window": "NONE",
-      "max_horizon_s": 0.0055111406119762495,
+      "max_horizon_s": 0.00616283421546195,
       "feasible": false
     }
   ],
@@ -186,12 +186,12 @@
     "tau_protein_ns": 15.243007897844024,
     "per_nucleus": {
       "Trp H-beta (CH2, geminal partner)": {
-        "tau_crit_dry_ns": 8.373515820503236,
-        "tau_crit_wet_ns": 5.43147180080414
+        "tau_crit_dry_ns": 9.368463349342347,
+        "tau_crit_wet_ns": 6.076786494255066
       },
       "flavin 8-alpha CH3 (intra-methyl)": {
-        "tau_crit_dry_ns": 17.28962972164154,
-        "tau_crit_wet_ns": 5.459781765937805
+        "tau_crit_dry_ns": 19.347392439842224,
+        "tau_crit_wet_ns": 10.843250489234924
       }
     }
   },
@@ -202,7 +202,7 @@
       "n_partners": 1,
       "tau_c_ns": 15.243007897844024,
       "T1_ms": 2.442117708093426,
-      "ceiling_ms": 5.491393876416881,
+      "ceiling_ms": 6.1479145275480915,
       "in_band": false
     },
     {
@@ -211,7 +211,7 @@
       "n_partners": 1,
       "tau_c_ns": 11.725390690649245,
       "T1_ms": 3.174752837310202,
-      "ceiling_ms": 7.141222448480914,
+      "ceiling_ms": 7.990402124589749,
       "in_band": false
     },
     {
@@ -220,7 +220,7 @@
       "n_partners": 1,
       "tau_c_ns": 18.760625105038798,
       "T1_ms": 1.98422078220434,
-      "ceiling_ms": 4.4624863530949295,
+      "ceiling_ms": 4.994495271273526,
       "in_band": false
     },
     {
@@ -229,7 +229,7 @@
       "n_partners": 1,
       "tau_c_ns": 30.486015795688047,
       "T1_ms": 1.2210593718176157,
-      "ceiling_ms": 2.7460559111725895,
+      "ceiling_ms": 3.073594009682971,
       "in_band": false
     },
     {
@@ -238,7 +238,7 @@
       "n_partners": 1,
       "tau_c_ns": 60.972031591376094,
       "T1_ms": 0.6105307214503402,
-      "ceiling_ms": 1.373462480355765,
+      "ceiling_ms": 1.5365256942611756,
       "in_band": false
     },
     {
@@ -247,7 +247,7 @@
       "n_partners": 1,
       "tau_c_ns": 30.486015795688047,
       "T1_ms": 1.2210593718176157,
-      "ceiling_ms": 2.7460559111725895,
+      "ceiling_ms": 3.073594009682971,
       "in_band": false
     },
     {
@@ -256,7 +256,7 @@
       "n_partners": 2,
       "tau_c_ns": 15.243007897844024,
       "T1_ms": 1.221058854046713,
-      "ceiling_ms": 2.746055838511563,
+      "ceiling_ms": 3.073592014163203,
       "in_band": false
     },
     {
@@ -265,7 +265,7 @@
       "n_partners": 3,
       "tau_c_ns": 15.243007897844024,
       "T1_ms": 0.814039236031142,
-      "ceiling_ms": 1.8316076933434302,
+      "ceiling_ms": 2.0484886616659685,
       "in_band": false
     },
     {
@@ -274,7 +274,7 @@
       "n_partners": 1,
       "tau_c_ns": 15.243007897844024,
       "T1_ms": 2.442117708093426,
-      "ceiling_ms": 5.491393876416881,
+      "ceiling_ms": 6.1479145275480915,
       "in_band": false
     },
     {
@@ -283,7 +283,7 @@
       "n_partners": 1,
       "tau_c_ns": 15.243007897844024,
       "T1_ms": 2.442117708093426,
-      "ceiling_ms": 4.115970424762969,
+      "ceiling_ms": 4.139659339413581,
       "in_band": false
     },
     {
@@ -292,7 +292,7 @@
       "n_partners": 1,
       "tau_c_ns": 15.243007897844024,
       "T1_ms": 1.5840608871810518,
-      "ceiling_ms": 3.5648545938048892,
+      "ceiling_ms": 3.9862922140620665,
       "in_band": false
     }
   ]

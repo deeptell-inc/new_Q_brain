@@ -819,11 +819,11 @@ $\mathrm{MC}(q{=}1)-C_0=0.002$ cannot manufacture a horizon.}
 \begin{tabular}{lccc}
 $\tau_c$ & $T_1$ ($50~\mu$T) & viable $T_{\rm turn}$ & horizon \\
 \hline
-$0.1$~ns & $372$~ms & $5$--$1100$~ms & $840$~ms \\
-$1$~ns & $37$~ms & $6$--$110$~ms & $84$~ms \\
-$5$~ns & $7.5$~ms & $10$--$22$~ms & $17$~ms \\
-$10$~ns & $3.7$~ms & none & $8.4$~ms \\
-$15.2$~ns (bound) & $2.4$~ms & \textbf{none} & $\mathbf{5.5}$~\textbf{ms} \\
+$0.1$~ns & $372$~ms & $5.4$--$1340$~ms & $937$~ms \\
+$1$~ns & $37$~ms & $5.6$--$134$~ms & $94$~ms \\
+$5$~ns & $7.4$~ms & $9.8$--$27$~ms & $19$~ms \\
+$10$~ns & $3.7$~ms & none & $9.4$~ms \\
+$15.2$~ns (bound) & $2.4$~ms & \textbf{none} & $\mathbf{6.2}$~\textbf{ms} \\
 \end{tabular}
 \end{ruledtabular}
 \end{table}
@@ -835,73 +835,86 @@ pull in opposite directions.
 samples $\tau_c$ at $\ldots,5,10,15.2$~ns and never evaluates anything between $5$
 and $10$, so quoting ``feasible only for $\tau_c\le5$~ns'' reports the last
 sampled point rather than the boundary. Bisecting on the same feasibility
-predicate puts it at $8.37$~ns, a requirement of $1.8\times$ rather than
+predicate puts it at $9.37$~ns, a requirement of $1.6\times$ rather than
 $3\times$.
 
 \paragraph*{The relaxation calculation omitted the intermolecular bath.} Our
 $T_1$ counted only the intramolecular partner. The validation table above
-measures the size of that omission without being asked to: liquid water's
+supplies the scale of that omission: liquid water's
 intramolecular-only prediction is $5.55$~s against a measured total of $3.6$~s, a
-bath contributing $54\%$ of the intramolecular rate. Restoring it shortens
+bath contributing $54\%$ of the intramolecular rate. We use that residual as a
+calibration, not as an independent measurement---$f$ is defined from it, so the
+ratio it restores to unity is an identity. Its transplant onto a protein interior
+is defensible by magnitude rather than by mechanism: the resulting
+$\Sigma_{\rm ext}=0.017$~\AA$^{-6}$ sits at the low end of the $0.016$--$0.030$ a
+uniform protein proton density gives for closest approaches of $2.5$--$2.0$~\AA,
+which is the conservative end for a claim of exclusion. Restoring it shortens
 $T_1$ for the protein-bound proton from $2.4$ to $1.6$~ms, the ceiling from $5.5$
-to $3.6$~ms, and moves the boundary back from $8.37$ to $5.43$~ns---a requirement
-of $2.8\times$. The two errors very nearly cancel, which is why the published
-$\tau_c\lesssim5$~ns and ``about three times'' survive; but they were reached by
+to $4.0$~ms, and moves the boundary back from $9.37$ to $6.08$~ns---a requirement
+of $2.5\times$. The two errors very nearly cancel, which is why the published
+$\tau_c\lesssim5$~ns and ``about three times'' are close but not exact---the
+converged values are $\lesssim6$~ns and $2.5\times$---and they were reached by
 a route that does not support them, and the corrected route is what we now give.
 
 \textbf{A register whose dipolar vector reorients only with the intact protein
-cannot reach the neural band}: its ceiling is $5.5$~ms on the intramolecular
-term alone and $3.6$~ms with the bath, below the band under every turnover rate.
+cannot reach the neural band}: its ceiling is $6.1$~ms on the intramolecular
+term alone and $4.0$~ms with the bath, below the band under every turnover rate.
 The criterion is a statement about $\tau_{\rm eff}=S^2\tau_c+(1-S^2)\tau_{\rm int}$
 and about the total dipolar sum, not about chemical binding. The flavin
 $8\alpha$-CH$_3$ makes the distinction concrete: its intramethyl H--H vector has
 the exact geometric value $S^2=1/4$ and therefore does not co-rotate with the
 protein despite being covalently attached, which on the intramolecular term alone
-would give $T_1=5.0$~ms and a ceiling of $11.3$~ms---inside the band. Its own
-boundary sits at $17.3$~ns without the bath, i.e.\ it would be feasible even at
+would give $T_1=5.0$~ms and a ceiling of $12.7$~ms---inside the band. Its own
+boundary sits at $19.3$~ns without the bath, i.e.\ it would be feasible even at
 the protein's own tumbling rate. With the bath that boundary falls to $5.5$~ns
-and the escape closes. Both candidate nuclei therefore land within a few per cent
-of the same requirement, $\tau_{\rm eff}\lesssim5$~ns.
+and the escape closes. The two candidate nuclei do not land at the same requirement---the methyl's
+boundary is $10.8$~ns against $6.1$~ns for Trp H$\beta$, because its intramethyl
+vector is already partly averaged---but both fall below the protein's own
+$15.2$~ns, the methyl by a factor of $1.4$.
 
 \paragraph*{How much of this depends on the band edge.} The requirement scales
 linearly with where the neural band is taken to start. In extreme narrowing
 $1/T_1\propto\tau_{\rm eff}$, so the ceiling is exactly inversely proportional to
 $\tau_{\rm eff}$ and the required speed-up is
 \begin{equation*}
-\text{speed-up} = 1.82\,(1+f)\times\frac{\text{band edge}}{10~\mathrm{ms}},
+\text{speed-up} = 1.63\,(1+f)\times\frac{\text{band edge}}{10~\mathrm{ms}},
 \end{equation*}
 with $f$ the intermolecular bath ratio. Bisecting numerically agrees with the
 closed form to two decimals. A register that reorients only with the protein
-becomes feasible once the band edge falls below $5.5$~ms on the intramolecular
-term alone, but below only $3.6$~ms once the bath is included. Taking the band to
+becomes feasible once the band edge falls below $6.1$~ms on the intramolecular
+term alone, but below only $4.0$~ms once the bath is included. Taking the band to
 start at $5$~ms rather than $10$~ms therefore does \emph{not} rescue it. We state
 this because the $10$~ms edge is a convention, and the conclusion should be read
 as conditional on it.
 
 \begin{table}[H]
-\caption{\label{tab:robust}Robustness of the ceiling. Every variation we can
-motivate leaves the horizon below the $10$~ms band edge; several were already
-computed for the paper and not reported.}
+\caption{\label{tab:robust}Robustness of the ceiling for the Trp H$\beta$ vector
+($S^2=1$). Each listed variation leaves the horizon below the $10$~ms band edge;
+several were already computed for the paper and not reported. The table varies
+the tumbling time, the partner count and the memory threshold; it does not vary
+the bath ratio $f$ or the bath order parameter, whose sensitivity is given in the
+text, nor $S^2$ itself, which is the separate methyl case above.}
 \begin{ruledtabular}
 \begin{tabular}{lccc}
 variation & $\tau_c$ (ns) & $T_1$ (ms) & ceiling (ms) \\
 \hline
-as published, hydration $1.3$ & $15.24$ & $2.44$ & $5.49$ \\
-hydration $1.0$ & $11.73$ & $3.18$ & $7.14$ \\
-hydration $1.6$ & $18.76$ & $1.98$ & $4.46$ \\
-viscosity $\times2$ & $30.49$ & $1.22$ & $2.75$ \\
-viscosity $\times4$ & $60.97$ & $0.61$ & $1.37$ \\
-$120$~kDa dimer & $30.49$ & $1.22$ & $2.75$ \\
-$2$ dipolar partners & $15.24$ & $1.22$ & $2.75$ \\
-$3$ dipolar partners & $15.24$ & $0.81$ & $1.83$ \\
-memory threshold $0.2$ & $15.24$ & $2.44$ & $5.49$ \\
-memory threshold $1.0$ & $15.24$ & $2.44$ & $4.12$ \\
-$+$ bath ($f=0.54$) & $15.24$ & $1.58$ & $3.56$ \\
+as published, hydration $1.3$ & $15.24$ & $2.44$ & $6.15$ \\
+hydration $1.0$ & $11.73$ & $3.17$ & $7.99$ \\
+hydration $1.6$ & $18.76$ & $1.98$ & $4.99$ \\
+viscosity $\times2$ & $30.49$ & $1.22$ & $3.07$ \\
+viscosity $\times4$ & $60.97$ & $0.61$ & $1.54$ \\
+$120$~kDa dimer & $30.49$ & $1.22$ & $3.07$ \\
+$2$ dipolar partners & $15.24$ & $1.22$ & $3.07$ \\
+$3$ dipolar partners & $15.24$ & $0.81$ & $2.05$ \\
+memory threshold $0.2$ & $15.24$ & $2.44$ & $6.15$ \\
+memory threshold $1.0$ & $15.24$ & $2.44$ & $4.14$ \\
+$+$ bath ($f=0.54$) & $15.24$ & $1.58$ & $3.99$ \\
 \end{tabular}
 \end{ruledtabular}
 \end{table}
 
-The one variation that would move the ceiling the other way is a rank error:
+Several of these shorten the ceiling further. The one that would
+\emph{lengthen} it, and so weaken the exclusion, is a rank error:
 $\tau_{\rm rot}$ here is the \emph{rank-2} correlation time, $1/(6D_r)$, which is
 what the dipolar spectral densities require. The rank-1 value used in dielectric
 and fluorescence-anisotropy work is three times longer ($45.7$~ns), and feeding it
@@ -914,7 +927,7 @@ were simply unknown---into a quantitative and falsifiable one:
 
 \begin{quote}
 \emph{The radical pair must be regenerated catalytically, not photochemically, on
-a register that reorients with $\tau_c\lesssim5$~ns while remaining part of the
+a register that reorients with $\tau_c\lesssim6$~ns while remaining part of the
 same molecule, at a turnover interval drawn from the corresponding row of
 Table~\ref{tab:feasible}: $10$--$22$~ms at $\tau_c=5$~ns, $6$--$110$~ms at
 $1$~ns, $5$--$1100$~ms at $0.1$~ns. The two conditions are not independent, and

@@ -64,12 +64,14 @@ works. Predicting that
 $T_1$ rather than assuming it removes the remaining latitude: at the geomagnetic
 field the register is in extreme narrowing, where relaxation is fastest, and a
 proton on the intact protein relaxes in $2.4$~ms rather than the second we had
-assumed---capping the horizon at $5.5$~ms unless the register reorients at least
-three times faster than the protein. Those two figures count only the
+assumed---capping the horizon at $6.1$~ms unless the register reorients about
+two and a half times faster than the protein. Those two figures count only the
 intramolecular dipolar partner and are therefore upper bounds; restoring the
-intermolecular proton bath, which this work's own validation table measures at
-$54\%$ of the intramolecular rate, shortens them to $1.6$ and $3.6$~ms and
-leaves the threefold requirement intact. What survives is a smaller claim on firmer
+intermolecular proton bath, calibrated on this work's own validation table at
+$54\%$ of the intramolecular rate, shortens them to $1.6$ and $4.0$~ms. The
+requirement survives in kind but not in size: solving the boundary instead of
+reading it off a grid would by itself have given $1.6\times$, the bath brings it
+to $2.5\times$, and that is the figure we now quote. What survives is a smaller claim on firmer
 ground: a criterion whose two constants can be measured in vitro, in place of one
 whose central relaxation time was never measured at all.
 \end{abstract}  
@@ -214,7 +216,7 @@ throughout as $(\mathrm{MC}-C_0)\times T_{\mathrm{turnover}}$, the zero-delay te
 $C_0\simeq1$ carrying no memory. It reaches the neural band only if the register
 is genuinely reused \emph{and} survives the pause, which requires it to be carried
 by protons rather than the quadrupolar flavin $^{14}$N and to reorient with
-$\tau_c\lesssim5$~ns (Supplemental Material, Secs.~S9 and S12).}
+$\tau_c\lesssim6$~ns (Supplemental Material, Secs.~S9 and S12).}
 \end{figure}
 
 We drive the reservoir the way a real turnover does. Each cycle the nuclei are
@@ -514,8 +516,8 @@ A turnover of $10$--$100$~ms therefore places the memory horizon at $19$--$188$~
 inside the neural band, \emph{provided the register survives the pause}. That
 proviso is not free, and Sec.~S12 shows it is what now binds: at the geomagnetic
 field a proton on the intact protein relaxes in $2.4$~ms, which caps the horizon
-at $5.5$~ms and puts it below the band unless the register reorients at least
-three times faster than the protein. The numbers in this table should therefore
+at $6.1$~ms and puts it below the band unless the register reorients about two
+and a half times faster than the protein. The numbers in this table should therefore
 be read as what the spin dynamics permit, not as what the chemistry delivers. We
 note also that a $1$~ms turnover gives $1.9$~ms, \emph{below} the $10$~ms--$1$~s
 band drawn in Fig.~\ref{fig:criterion}(a); the originally quoted range of
@@ -595,8 +597,9 @@ biological reservoir:
 \emph{The same nuclear register must be re-used across successive turnovers, and
 successive turnovers must be driven by distinct input samples. The register must
 be carried by protons---the flavin $^{14}$N is quadrupolar and cannot hold
-one---and must reorient with $\tau_c\lesssim5$~ns, since at the geomagnetic field
-a rigidly protein-bound proton relaxes in $2.4$~ms. Given all of that, the memory
+one---and must reorient with $\tau_c\lesssim6$~ns, since at the geomagnetic field
+a proton whose dipolar vector reorients only with the protein relaxes in
+$2.4$~ms on the intramolecular term alone, $1.6$~ms with the intermolecular bath. Given all of that, the memory
 horizon is $(\mathrm{MC}-C_0)\times T_{\rm turnover}$, bounded above by
 $(\mathrm{MC}-C_0)\times T_{1n}$; without it, the system retains nothing.}
 \end{quote}
@@ -606,8 +609,8 @@ much of it needed the spin dynamics. The quantity $\mathrm{MC}-C_0\simeq1.9$, an
 with it the horizon, comes from the reservoir calculation. The constants that
 decide whether the horizon reaches the neural band divide unevenly. The proton
 $T_1$ of $2.4$~ms and the photon budget are relaxation theory and photophysics
-and would have followed without the master equation. The $5.5$~ms cap and the
-$\tau_c\lesssim5$~ns requirement would not: both are obtained by feeding
+and would have followed without the master equation. The $6.1$~ms cap and the
+$\tau_c\lesssim6$~ns requirement would not: both are obtained by feeding
 $q=1-\exp(-T_{\rm d}/T_{1n})$ into the measured $\mathrm{MC}(q)$ curve, which is
 itself an output of the master equation. We previously claimed all four were
 independent of the spin dynamics; that was wrong for the last two. The population-versus-coherence finding is real, but at the
@@ -849,24 +852,26 @@ $\tau_{\rm eff}=S^2\tau_c+(1-S^2)\tau_{\rm int}$, together with the dipolar sum
 $\Sigma=\sum_j S_j^2 r_j^{-6}$ over intramolecular \emph{and} intermolecular
 partners. For a vector that reorients only with the intact $60$~kDa protein
 ($S^2=1$, $\tau_c=15.2$~ns) the intramolecular geminal term alone gives
-$T_1\le2.4$~ms and a ceiling of $\le5.5$~ms; adding the intermolecular proton
-bath---which the water row of our own validation table measures independently at
-$54\%$ of the intramolecular rate---shortens these to $1.6$ and $3.6$~ms. Fast
+$T_1\le2.4$~ms and a ceiling of $\le6.1$~ms; adding the intermolecular proton
+bath---whose size we calibrate on the water row of our own validation table, at
+$54\%$ of the intramolecular rate---shortens these to $1.6$ and $4.0$~ms. That
+row is an empirical anchor rather than an independent check: $f$ is defined as
+its residual, so the agreement it then shows is an identity. Fast
 internal motion lengthens $T_1$: the intramethyl H--H vector of the flavin
 $8\alpha$-CH$_3$ has the exact geometric value $S^2=1/4$, because that vector does
 \emph{not} co-rotate rigidly with the protein even though the methyl is
 covalently attached, and the intramethyl coupling alone would give $T_1=5.0$~ms
 and a ceiling of $11.3$~ms---inside the band. That escape does not survive the
-bath: it moves the methyl's own boundary from $17.3$ to $5.5$~ns. The criterion is
+bath: it moves the methyl's own boundary from $19.3$ to $10.8$~ns. The criterion is
 therefore quantitative and vector-specific rather than a statement about binding:
-the register's dipolar vector must lose orientational memory about three times
-faster than the intact protein ($\tau_{\rm eff}\lesssim5$~ns), a factor that
-would be $1.8$ if the intermolecular bath were neglected. Second, the drive cannot be light: with the
+the register's dipolar vector must lose orientational memory about two and a
+half times faster than the intact protein ($\tau_{\rm eff}\lesssim6$~ns), a factor
+that would be $1.6$ if the intermolecular bath were neglected. Second, the drive cannot be light: with the
 measured flavin extinction coefficient, a single flavin turns over once per
 $7.7$~s in full sunlight and once per some hundreds of years inside a skull, so a
 photochemical cycle fails by about ten orders of magnitude and the regeneration
 must be catalytic. The criterion that survives is correspondingly specific---the
-pair regenerated catalytically on a register with $\tau_c\lesssim5$~ns, at a
+pair regenerated catalytically on a register with $\tau_c\lesssim6$~ns, at a
 turnover interval that depends on how mobile that register is---$10$--$22$~ms at
 $\tau_c=5$~ns, widening to $6$--$110$~ms at $1$~ns and $5$--$1100$~ms at
 $0.1$~ns---and both of its parameters are measurable in vitro by
@@ -895,7 +900,7 @@ classical network matched channel-for-channel exceeds the radical pair. The
 obstacle usually invoked, a microsecond memory horizon, does not survive scrutiny:
 the register is nuclear and survives recombination, so the clock is the turnover
 interval, and a $10$--$100$~ms turnover places the horizon at $19$--$188$~ms---so
-long as the register itself lasts that long, which for a rigidly protein-bound
+long as the register itself lasts that long, which for a vector reorienting only with the whole protein
 nucleus at the geomagnetic field it does not. What
 decides the question instead is whether the same nuclear register is reused from
 one turnover to the next; if it is not, the capacity falls to a memoryless
@@ -913,9 +918,10 @@ a conclusion reached independently by asking what survives when the copies in a
 $10^{10}$-molecule pool fall out of step. We offer the criterion as the thing to
 test, in the sharpened form that the relevant constant is the proton $T_1$ of the
 diamagnetic product \emph{at the geomagnetic field}, which our own calculation
-puts at $2.4$~ms for a rigidly protein-bound nucleus rather than at the second
+puts at $2.4$~ms---$1.6$~ms once the intermolecular bath is restored---for a
+nucleus whose dipolar vector reorients only with the protein, rather than at the second
 suggested by high-field measurements---so that the register must reorient at
-least three times faster than the protein for the horizon to reach the neural
+least two and a half times faster than the protein for the horizon to reach the neural
 band at all. The turnover interval of a neuronal cryptochrome has not been
 measured.
 

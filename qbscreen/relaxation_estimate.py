@@ -169,9 +169,21 @@ FLAVIN_N = {"N5": dict(chi=3.6e6, eta=0.11), "N10": dict(chi=4.8e6, eta=0.33)}
 TRP_N = dict(chi=3.38e6, eta=0.02)        # indole N, Suenram 1988 (microwave)
 
 GEOM = {
-    # register candidates, with the dominant dipolar partner
-    "Trp H-beta (CH2, geminal partner)": dict(r=1.78, n=1, S2=1.0, tau_int=None),
-    "flavin 8-alpha CH3 (intra-methyl)": dict(r=1.79, n=2, S2=0.25, tau_int=10e-12),
+    # register candidates, with the dominant dipolar partner.
+    #
+    # S2_ext is the order parameter of the vectors to the INTERMOLECULAR bath,
+    # which is not the same as S2. For Trp H-beta the surrounding protons really
+    # do co-rotate with the protein, so S2_ext = 1. For a methyl proton they do
+    # not: the proton circles the C3 axis at ~1.03 A, which partially averages
+    # every vector to a fixed external partner. Averaging Y_2m/r^3 over that
+    # circle for external protons at 2.4-4.0 A gives S2_ext = 0.54-0.79, with an
+    # r^-6-weighted bath average near 0.70. Leaving it at 1 would overestimate
+    # the methyl's bath -- in the direction that strengthens this paper's own
+    # exclusion, which is the wrong way to be wrong.
+    "Trp H-beta (CH2, geminal partner)": dict(r=1.78, n=1, S2=1.0, tau_int=None,
+                                              S2_ext=1.0),
+    "flavin 8-alpha CH3 (intra-methyl)": dict(r=1.79, n=2, S2=0.25, tau_int=10e-12,
+                                              S2_ext=0.70),
 }
 
 
@@ -192,11 +204,25 @@ def bath_ratio_from_water():
     return dipolar_T1(1.51, 2.5e-12, 9.4, n_partners=1) / 3.6 - 1.0
 
 
-def sum_ext_for(g, f=None):
-    """Intermolecular sum (A^-6) for a GEOM entry, scaled from the water row."""
+def sum_ext_for(g=None, f=None):
+    """Intermolecular sum (A^-6) for a nucleus in a protein interior.
+
+    This used to be scaled by the entry's own n/r^6, which gave the methyl a
+    bath 1.9x larger than Trp H-beta's purely because it has two geminal
+    partners. The intermolecular sum is set by the density and closest approach
+    of surrounding protons and has nothing to do with how many geminal partners
+    the nucleus happens to have, so the same interior bath is now used for both.
+
+    The magnitude comes from the water validation row transplanted onto the
+    Trp geminal geometry, which lands at 0.017 A^-6 -- inside, and at the low
+    end of, the 0.016-0.030 A^-6 a uniform protein proton density gives for
+    closest approaches of 2.5-2.0 A. Being at the low end is the conservative
+    choice for a claim of exclusion.
+    """
     if f is None:
         f = bath_ratio_from_water()
-    return f * g["n"] / g["r"] ** 6
+    trp = GEOM["Trp H-beta (CH2, geminal partner)"]
+    return f * trp["n"] / trp["r"] ** 6
 
 
 def predict(mass_kda=60.0, fields=(50e-6, 1e-3, 0.5, 9.4)):
