@@ -113,7 +113,7 @@ superseded scan and is no longer the case.
 The central claims---the agreement of the Liouville-space solver with the coherent
 limit, the Dambre capacity bound, the correlated-pair-birth readout capacities, and
 the nuclear-register reuse criterion---are covered by an automated test suite
-(\texttt{qbscreen/tests/}; 258 tests, all passing:
+(\texttt{qbscreen/tests/}; 286 tests, all passing:
 \texttt{test\_panel\_claims.py} binds the headline quantities and load-bearing
 claims, and \texttt{test\_table\_rows.py} binds the capacity and standard-deviation cells of
 every table, with the expected values transcribed from the manuscript rather than
@@ -121,7 +121,11 @@ from the data files, while \texttt{test\_printed\_cells.py} parses the printed
 cells back out of the \texttt{.tex} and checks them against the data, so a drift
 on either side fails. \texttt{test\_spin\_parameters.py} binds the input-parameter
 table and \texttt{test\_cross\_document\_refs.py} the hand-typed cross-document
-table references; derived-time and raw-IPC columns are not yet bound). Every number reported in the paper can be regenerated from a clean checkout with
+table references. The table tests see only tables, so
+\texttt{test\_prose\_numbers.py} binds the criterion numbers printed in
+sentences---in this file's companions \texttt{README.md}, the claims ledger and
+the cover letter as well as the manuscript---and fails when a new one appears
+with neither a binding nor a recorded waiver; derived-time and raw-IPC columns are not yet bound). Every number reported in the paper can be regenerated from a clean checkout with
 the commands below; \texttt{scripts/regenerate\_all.sh} runs exactly this list and
 checks the result byte-for-byte against the shipped files; the three figures are rebuilt with \texttt{manuscript/make\_schematic.py}
 and \texttt{manuscript/make\_fig\_criterion.py}. One shipped file,
