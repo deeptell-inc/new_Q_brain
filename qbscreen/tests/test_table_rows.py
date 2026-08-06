@@ -174,8 +174,12 @@ def test_predicted_T1_row():
     assert p["tau_c_s"] == pytest.approx(15.2e-9, rel=0.02)
 
 
-@pytest.mark.parametrize("tau_ns,T1,horizon", [(0.1, 0.372, 0.838), (1.0, 0.0372, 0.0838),
-                                               (5.0, 0.00745, 0.0167), (15.2, 0.00245, 0.00551)])
+@pytest.mark.parametrize("tau_ns,T1,horizon", [
+    (0.1, 0.3723, 0.9369),
+    (1.0, 0.03723, 0.09368),
+    (5.0, 0.007445, 0.01874),
+    (15.2, 0.002449, 0.006163),
+])
 def test_feasible_region_row(tau_ns, T1, horizon):
     rows = {r["tau_c_ns"]: r for r in _load(PANEL, "open5_turnover_estimate")["feasible_region"]}
     assert rows[tau_ns]["T1_s"] == pytest.approx(T1, rel=0.02)
@@ -375,10 +379,13 @@ def test_register_reuse_row(q, mc5, mc8):
 
 
 # ── SI Table S15: the feasible-region windows, as printed ────────────
-@pytest.mark.parametrize("tau_ns,window", [(0.1, "5.3 - 1.1e+03 ms"),
-                                           (1.0, "5.5 - 110 ms"),
-                                           (5.0, "9.8 - 22 ms"),
-                                           (10.0, "NONE"), (15.2, "NONE")])
+@pytest.mark.parametrize("tau_ns,window", [
+    (0.1, "5.4 - 1.34e+03 ms"),
+    (1.0, "5.6 - 134 ms"),
+    (5.0, "9.8 - 26.9 ms"),
+    (10.0, "NONE"),
+    (15.2, "NONE"),
+])
 def test_feasible_window_string(tau_ns, window):
     """The criterion sentence quotes these windows; they must be the stored ones."""
     rows = {r["tau_c_ns"]: r for r in _load(PANEL, "open5_turnover_estimate")["feasible_region"]}
@@ -491,17 +498,17 @@ _ROBUST = _load(PANEL, "open5_turnover_estimate")["robustness"]
 
 
 @pytest.mark.parametrize("variation,tau_c,T1,ceiling", [
-    ("as published, hydration 1.3", 15.24, 2.442, 5.49),
-    ("hydration 1.0", 11.73, 3.175, 7.14),
-    ("hydration 1.6", 18.76, 1.984, 4.46),
-    ("viscosity x2", 30.49, 1.221, 2.75),
-    ("viscosity x4", 60.97, 0.611, 1.37),
-    ("120 kDa dimer", 30.49, 1.221, 2.75),
-    ("2 dipolar partners", 15.24, 1.221, 2.75),
-    ("3 dipolar partners", 15.24, 0.814, 1.83),
-    ("memory threshold 0.2", 15.24, 2.442, 5.49),
-    ("memory threshold 1.0", 15.24, 2.442, 4.12),
-    ("+ bath (f=0.54)", 15.24, 1.584, 3.56),
+    ("as published, hydration 1.3", 15.24, 2.442, 6.15),
+    ("hydration 1.0", 11.73, 3.175, 7.99),
+    ("hydration 1.6", 18.76, 1.984, 4.99),
+    ("viscosity x2", 30.49, 1.221, 3.07),
+    ("viscosity x4", 60.97, 0.611, 1.54),
+    ("120 kDa dimer", 30.49, 1.221, 3.07),
+    ("2 dipolar partners", 15.24, 1.221, 3.07),
+    ("3 dipolar partners", 15.24, 0.814, 2.05),
+    ("memory threshold 0.2", 15.24, 2.442, 6.15),
+    ("memory threshold 1.0", 15.24, 2.442, 4.14),
+    ("+ bath (f=0.54)", 15.24, 1.584, 3.99),
 ])
 def test_robustness_row(variation, tau_c, T1, ceiling):
     r = next(x for x in _ROBUST if x["variation"] == variation)

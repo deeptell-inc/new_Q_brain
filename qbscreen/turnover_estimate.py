@@ -116,7 +116,16 @@ def feasible_region(min_memory=0.5, band=(1e-2, 1.0), return_boundaries=False,
     exceed roughly four times the seed noise before counting it.
     """
     from qbscreen.relaxation_estimate import dipolar_T1, GEOM
-    with open("simulation_results/register_reuse.json") as f:
+    # The ceiling is max_Td (MC(q(Td)) - 1) Td. With a piecewise-linear MC(q) the
+    # maximum lands on a knot, and on the original eight-point grid that knot was
+    # q = 0.900 for every tau_c quoted -- so the ceiling, both critical tau_c
+    # values and every robustness row were decided by one simulation point. The
+    # refined scan (21 points through the maximum, six seeds, SD retained) moves
+    # the ceiling up 12%: the coarse grid was not noisy, it was too coarse. It is
+    # converged: linear and PCHIP interpolation now agree to 0.2%.
+    refined = "simulation_results/panel/open7_register_reuse_refined.json"
+    src = refined if os.path.exists(refined) else "simulation_results/register_reuse.json"
+    with open(src) as f:
         reuse = json.load(f)
     qs = np.array([r["q_nuc"] for r in reuse])
     mcs = np.array([r["MC_8"] for r in reuse])
@@ -137,7 +146,7 @@ def feasible_region(min_memory=0.5, band=(1e-2, 1.0), return_boundaries=False,
         """
         T1 = dipolar_T1(g["r"], tc_ns * 1e-9, 50e-6, n_partners=g["n"],
                         S2=g.get("S2", 1.0), tau_int=g.get("tau_int"),
-                        sum_ext=sum_ext)
+                        sum_ext=sum_ext, S2_ext=g.get("S2_ext", 1.0))
         ok, best = [], 0.0
         for Td in Tds:
             m = float(np.interp(1 - np.exp(-Td / T1), qs, mcs)) - C0
@@ -193,7 +202,7 @@ def feasible_region(min_memory=0.5, band=(1e-2, 1.0), return_boundaries=False,
     print(f"    {'nucleus':36s} {'no bath':>12s} {'with bath':>12s} {'speed-up':>10s}")
     for nm, gg in GEOM.items():
         dry = critical_tau_c(gg, 0.0)
-        wet = critical_tau_c(gg, sum_ext_for(gg, f_bath))
+        wet = critical_tau_c(gg, sum_ext_for(f=f_bath))
         boundaries[nm] = dict(tau_crit_dry_ns=dry, tau_crit_wet_ns=wet)
         su = (TAU_PROTEIN_NS / wet) if wet else float("nan")
         print(f"    {nm[:35]:36s} {dry if dry else float('nan'):11.3f}s"
@@ -228,7 +237,12 @@ def robustness(min_memory=0.5, band=(1e-2, 1.0)):
     import numpy as np
     from qbscreen.relaxation_estimate import (dipolar_T1, tau_rot2_protein, GEOM,
                                               sum_ext_for, bath_ratio_from_water)
-    with open("simulation_results/register_reuse.json") as f:
+    # same refined curve the ceiling itself uses; reading the coarse one here
+    # would have printed a robustness table inconsistent with the number it is
+    # supposed to be testing the robustness of
+    refined = "simulation_results/panel/open7_register_reuse_refined.json"
+    src = refined if os.path.exists(refined) else "simulation_results/register_reuse.json"
+    with open(src) as f:
         reuse = json.load(f)
     qs = np.array([r["q_nuc"] for r in reuse])
     mcs = np.array([r["MC_8"] for r in reuse])

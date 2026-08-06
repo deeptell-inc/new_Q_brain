@@ -224,6 +224,49 @@ def grid_convergence(n_t_list=(24, 48, 96, 192), L=700, n_seeds=6):
     return out
 
 
+def register_reuse_refined(L=700, n_seeds=6):
+    """Re-scan MC(q) densely where the horizon ceiling is actually decided.
+
+    The coarse scan below samples q at 0, 0.1, 0.3, 0.5, 0.7, 0.9, 0.99, 1. The
+    ceiling is max_Td (MC(q(Td)) - 1) Td, and with linear interpolation between
+    those knots the maximum lands ON a knot -- q = 0.900 for every tau_c we
+    quote. So the 5.5 ms ceiling, both critical tau_c values and all eleven rows
+    of the robustness table are decided by one simulation point, whose seed
+    scatter the coarse scan computed and then discarded (only the mean was
+    stored).
+
+    That is the same pathology as reading a boundary off a coarse tau_c grid,
+    which this package fixed on the tau_c axis and left standing on the q axis.
+    This function measures it: a dense grid through the maximum, with the
+    standard deviation kept.
+    """
+    import numpy as np
+    from qbscreen.reservoir import build_reservoir_H, memory_and_ipc
+    qs = tuple(np.round(np.concatenate([
+        [0.0, 0.1, 0.3, 0.5, 0.7],
+        np.arange(0.80, 0.9601, 0.02),
+        [0.97, 0.98, 0.99, 1.0]]), 4))
+    H = build_reservoir_H(**CRY)
+    out = []
+    print(f"\n  refined register-reuse scan ({len(qs)} q-points, {n_seeds} seeds)")
+    print(f"  {'q':>6} {'MC_8':>9} {'sd':>8}")
+    for q in qs:
+        acc = []
+        for sd in range(n_seeds):
+            rng = np.random.default_rng(sd)
+            s = rng.uniform(0, 1, L + 80)
+            r8 = run_routes(s, H, q_nuc=float(q))
+            acc.append(memory_and_ipc(r8["cidnp"], s[80:])["MC"]
+                       if isinstance(r8, dict) and "cidnp" in r8 else np.nan)
+        out.append(dict(q_nuc=float(q), MC_8=float(np.mean(acc)),
+                        MC_8_sd=float(np.std(acc, ddof=1)), n_seeds=n_seeds))
+        print(f"  {q:>6.3f} {out[-1]['MC_8']:>9.4f} {out[-1]['MC_8_sd']:>8.4f}", flush=True)
+    with open("simulation_results/panel/open7_register_reuse_refined.json", "w") as f:
+        json.dump(out, f, indent=2)
+    print("  [checkpoint] simulation_results/panel/open7_register_reuse_refined.json")
+    return out
+
+
 def register_reuse(qs=(0.0, 0.1, 0.3, 0.5, 0.7, 0.9, 0.99, 1.0), L=700, n_seeds=4):
     """The falsifiable criterion: capacity versus the probability q that the
     nuclear register is depolarised between turnovers.  q = 0 is full reuse;
