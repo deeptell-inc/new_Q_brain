@@ -1,0 +1,184 @@
+{
+  "light_driven": [
+    {
+      "condition": "full sunlight, at the surface",
+      "flux_photons_cm2_s": 3e+16,
+      "k_turnover_s": 0.1296411078906764,
+      "T_turnover_s": 7.713602701106804
+    },
+    {
+      "condition": "overcast daylight",
+      "flux_photons_cm2_s": 3000000000000000.0,
+      "k_turnover_s": 0.01296411078906764,
+      "T_turnover_s": 77.13602701106804
+    },
+    {
+      "condition": "bright indoor lighting",
+      "flux_photons_cm2_s": 30000000000000.0,
+      "k_turnover_s": 0.0001296411078906764,
+      "T_turnover_s": 7713.602701106804
+    },
+    {
+      "condition": "moonlight",
+      "flux_photons_cm2_s": 30000000000.0,
+      "k_turnover_s": 1.296411078906764e-07,
+      "T_turnover_s": 7713602.701106803
+    },
+    {
+      "condition": "inside the skull (blue, ~1 cm of tissue)",
+      "flux_photons_cm2_s": 30000000.000000004,
+      "k_turnover_s": 1.2964110789067642e-10,
+      "T_turnover_s": 7713602701.106802
+    }
+  ],
+  "reaction_driven": [
+    {
+      "enzyme": "slow flavoenzyme",
+      "k_cat_s": 1.0,
+      "T_turnover_s": 1.0
+    },
+    {
+      "enzyme": "typical flavoenzyme",
+      "k_cat_s": 50.0,
+      "T_turnover_s": 0.02
+    },
+    {
+      "enzyme": "fast flavoenzyme",
+      "k_cat_s": 1000.0,
+      "T_turnover_s": 0.001
+    }
+  ],
+  "register_survival": [
+    {
+      "tau_c_ns": 0.05,
+      "regime": "small, freely tumbling",
+      "T1_s": 0.7445042850079687,
+      "q": [
+        0.0013422739571851139,
+        0.013341952624234876,
+        0.1256876273309685,
+        0.7389845332431227
+      ]
+    },
+    {
+      "tau_c_ns": 0.1,
+      "regime": "small, freely tumbling",
+      "T1_s": 0.37225214250568267,
+      "q": [
+        0.0026827462149818793,
+        0.02650589754852306,
+        0.23557787499691174,
+        0.9318709261128545
+      ]
+    },
+    {
+      "tau_c_ns": 0.5,
+      "regime": "loosely tethered",
+      "T1_s": 0.07445042851200623,
+      "q": [
+        0.013341952622239472,
+        0.1256876273132872,
+        0.7389845331903375,
+        0.9999985322150584
+      ]
+    },
+    {
+      "tau_c_ns": 1.0,
+      "regime": "loosely tethered",
+      "T1_s": 0.037225214272987,
+      "q": [
+        0.026505897532773437,
+        0.2355778748732401,
+        0.9318709260026323,
+        0.9999999999978456
+      ]
+    },
+    {
+      "tau_c_ns": 5.0,
+      "regime": "loosely tethered",
+      "T1_s": 0.007445042963294257,
+      "q": [
+        0.12568762554516144,
+        0.7389845279118101,
+        0.9999985322147616,
+        1.0
+      ]
+    },
+    {
+      "tau_c_ns": 15.2,
+      "regime": "protein-bound (60 kDa)",
+      "T1_s": 0.002449027597518667,
+      "q": [
+        0.33523742304402493,
+        0.9831474498950581,
+        1.0,
+        1.0
+      ]
+    }
+  ],
+  "feasible_region": [
+    {
+      "tau_c_ns": 0.01,
+      "T1_s": 3.7225214250344085,
+      "window": "5.3 - 550 ms",
+      "max_horizon_s": 8.371561607745107,
+      "feasible": true
+    },
+    {
+      "tau_c_ns": 0.05,
+      "T1_s": 0.7445042850079687,
+      "window": "5.3 - 977 ms",
+      "max_horizon_s": 1.675532277446606,
+      "feasible": true
+    },
+    {
+      "tau_c_ns": 0.1,
+      "T1_s": 0.37225214250568267,
+      "window": "5.3 - 1.1e+03 ms",
+      "max_horizon_s": 0.83758285050633,
+      "feasible": true
+    },
+    {
+      "tau_c_ns": 0.5,
+      "T1_s": 0.07445042851200623,
+      "window": "5.4 - 220 ms",
+      "max_horizon_s": 0.16749293719251518,
+      "feasible": true
+    },
+    {
+      "tau_c_ns": 1.0,
+      "T1_s": 0.037225214272987,
+      "window": "5.5 - 110 ms",
+      "max_horizon_s": 0.08377296398055024,
+      "feasible": true
+    },
+    {
+      "tau_c_ns": 2.0,
+      "T1_s": 0.018612607170461263,
+      "window": "5.9 - 55.1 ms",
+      "max_horizon_s": 0.041881725169597615,
+      "feasible": true
+    },
+    {
+      "tau_c_ns": 5.0,
+      "T1_s": 0.007445042963294257,
+      "window": "9.8 - 22 ms",
+      "max_horizon_s": 0.016743267039676272,
+      "feasible": true
+    },
+    {
+      "tau_c_ns": 10.0,
+      "T1_s": 0.0037225216514859636,
+      "window": "NONE",
+      "max_horizon_s": 0.00837428204470478,
+      "feasible": false
+    },
+    {
+      "tau_c_ns": 15.2,
+      "T1_s": 0.002449027597518667,
+      "window": "NONE",
+      "max_horizon_s": 0.0055111406119762495,
+      "feasible": false
+    }
+  ]
+}

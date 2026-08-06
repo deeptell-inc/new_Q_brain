@@ -301,4 +301,12 @@ def run(L=1200, n_seeds=10):
 
 
 if __name__ == "__main__":
-    run()
+    # run() alone left coherence_tradeoff.json and cryptochrome_reality.json
+    # unproduced by any documented command, so a clean-room regeneration could
+    # not recreate them. Dispatch on the argument, as semiclassical.py does.
+    import sys
+    which = sys.argv[1:] or ["run"]
+    for w in which:
+        {"run": run,
+         "tradeoff": coherence_tradeoff,
+         "cryptochrome": cryptochrome_reality}[w]()

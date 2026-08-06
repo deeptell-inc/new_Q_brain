@@ -5,6 +5,8 @@
 \usepackage{times}
 \usepackage{hyperref}
 \usepackage{xcolor}
+\usepackage[htt]{hyphenat}   % allow \texttt{} filenames to break across lines
+\sloppy
 \hypersetup{colorlinks=true, urlcolor=blue, citecolor=blue}
 \setlength{\parskip}{6pt}
 \setlength{\parindent}{0pt}
@@ -46,9 +48,34 @@ single-electron-reset control that reproduces the artifact it replaces;
 readout routes with recombination active, the product-weighted CIDNP observable, the
 turnover clock, and the nuclear-register depolarisation parameter $q$;
 \item \texttt{qbscreen/final\_numbers.py} --- protocol-consistent recomputation of
-every headline quantity reported in the main text and ESI;
+the engineered-point capacity, coherence fraction, classical baselines and $T_2^e$
+scan; the chemical-readout, clock and criterion headline numbers come from
+\texttt{readout\_routes.py} and \texttt{panel\_response.py};
+\item \texttt{qbscreen/panel\_response.py} --- the referee-requested controls:
+the product-state register of Eq.~(2), the per-route memoryless floors at $q=1$,
+the delay-resolved memory kernel, the twelve-seed turnover-clock scan with paired
+statistics, the grid convergence of MC, the depolarising-versus-dephasing nuclear
+channel comparison, the cryptochrome-point classical baselines, and the ridge and
+shot-noise sensitivity scans. Outputs are written to
+\texttt{simulation\_results/panel/};
 \item \texttt{qbscreen/qrc\_benchmarks.py} --- classical echo-state-network
 baselines, the NARMA2 benchmark, and the coherence-time scan;
+\item \texttt{qbscreen/semiclassical.py} --- the classical-spin reference model
+for the coherence fraction (ESI, S8);
+\item \texttt{qbscreen/nuclide\_register.py} --- per-nucleus register relaxation,
+i.e.\ whether a proton-only register suffices (ESI, S9);
+\item \texttt{qbscreen/ensemble\_pooled.py} --- pooled ensembles with
+heterogeneous couplings, desynchronised turnover, and heterogeneous relaxation
+times with the mean-field control that separates the spread from the shift in
+mean survival (ESI, S10);
+\item \texttt{qbscreen/general\_spin.py} --- anisotropic hyperfine tensors and
+$^{14}$N as spin-1 (ESI, S11);
+\item \texttt{qbscreen/relaxation\_estimate.py} and
+\texttt{qbscreen/turnover\_estimate.py} --- prediction of the two constants the
+criterion depends on, with the relaxation calculator validated against three
+measured systems (ESI, S12);
+\item \texttt{qbscreen/product\_carrier\_audit.py} --- the adverse sensitivity
+analyses re-run with the product register (ESI, S4);
 \item \texttt{manuscript/make\_schematic.py} and
 \texttt{manuscript/make\_fig\_criterion.py} --- Figs.~1--3.
 \end{itemize}
@@ -59,24 +86,71 @@ All numerical outputs underlying the figures and tables are provided as JSON fil
 \texttt{final\_numbers.json}, \texttt{corrected\_injection.json},
 \texttt{readout\_routes.json}, \texttt{register\_reuse.json},
 \texttt{grid\_convergence.json}, \texttt{qrc\_benchmarks.json} and
-\texttt{cryptochrome\_reality.json}. No experimental data were generated; the study
+\texttt{cryptochrome\_reality.json}, together with the referee-response outputs in
+\texttt{simulation\_results/panel/} (\texttt{c1}--\texttt{c6}, \texttt{m6}--\texttt{m9},
+\texttt{open1}--\texttt{open6}, \texttt{s2} and \texttt{audit3}), which carry the
+numbers added in revision.
+Three drivers---\texttt{ensemble.py}, \texttt{quantum\_vs\_classical.py} and
+\texttt{run\_reservoir} in \texttt{reservoir.py}---still implement the superseded
+single-electron reset and are retained as controls only; no reported result
+derives from them, though the capacity estimators in \texttt{reservoir.py} are
+used throughout. No experimental data were generated; the study
 is entirely computational. Every reported capacity is out of sample, is quoted with
-its shuffled-input null floor, and is shown to be converged in sample length; values
-are means over $4$--$10$ input realisations with the stated standard deviations;
-the turnover-clock scan uses a single realisation, since the quantity of interest
-there is the ratio of memory capacities across pause lengths on the same input.
+its route-specific memoryless floor, and is shown to be converged in sample length
+and in the time grid; capacities are means over $3$--$12$ input realisations with the
+stated standard deviations (the ridge and shot-noise sensitivity scans, the semiclassical
+integration-step check and the superseded clock scan of ESI Table~S7 are
+single-realisation and are excluded): twelve for the turnover-clock scan, four for the
+register-reuse and nuclear-channel scans and the semiclassical reference, three
+for the ensemble and anisotropy scans, and six to eight elsewhere. The turnover-clock scan, which carries the
+central claim, uses twelve realisations; because the same seeds are used
+at every pause length, the change in capacity across pause lengths is reported as
+a paired difference with its standard error. An earlier version of this statement
+described the clock scan as using a single realisation, which was correct of the
+superseded scan and is no longer the case.
 
 \noindent\textbf{Reproducibility.}
 The central claims---the agreement of the Liouville-space solver with the coherent
 limit, the Dambre capacity bound, the correlated-pair-birth readout capacities, and
 the nuclear-register reuse criterion---are covered by an automated test suite
-(\texttt{qbscreen/tests/}; 28 tests, all passing). All figures and numbers can be
-regenerated from a clean checkout with
+(\texttt{qbscreen/tests/}; 243 tests, all passing:
+\texttt{test\_panel\_claims.py} binds the headline quantities and load-bearing
+claims, and \texttt{test\_table\_rows.py} binds the capacity and standard-deviation cells of
+every table, with the expected values transcribed from the manuscript rather than
+from the data files, while \texttt{test\_printed\_cells.py} parses the printed
+cells back out of the \texttt{.tex} and checks them against the data, so a drift
+on either side fails. \texttt{test\_spin\_parameters.py} binds the input-parameter
+table and \texttt{test\_cross\_document\_refs.py} the hand-typed cross-document
+table references; derived-time and raw-IPC columns are not yet bound). Every number reported in the paper can be regenerated from a clean checkout with
+the commands below; \texttt{scripts/regenerate\_all.sh} runs exactly this list and
+checks the result byte-for-byte against the shipped files; the three figures are rebuilt with \texttt{manuscript/make\_schematic.py}
+and \texttt{manuscript/make\_fig\_criterion.py}. One shipped file,
+\texttt{open5\_feasible\_region.json}, duplicates a block inside
+\texttt{open5\_turnover\_estimate.json} and has no separate command.
 \begin{quote}\small
 \texttt{pip install -e .}\\
 \texttt{python -m pytest qbscreen/tests/ -q}\\
 \texttt{python -m qbscreen.final\_numbers}\\
-\texttt{python -m qbscreen.readout\_routes}
+\texttt{python -m qbscreen.readout\_routes}\\
+\texttt{python -m qbscreen.corrected\_injection}\\
+\texttt{python -m qbscreen.reanalysis}\\
+\texttt{python -m qbscreen.panel\_response}\\
+\texttt{python -m qbscreen.semiclassical}\\
+\texttt{python -m qbscreen.semiclassical floor}\\
+\texttt{python -m qbscreen.semiclassical conv}\\
+\texttt{python -m qbscreen.nuclide\_register}\\
+\texttt{python -m qbscreen.ensemble\_pooled}\\
+\texttt{python -m qbscreen.general\_spin}\\
+\texttt{python -m qbscreen.relaxation\_estimate}\\
+\texttt{python -m qbscreen.turnover\_estimate}\\
+\texttt{python -m qbscreen.product\_carrier\_audit}\\
+\texttt{python -m qbscreen.reservoir}\\
+\texttt{python -m qbscreen.reservoir realism}\\
+\texttt{python -m qbscreen.qrc\_benchmarks}\\
+\texttt{python -m qbscreen.qrc\_benchmarks tradeoff}\\
+\texttt{python -m qbscreen.qrc\_benchmarks cryptochrome}\\
+\texttt{python -m qbscreen.ensemble}\\
+\texttt{python -m qbscreen.quantum\_vs\_classical}
 \end{quote}
 
 \noindent\textbf{Software.}

@@ -404,42 +404,48 @@ def full_analysis(L=1200, n_seeds=10):
 
 
 if __name__ == "__main__":
-    print("Quantum reservoir computing on the radical-pair + nuclear-spin system")
-    print("=" * 74)
-    rng = np.random.default_rng(7)
-    L = 1500
-    s = rng.uniform(0, 1, L + 100)  # +washout
+    # readout_realism() writes reservoir_readout_realism.json but was unreachable
+    # from here, so a clean-room run could not recreate that shipped file.
+    import sys as _sys
+    if _sys.argv[1:] == ["realism"]:
+        readout_realism()
+    else:
+        print("Quantum reservoir computing on the radical-pair + nuclear-spin system")
+        print("=" * 74)
+        rng = np.random.default_rng(7)
+        L = 1500
+        s = rng.uniform(0, 1, L + 100)  # +washout
 
-    # ── Engineered regime: effective hyperfine writing, full readout ──
-    H = build_reservoir_H(B_tesla=1e-3, A_e1_a=80, A_e1_b=40, A_e2_a=15, J=2.0)
-    P_eng = propagator(H, tau_us=0.05, T2e_ns=50.0)   # τ=50 ns, T2e=50 ns
-    obs_full = _observable_set("full")
-    X_eng = run_reservoir(s, P_eng, obs_full, nuc_deph_p=0.0)
-    s_eng = s[100:]
-    r_eng = memory_and_ipc(X_eng, s_eng)
-    print(f"\n[Engineered] {X_eng.shape[1]} observables, τ=50 ns, T2e=50 ns, nuclei retained")
-    print(f"  Memory capacity MC      = {r_eng['MC']:.2f}   (≤ {r_eng['n_obs']})")
-    print(f"  Nonlinear IPC (deg-2)   = {r_eng['IPC_nonlinear']:.2f}")
-    print(f"  Total IPC               = {r_eng['IPC_total']:.2f}")
+        # ── Engineered regime: effective hyperfine writing, full readout ──
+        H = build_reservoir_H(B_tesla=1e-3, A_e1_a=80, A_e1_b=40, A_e2_a=15, J=2.0)
+        P_eng = propagator(H, tau_us=0.05, T2e_ns=50.0)   # τ=50 ns, T2e=50 ns
+        obs_full = _observable_set("full")
+        X_eng = run_reservoir(s, P_eng, obs_full, nuc_deph_p=0.0)
+        s_eng = s[100:]
+        r_eng = memory_and_ipc(X_eng, s_eng)
+        print(f"\n[Engineered] {X_eng.shape[1]} observables, τ=50 ns, T2e=50 ns, nuclei retained")
+        print(f"  Memory capacity MC      = {r_eng['MC']:.2f}   (≤ {r_eng['n_obs']})")
+        print(f"  Nonlinear IPC (deg-2)   = {r_eng['IPC_nonlinear']:.2f}")
+        print(f"  Total IPC               = {r_eng['IPC_total']:.2f}")
 
-    # ── In-vivo regime: scalar readout only + strong inter-cycle dephasing ──
-    obs_scalar = _observable_set("scalar")
-    X_iv = run_reservoir(s, P_eng, obs_scalar, nuc_deph_p=0.6)
-    r_iv = memory_and_ipc(X_iv, s_eng)
-    print(f"\n[In-vivo]    {X_iv.shape[1]} observable (singlet yield), inter-cycle nuclear dephasing p=0.6")
-    print(f"  Memory capacity MC      = {r_iv['MC']:.3f}   (≤ {r_iv['n_obs']})")
-    print(f"  Nonlinear IPC (deg-2)   = {r_iv['IPC_nonlinear']:.3f}")
-    print(f"  Total IPC               = {r_iv['IPC_total']:.3f}")
+        # ── In-vivo regime: scalar readout only + strong inter-cycle dephasing ──
+        obs_scalar = _observable_set("scalar")
+        X_iv = run_reservoir(s, P_eng, obs_scalar, nuc_deph_p=0.6)
+        r_iv = memory_and_ipc(X_iv, s_eng)
+        print(f"\n[In-vivo]    {X_iv.shape[1]} observable (singlet yield), inter-cycle nuclear dephasing p=0.6")
+        print(f"  Memory capacity MC      = {r_iv['MC']:.3f}   (≤ {r_iv['n_obs']})")
+        print(f"  Nonlinear IPC (deg-2)   = {r_iv['IPC_nonlinear']:.3f}")
+        print(f"  Total IPC               = {r_iv['IPC_total']:.3f}")
 
-    print("\nGenerating scans + figure ...")
-    full_analysis()
-    print("  figure → manuscript/figures/fig_reservoir.pdf")
-    print("  data   → simulation_results/reservoir_results.json")
+        print("\nGenerating scans + figure ...")
+        full_analysis()
+        print("  figure → manuscript/figures/fig_reservoir.pdf")
+        print("  data   → simulation_results/reservoir_results.json")
 
-    print("\nInterpretation:")
-    print("  • Engineered (multi-observable, retained nuclei): the spin reservoir")
-    print("    carries genuine linear memory AND nonlinear capacity — it works as")
-    print("    a quantum reservoir, as in NMR/EPR molecular-spin RC.")
-    print("  • In-vivo (scalar product-yield readout + sparse RP throughput): the")
-    print("    capacity collapses — the brain cannot read out the reservoir nodes")
-    print("    or drive it fast enough to use them.")
+        print("\nInterpretation:")
+        print("  • Engineered (multi-observable, retained nuclei): the spin reservoir")
+        print("    carries genuine linear memory AND nonlinear capacity — it works as")
+        print("    a quantum reservoir, as in NMR/EPR molecular-spin RC.")
+        print("  • In-vivo (scalar product-yield readout + sparse RP throughput): the")
+        print("    capacity collapses — the brain cannot read out the reservoir nodes")
+        print("    or drive it fast enough to use them.")

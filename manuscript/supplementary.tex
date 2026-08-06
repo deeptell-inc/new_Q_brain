@@ -30,13 +30,25 @@ What a radical-pair quantum reservoir would require}
 
 Every number below is computed under the single protocol used in the main text ---
 correlated-pair birth, converged time grid, out-of-sample capacity estimation ---
-so that no quantity is carried over from a superseded calculation. The sections cover
+with two exceptions that are labelled where they appear and retained deliberately
+as controls: the first row of Table~\ref{tab:inject}, which is the superseded
+single-electron reset, and Table~\ref{tab:clock}, which is the originally
+submitted single-realisation clock scan. The sections cover
 (S1) validation of the Liouville-space solver, (S2) the capacity estimator and its
 controls, (S3) the injection map and why a single-electron reset fails, (S4) the
-chemically accessible readout routes and their grid convergence, (S5) the coherence
-fraction at matched hopping rate, (S6) classical baselines, (S7) the turnover clock
-and the register-reuse criterion, and (S8) the spin parameters. All are reproducible
-from the open \texttt{qbscreen} package.
+chemically accessible readout routes, their route-specific memoryless floors,
+their grid convergence and a re-run of the adverse analyses with the product
+register, (S5) the coherence fraction at matched hopping rate,
+(S6) classical baselines, (S7) the turnover clock and the register-reuse
+criterion, (S8) a semiclassical reference model for the coherence fraction,
+(S9) which nuclei can actually hold the register, (S10) ensemble averaging over
+heterogeneous and desynchronised copies, (S11) anisotropic hyperfine coupling and
+the nuclear spin quantum number, (S12) prediction of the two constants the
+criterion depends on, and (S13) the spin parameters. Sections
+S8--S12 were added in response to referee comment and, unlike the rest, several of
+them \emph{reduce} the claims of the main text; we have kept the reductions
+rather than the original numbers. All are reproducible from the open
+\texttt{qbscreen} package.
 
 \section{Liouville-space solver and the coherent limit}
 \label{sec:solver}
@@ -80,8 +92,12 @@ convergence is a property of the corrected drive, not of the estimator.
 
 \paragraph*{The Dambre bound is not an independence test.} $\mathrm{IPC}\le
 n_{\rm obs}$ holds asymptotically for an orthonormal target family but is violated in
-finite samples: for $X=s$ ($n_{\rm obs}=1$, $T=1200$) the estimator returns $1.011$
-on average and exceeds the bound in $30$ of $30$ seeds. Satisfying the inequality
+finite samples: for $X=s$ ($n_{\rm obs}=1$, $T=1200$) the estimator returns
+$1.013\pm0.009$ on average and exceeds the bound in $29$ of $30$ seeds. (The
+submitted version quoted $1.011$ and $30$ of $30$ from a run whose output was not
+retained; the figures here are from the stored, regenerable control
+\texttt{s2\_dambre\_control.json}, and we quote those rather than the unverifiable
+originals.) Satisfying the inequality
 therefore does not demonstrate that the readout observables are independent, and we
 make no such argument anywhere in this work.
 
@@ -102,9 +118,9 @@ superposition. Table~\ref{tab:inject} gives the consequence at the cryptochrome 
 \caption{\label{tab:inject}The injection map and the capacity it permits.}
 \begin{ruledtabular}
 \begin{tabular}{lcc}
-injection & max.\ flux spread & IPC \\
+injection & max.\ flux & IPC \\
 \hline
-single-electron reset (superseded) & $2.7\times10^{-14}$ & $0.000\pm0.000$ \\
+single-electron reset & $2.7\times10^{-14}$ & $0.000\pm0.000$ \\
 correlated-pair birth, $S/T$ & $4.9\times10^{-1}$ & $2.941\pm0.108$ \\
 correlated-pair birth, $S$--$T_0$ & $4.3\times10^{-1}$ & $3.116\pm0.209$ \\
 \end{tabular}
@@ -136,11 +152,70 @@ end-point singlet yield & 1 & $1.017$ \\
 both exit channels, end point & 2 & $1.374$ \\
 three micro-environments (different $\tau$) & 3 & $2.557$ \\
 time-resolved kinetics, one product pool & 5 & $2.008$ \\
-\quad $+$ accumulated downstream pool & 10 & $2.706$ \\
-\quad $+$ CIDNP on the product & 8 & $4.650$ \\
+both exit channels, time-resolved & 10 & $2.012$ \\
+kinetics $+$ accumulated downstream pool & 10 & $2.706$ \\
+kinetics $+$ CIDNP on the product & 8 & $4.650$ \\
 \end{tabular}
 \end{ruledtabular}
 \end{table}
+
+All seven routes defined by the model are listed; the submitted version omitted
+the fourth, and the last two rows are separate constructions rather than the
+cumulative additions the earlier indentation implied (the CIDNP route is five
+kinetic channels plus three polarisation channels, hence eight, not eighteen).
+The omitted route is informative: doubling the time-resolved channel count from
+five to ten by adding the second exit channel changes the capacity by $0.003$, so
+the readout saturates in channel number.
+
+\paragraph*{Route-specific memoryless floors.} The floor is not common to these
+routes and is measured by wiping the register every cycle ($q=1$), which leaves
+only what each route computes from the present input (six seeds):
+$1.019\pm0.025$ for the one-, two-, three-, five- and ten-channel yield routes
+(including the heterogeneous-lifetime route, whose floor is measured by the same
+$q=1$ construction), $2.005\pm0.017$ for the eight-channel CIDNP route, and
+$1.960\pm0.070$ for the accumulated pool. The CIDNP excess is therefore $4.650-2.005=2.64$, not the
+factor of $4.6$ that a universal floor of unity would imply. The accumulated-pool
+route retains $\mathrm{MC}=1.937$ at $q=1$ because a leaky integrator is itself a
+classical delay line; its capacity is not evidence of nuclear-spin memory and we
+exclude it from the claims in the main text.
+
+\paragraph*{The register is the product.} The cycle above hands the next turnover
+the renormalised state of the pair that did \emph{not} recombine. Rebuilding it so
+that the register is the nuclear state carried away by the recombined molecule,
+$\sigma_{\rm nuc}\propto\int[k_S\mathrm{Tr}_e(P_S\rho P_S)+k_T\mathrm{Tr}_e(P_T\rho P_T)]dt$,
+raises every capacity: kinetics $2.008\to2.742$, both-exit time-resolved
+$2.012\to2.757$, CIDNP $4.650\to4.909$, accumulated pool $2.706\to3.872$ (six
+seeds). The reported numbers are thus conservative with respect to this choice.
+
+\paragraph*{Do the adverse results survive the product register?} They do. The
+sensitivity analyses of Secs.~\ref{sec:nuclide}--\ref{sec:aniso} are quoted for
+the survivor register, so that they are directly comparable with the published
+pipeline; each has also been re-run with the product register.
+
+\begin{table}[H]
+\caption{\label{tab:prodaudit}The reductions are not artifacts of the survivor
+register.}
+\begin{ruledtabular}
+\begin{tabular}{lcc}
+quantity & survivor & product \\
+\hline
+proton register, excess retained & $29\%$ & $30\%$ \\
+proton register, kinetic excess & $+0.000$ & $+0.000$ \\
+kinetic excess at $2$ cycles of jitter & $+0.004$ & $-0.006$ \\
+CIDNP excess at $2$ cycles of jitter & $+1.310$ & $+1.153$ \\
+anisotropy $\eta=0.5$, fraction retained & $32\%$ & $40\%$ \\
+anisotropy $\eta=1$ (Ising), excess & $0.000$ & $0.005$ \\
+\end{tabular}
+\end{ruledtabular}
+\end{table}
+
+Every reduction survives, and none of the paper's conclusions depends on the
+choice. The one visible difference is that the kinetic readout degrades more
+gracefully under moderate jitter with the product register (excess $+0.317$ at
+half a cycle, against $+0.006$), though it still reaches zero by two cycles.
+Anisotropy is likewise slightly less punishing ($40\%$ retained rather than
+$32\%$) while remaining a two-thirds loss, and the Ising point still gives an
+excess of $0.005$, i.e.\ zero within the estimator's floor.
 
 \paragraph*{Time-grid convergence.} A $40$~MHz hyperfine coupling has a $25$~ns
 period, so a coarse grid under-samples the dynamics and inflates the time-resolved
@@ -196,6 +271,25 @@ $2\times10^{4}$ & $2\times10^{4}$ & $0.998$ \\
 The saturation value $1.00$ is the memoryless floor, so the coherence fraction is
 $(5.421-0.999)/5.421=0.82$.
 
+The added $\gamma$ above acts on all five spins, which raises the objection that
+the collapse merely records erasure of the nuclear register rather than loss of
+electronic coherence. It does not. Restricting the added dephasing to the two
+electrons, leaving the nuclei entirely untouched, and holding the same matched
+$\tau$ gives $\mathrm{IPC}=0.9949\pm0.0222$, $0.9891\pm0.0223$ and
+$0.9891\pm0.0224$ at $\gamma=10^3$, $5\times10^3$ and $2\times10^4$~MHz (six
+seeds), i.e.\ a coherence fraction of $0.817$ against $0.816$ for the all-spin
+channel. The quantity is a statement about the electrons.
+
+It remains, however, an \emph{operational} fraction: it is defined by one
+particular incoherent limit in which $\tau$ is stretched by up to a factor of
+$400$, not by comparison against a physically motivated classical model. The
+appropriate reference would be a semiclassical radical-pair treatment with
+classical hyperfine vectors and rate equations [Timmel \textit{et al.},
+Mol.~Phys.\ \textbf{95}, 71 (1998)]. Section~\ref{sec:semiclassical} supplies
+exactly that reference and finds the classical model at its own memoryless floor,
+so $0.82$ is conservative; we nonetheless do not present it as a measure of ``how
+quantum'' the reservoir is.
+
 \section{Classical baselines}
 \label{sec:esn}
 Tanh echo-state networks (spectral radius $0.9$, input scale $0.6$) are driven by the
@@ -222,11 +316,17 @@ have.
 
 \section{Turnover clock and the register-reuse criterion}
 \label{sec:clock}
-The memory horizon is $\mathrm{MC}$ times the cycle time. Because the nuclei leave in
-the diamagnetic product, where nuclear relaxation is of order $0.1$--$1$~s, the cycle
-time is the turnover interval $T_{\rm d}$ and not the radical-pair lifetime. We
-insert a pause between turnovers and relax the register with probability
-$q=1-\exp(-T_{\rm d}/T_{1n})$, taking $T_{1n}=1$~s.
+The memory horizon is $(\mathrm{MC}-C_0)$ times the cycle time, the zero-delay
+term $C_0\simeq1$ contributing no memory; the raw $\mathrm{MC}\times T$ used in
+Table~\ref{tab:clock} below is the superseded convention and is retained only
+because that table is the originally submitted scan. Because the nuclei leave in
+the diamagnetic product the cycle time is the turnover interval $T_{\rm d}$ and
+not the radical-pair lifetime. We insert a pause between turnovers and relax the
+register with probability $q=1-\exp(-T_{\rm d}/T_{1n})$, taking $T_{1n}=1$~s.
+That value is retained here for continuity with the submitted version;
+Sec.~\ref{sec:predict} shows it is a high-field number and that the correct
+low-field value for a protein-bound proton is some four hundred times shorter,
+which is what ultimately binds the criterion.
 
 \begin{table}[H]
 \caption{\label{tab:clock}The horizon follows the turnover interval.}
@@ -242,10 +342,24 @@ $100$~ms & $9.5\times10^{-2}$ & $1.944$ & $2.800$ & $280$~ms \\
 \end{ruledtabular}
 \end{table}
 
-The capacity changes by $0.2\%$ across five decades of turnover interval, so the
-horizon simply tracks it. Table~\ref{tab:reuse} isolates the requirement that
-actually binds: how much depolarisation of the register between turnovers the memory
-tolerates.
+Table~\ref{tab:clock} is the originally submitted scan, which used a \emph{single}
+input realisation; four significant figures were not supportable on that sample and
+the $0.2\%$ quoted from it came from the five-channel column while the horizon
+quoted alongside it came from the eight-channel column. Repeating the scan with
+twelve realisations gives $\mathrm{MC}$ (8 ch) $=2.926\pm0.149$, $2.926\pm0.148$,
+$2.922\pm0.145$ and $2.880\pm0.116$ for the same four intervals. Since the same
+seeds are used at every $T_{\rm d}$, the change is assessed on paired differences:
+$0.046\pm0.011$ (SEM, $n=12$, $t=4.23$), i.e.\ $1.6\%$ across five decades. That
+is a real decrease, resolved above both the seed noise and the grid error, and
+about eight times the originally quoted figure; the qualitative conclusion---the
+horizon tracks the clock---is unchanged. Table~\ref{tab:reuse} isolates the
+requirement that actually binds: how much depolarisation of the register between
+turnovers the memory tolerates.
+
+The linear memory capacity, which is the quantity these claims concern, also
+converges in the time grid, something the submitted version reported only for the
+IPC: $\mathrm{MC}$ (8 ch) $=2.889$, $2.866$, $2.861$ for $n_t=48$, $96$, $192$
+(six seeds), a $0.17\%$ change across the last refinement.
 
 \begin{table}[H]
 \caption{\label{tab:reuse}The criterion: memory against register depolarisation $q$.}
@@ -263,9 +377,479 @@ $q$ & $T_{\rm d}/T_{1n}$ & MC (5 ch) & MC (8 ch) \\
 \end{ruledtabular}
 \end{table}
 
-Memory is essentially intact while the turnover interval is shorter than the nuclear
-relaxation time ($q\lesssim0.5$) and collapses to the memoryless floor
+Memory degrades steadily as the turnover interval approaches the nuclear relaxation
+time---by $q=0.5$ a fifth of the eight-channel capacity is already gone, so
+``essentially intact'' overstates it---and collapses to the memoryless floor
 $\mathrm{MC}=1.00$ when every turnover starts from a fresh molecule.
+
+\paragraph*{Which nuclear relaxation process enforces the criterion.} The register
+propagated between turnovers is a full nuclear density matrix, so memory might in
+principle require nuclear coherences as well as populations to survive the pause;
+the binding constant would then be $\min(T_{1n},T_{2n})$, which at NMR fields is
+much the more restrictive. Replacing the depolarising channel by a pure-dephasing channel on
+each nucleus---which destroys nuclear coherence while preserving
+$\langle I_z\rangle$ exactly---settles it (four seeds):
+
+\begin{table}[H]
+\caption{\label{tab:chan}The register is a population register, not a coherence
+register.}
+\begin{ruledtabular}
+\begin{tabular}{lcc}
+$q$ & MC (8 ch), depolarising & MC (8 ch), dephasing \\
+\hline
+$0.0$ & $2.890$ & $2.890$ \\
+$0.3$ & $2.667$ & $2.919$ \\
+$0.5$ & $2.288$ & $2.899$ \\
+$0.7$ & $2.030$ & $2.878$ \\
+$0.9$ & $1.977$ & $2.867$ \\
+$1.0$ & $1.002$ & $2.865$ \\
+\end{tabular}
+\end{ruledtabular}
+\end{table}
+
+Complete nuclear dephasing every cycle costs less than $1\%$ of the capacity. The
+memory resides in nuclear $z$-populations---precisely what the CIDNP readout
+reports---so the constant that bounds the horizon is $T_{1n}$.
+
+This is a statement about what the reservoir uses, not a rescue. At the
+geomagnetic field the register is in extreme narrowing, where
+$J(0)$, $J(\omega)$ and $J(2\omega)$ coincide and therefore $T_{1n}$ and $T_{2n}$
+agree to one part in $10^{7}$
+(Sec.~\ref{sec:predict}); the population/coherence distinction changes nothing
+there, and would matter only in an NMR magnet.
+
+\paragraph*{Regularisation and counting statistics.} The ridge parameter
+$\lambda=10^{-6}$ on unstandardised features is load-bearing, because the
+time-resolved channels are nested partial integrals of a single signal and the
+Gram matrix is correspondingly ill-conditioned ($\kappa\approx10^9$). For the
+kinetic route the recovered IPC runs $4.53$, $4.11$, $1.98$, $1.01$, $1.00$ at
+$\lambda=10^{-12}$, $10^{-9}$, $10^{-6}$, $10^{-3}$, $10^{-1}$; standardising the
+features gives $4.53$, $4.53$, $4.34$, $2.26$, $1.42$. The reported capacities are
+therefore conservative with respect to this choice, not inflated by it. The
+physically meaningful regulariser is the noise on a real product pool: adding
+Gaussian shot noise of relative size $N^{-1/2}$ to each channel leaves the CIDNP
+capacity at $4.54$ for $N=10^{10}$, $4.54$ for $N=10^{8}$ and $3.93$ for
+$N=10^{6}$, so at cellular copy numbers the readout is not shot-noise limited.
+
+\section{A semiclassical reference for the coherence fraction}
+\label{sec:semiclassical}
+The coherence fraction of Sec.~\ref{sec:coh} is defined by an operational
+dephasing limit, not by comparison against a physically motivated classical
+model, and we said there that it should not be read as a quantum/classical
+decomposition without one. This section supplies the reference.
+
+We keep the Hamiltonian, couplings, drive, readout and estimator identical and
+change one thing: every spin becomes a classical vector of length $\sqrt{S(S+1)}$
+precessing in the field of the others, $\dot{\bm S}_i=\bm S_i\times\partial
+H/\partial\bm S_i$. This is the Schulten--Wolynes/Timmel semiclassical treatment
+carried to its natural conclusion---classical nuclei \emph{with} back-action, so
+that the register can still carry memory between turnovers. A static-nucleus
+semiclassical model would have no memory by construction and would be a straw
+man. The correspondences are exact in the mean: $\langle P_S\rangle=\tfrac14-\bm
+S_1\!\cdot\!\bm S_2$, singlet birth is an antiparallel pair ($P_S=1$), triplet
+birth is a fixed angle $\cos\theta=1/3$ ($P_S=0$), and electronic $T_2^e$ becomes
+a white-noise $z$-field. Each of $M=512$ trajectories is one molecule carrying
+its own register, so the trajectory average is simultaneously the classical
+reference and a pooled ensemble of independent registers.
+
+Two checks: the sampled $\langle P_S\rangle$ reproduces the input $s$ to four
+decimals across $s\in[0,1]$, and $|\bm S|$ is conserved to $5\times10^{-7}$ over a
+cycle. The capacity shows no systematic drift with the integration step
+($0.78$, $0.88$, $0.73$ for $3$, $6$ and $12$ substeps per output point); the
+scatter is Monte-Carlo noise in the pooled observable, not integration error.
+
+At the engineered point with the same twelve observables (four seeds,
+$L=700$):
+\begin{equation*}
+\mathrm{IPC}_{\rm classical}=0.764\pm0.015,
+\qquad \mathrm{IPC}_{\rm quantum}=5.421 ,
+\end{equation*}
+a coherence fraction of $0.859$ against the $0.816$ obtained from the operational
+dephasing limit. The classical value sits slightly below the nominal memoryless
+floor of unity because of sampling noise in the $M=512$ pooled observable, so the
+comparison that matters is against the classical model's \emph{own} floor,
+obtained by randomising its register every cycle:
+\begin{equation*}
+\mathrm{IPC}_{\rm classical}=0.764\pm0.015,
+\quad
+\mathrm{IPC}_{\rm classical}^{\,q=1}=0.768\pm0.016 .
+\end{equation*}
+The excess is $-0.004$: zero within the noise. The classical reservoir retains
+\emph{no} memory of previous turnovers at all, and its linear and total capacities
+coincide to three decimals, so it has no nonlinear capacity either. Classical
+nuclei with full back-action, given every opportunity to store information
+between cycles, store none.
+
+The conclusion is the one the main text hedged against, and it goes the paper's
+way: measured against a genuine classical model of the same spin system, rather
+than against an operational dephasing limit, the coherence fraction is if
+anything \emph{larger} than reported. The $0.82$ quoted in the main text is
+conservative.
+
+\section{Which nuclei can hold the register}
+\label{sec:nuclide}
+The main text applies a single relaxation probability $q$ to the whole nuclear
+register, with $T_{1n}=1$~s. The relaxation literature does not support treating
+the three nuclei alike, and the correction matters more than any other in this
+work.
+
+\paragraph*{What is measured.} For protein-bound $^1$H the assumption is sound:
+non-selective amide $T_1$ in ubiquitin is $1.15$~s at $600$~MHz
+[Tjandra \textit{et al.}, J.~Am.~Chem.~Soc.\ \textbf{117}, 12562 (1995)], and
+$3.0$--$18.7$~s in a deuterated domain [Ulmer \textit{et al.}, J.~Magn.~Reson.\
+\textbf{166}, 190 (2004)]. In vivo $^{31}$P in human brain and muscle spans
+$1.1$--$6.7$~s [Bogner \textit{et al.}, Magn.~Reson.~Med.\ \textbf{62}, 574 (2009); Ren \textit{et al.}, NMR Biomed.\ \textbf{28}, 1455 (2015)]. For $^{14}$N it is not sound. Nitrogen-14 is
+spin-1 and relaxes quadrupolarly; in immobilised proteins $^{14}$N acts as a
+fast-relaxing relaxation sink [Sunde and Halle, J.~Magn.~Reson.\ \textbf{203}, 257 (2010)], and rotationally immobilised
+protein protons already show $1/T_1>2000~\mathrm{s}^{-1}$ at low
+field [Goddard, Korb and Bryant, J.~Magn.~Reson.\ \textbf{199}, 68 (2009)]. Using the measured quadrupole tensors of the flavin
+semiquinone---$e^2qQ/h\approx3.6$~MHz for N5 and $4.8$~MHz for N10
+[Mart\'inez \textit{et al.}, Magn.~Reson.\ \textbf{6}, 183 (2025)]---with a
+rotational correlation time of $\sim20$~ns for a cryptochrome-sized protein, and
+noting that at geomagnetic field $\omega\tau_c\ll1$ places the system firmly in
+extreme narrowing where quadrupolar relaxation is \emph{maximal}, gives
+$T_1(^{14}\mathrm{N})\approx0.14$--$0.26~\mu$s. Even the most favourable measured
+biological $^{14}$N coupling reaches only $\sim1.3~\mu$s.
+
+Two of the three nuclei in our model are $^{14}$N5 and $^{14}$N10 on FAD. For
+them, $q=1-\exp(-T_{\rm d}/T_{1n})\to1$ for any turnover interval beyond a
+microsecond: they are wiped every cycle, whatever the turnover rate.
+
+We note for completeness that the objection usually raised---paramagnetic
+relaxation from dissolved O$_2$ and cytoplasmic metal ions---is \emph{not} what
+binds here. Measured oxygen relaxivity is $0.14~\mathrm{s^{-1}mM^{-1}}$ on water
+protons at $\ge3$~T [Vatnehol \textit{et al.}, MAGMA \textbf{33}, 447 (2020)] and
+$0.03$--$0.5~\mathrm{s^{-1}mM^{-1}}$ on protein-bound protons depending on burial
+[Teng and Bryant, Biophys.~J.\ \textbf{86}, 1713 (2004)]; at a tissue
+$[\mathrm{O_2}]$ of $\sim30~\mu$M, and with cytosolic labile Fe at $0.2$--$7~\mu$M,
+the total paramagnetic contribution is $\lesssim0.1~\mathrm{s^{-1}}$, a ceiling of
+tens of seconds. The bound on the proton register is set by slow tumbling, not by
+paramagnets.
+
+\paragraph*{What survives.} We therefore relax each nucleus independently,
+depolarising nucleus $j$ by $\mathrm{Tr}_j(\rho)\otimes\mathbb{1}_j/2$, and score
+every scenario against the all-wiped floor of the same readout (six seeds).
+
+\begin{table}[H]
+\caption{\label{tab:nuclide}Capacity by which nuclei retain their polarisation,
+as excess over the all-wiped floor.}
+\begin{ruledtabular}
+\begin{tabular}{lcccc}
+register retained & kinetics & excess & CIDNP & excess \\
+\hline
+all three (main text) & $2.008$ & $+0.989$ & $4.650$ & $+2.644$ \\
+$^1$H only (literature) & $1.019$ & $+0.000$ & $2.784$ & $\mathbf{+0.779}$ \\
+$^{14}$N only & $1.020$ & $+0.001$ & $3.447$ & $+1.442$ \\
+none (floor) & $1.019$ & $0$ & $2.005$ & $0$ \\
+\end{tabular}
+\end{ruledtabular}
+\end{table}
+
+The conclusion is a real weakening of the paper, and we state it as such. A
+physically defensible register---the proton alone---retains
+$+0.779$ of excess capacity, $29\%$ of the value obtained when all three nuclei
+are assumed to persist. The time-resolved kinetic readout is destroyed outright:
+it needs the whole register and returns exactly its floor when either subset is
+wiped. (That is a statement about the survivor register: with the product register
+the kinetic excess still falls to zero when the $^{14}$N are wiped, but wiping the
+proton alone leaves $+0.48$.) \textbf{The reservoir therefore survives on the proton register, at roughly
+a third of the capacity, and only through the CIDNP channel.} The proton
+$T_{1n}$ of $\sim1$~s that makes this seem comfortable is, however, a
+\emph{high-field} measurement; Sec.~\ref{sec:predict} shows that at the
+geomagnetic field the same nucleus relaxes some four hundred times faster, which
+tightens the criterion further. What shrinks here is how much the reservoir can
+compute and how it must be read; what Sec.~\ref{sec:predict} shrinks is the
+window in which it can be read at all.
+
+This also sharpens the experimental target: the criterion should be tested on a
+radical pair whose register is protons, and the relevant relaxation time is the
+proton $T_1$ of the diamagnetic product, not a generic ``nuclear $T_1$''.
+
+\section{Ensemble averaging}
+\label{sec:ensemble}
+Every capacity above is a single-molecule quantity, whereas a downstream reaction
+reads a pool of order $10^{10}$ copies. A density matrix already averages over a
+\emph{homogeneous} ensemble sharing a common clock, so that case is covered; what
+is not covered is heterogeneity between copies and desynchronisation of their
+turnover schedules. We compute both by pooling the product signal of many copies
+driven by a common input, and---as with the accumulated-pool route---we measure
+each pooled readout against its \emph{own} floor, obtained by wiping the nuclear
+register every cycle. Only the excess over that floor is register memory.
+
+\paragraph*{Desynchronisation is the binding constraint.} Copies are placed at
+phase offsets drawn uniformly in $[-\Delta,+\Delta]$ cycles ($64$ copies, three
+seeds). A copy offset by more than one cycle is showing an earlier \emph{input},
+so pooling itself becomes a delay line; the floor control is essential.
+
+\begin{table}[H]
+\caption{\label{tab:desync}Pooled capacity against turnover jitter $\Delta$,
+as excess over the register-wiped floor of the same pooled readout.}
+\begin{ruledtabular}
+\begin{tabular}{lcccc}
+$\Delta$ (cycles) & kinetics IPC & excess & CIDNP IPC & excess \\
+\hline
+$0$    & $2.000$ & $+0.991$ & $4.660$ & $+2.664$ \\
+$0.1$  & $1.790$ & $+0.781$ & $3.510$ & $+1.901$ \\
+$0.25$ & $1.607$ & $+0.598$ & $3.377$ & $+1.756$ \\
+$0.5$  & $1.015$ & $+0.006$ & $3.140$ & $+1.518$ \\
+$1$    & $1.119$ & $+0.110$ & $3.176$ & $+1.555$ \\
+$2$    & $1.885$ & $+0.004$ & $3.833$ & $+1.310$ \\
+\end{tabular}
+\end{ruledtabular}
+\end{table}
+
+The two readouts behave completely differently. The time-resolved kinetics lose
+almost all of their memory by half a cycle of jitter with the survivor register
+($+0.991\to+0.006$) and reach zero near one and a half cycles with the product
+register ($+1.716\to+0.317$ at half a cycle, $+0.181$ at one, $+0.016$ at one and
+a half; Sec.~\ref{sec:routes}). Those channels sample the cycle at particular
+times, so a pool spread over the cycle averages them into a single number. The
+survivor sequence is not monotonic---it returns to $+0.110$ at one cycle---and
+the $q=1$ floor rises beyond one cycle, so these numbers should be read as the
+excess they are and not as a smooth decay curve. The apparent recovery of the raw IPC at
+$\Delta\ge1$ is an artifact of pooling and not memory at all---at $\Delta=2$ the
+excess over the register-wiped floor is $+0.004$. The CIDNP route, by contrast,
+retains half its excess even at $\Delta=2$, because the product-weighted
+polarisation is integrated over the whole cycle and does not depend on when the
+pool is inspected. \textbf{Synchronised turnover is therefore a requirement of the
+kinetic readout specifically, not of the reservoir.} Of the two routes evaluated
+here, CIDNP is the one that survives a desynchronised ensemble; the remaining five
+routes of Table~\ref{tab:routes} were not evaluated under jitter, so we do not
+claim it is the only survivor among all seven.
+
+\paragraph*{Heterogeneity is not a threat.} Scattering the three hyperfine
+couplings log-normally about the cryptochrome point does not degrade the pooled
+capacity; see \texttt{open1\_ensemble\_heterogeneity.json}. Mild spread slightly
+\emph{improves} it, which we attribute to the averaging reducing the
+ill-conditioning of the nested time-resolved channels discussed above rather than
+to any spin-dynamical effect.
+
+\paragraph*{Heterogeneous relaxation.} The heterogeneity above varies the
+Hamiltonian at a common relaxation rate, which is not the variable the register
+criterion turns on. A real pool does not tumble at one rate: some copies stay
+bound to the protein and some diffuse freely, so $\tau_c$---and through it
+$T_{1n}$, and through that the fraction of the register surviving a
+turnover---differs from copy to copy. Because the readout sums over copies and
+cannot tell them apart, a fast-relaxing sub-population could in principle wash
+out a slow one's memory. We test this by drawing $\tau_c$ log-normally about a
+$5$~ns median with log-spread $\sigma$, taking six stratified quantiles as the
+copies, and giving each its own survival $q_j=1-\exp(-T_{\rm d}/T_1(\tau_c^{(j)}))$
+through the relaxation model of Sec.~\ref{sec:predict} at $T_{\rm d}=10$~ms
+(three seeds, eight-channel CIDNP route).
+
+\begin{table}[H]
+\caption{\label{tab:tauchet}Pooling copies that relax at different rates. The
+mean-field column is a single homogeneous copy at the pool's own mean $q$; the
+last two columns are what the \emph{spread} contributes once that is removed, in
+absolute terms and as a fraction of the rise over $\sigma=0$.}
+\begin{ruledtabular}
+\begin{tabular}{lccccc}
+$\sigma$ & $\tau_c$ (ns) & $\bar q$ & pooled excess & spread alone & of the rise \\
+\hline
+$0$ & $5.00$ & $0.739$ & $+1.956$ & $-0.000$ & --- \\
+$0.3$ & $3.30$--$7.57$ & $0.735$ & $+1.962$ & $+0.003$ & $46\%$ \\
+$0.6$ & $2.18$--$11.46$ & $0.722$ & $+1.985$ & $+0.017$ & $57\%$ \\
+$1.0$ & $1.25$--$19.93$ & $0.696$ & $+2.044$ & $+0.059$ & $66\%$ \\
+\end{tabular}
+\end{ruledtabular}
+\end{table}
+
+The pooled excess does not fall; it rises slightly, from $+1.956$ to $+2.044$
+across a sixteen-fold spread in $\tau_c$---a change of $4.5$ per cent. Two parts of
+the rise can be separated. The mean survival $\bar q$ drifts from $0.739$ to
+$0.696$, and a lower $q$ leaves more register intact; the mean-field control
+isolates that part. The drift is not because a wider distribution holds more slow
+copies---the copies are stratified quantiles, so three lie on each side of the
+median at every $\sigma$---but because $q=1-e^{-T_{\rm d}/T_1}$ saturates at
+unity. A copy displaced to slow $\tau_c$ can lose much more than the fast copy
+opposite it can gain, so a symmetric spread in $\tau_c$ produces an asymmetric,
+downward response in $q$: at $\sigma=1$ the six values are $0.286$ to $0.995$,
+i.e.\ $-0.45$ and $+0.26$ about the median. At $\sigma=1$ it accounts for $+0.030$ of the $+0.088$ rise. The remaining
+$+0.059$ is the spread itself, so the \emph{majority} of the rise---$66$ per
+cent---is not a mean-field effect. The same split gives $46$ and $57$ per cent at
+$\sigma=0.3$ and $0.6$. At $\sigma=0$ the control reproduces the pooled value to
+$8\times10^{-13}$, which is the consistency check that the decomposition is doing
+what it claims; the residual is positive at all three non-zero spreads.
+
+What this does and does not license is worth stating carefully. It licenses
+applying the criterion to a heterogeneous pool: capacity never falls below the
+uniform value, and the total effect of a sixteen-fold spread stays under five per
+cent, so a single effective $T_{1n}$ is an adequate working approximation. It does
+\emph{not} license the cleaner claim that a heterogeneous pool simply is a
+homogeneous pool at its mean survival---the mean-field control was run precisely
+to test that, and it fails: most of the (small, favourable) difference is the
+spread itself, not the shifted mean. The scan covers $\sigma\le1$ about a single
+median and does not speak to a pool split into two widely separated populations. It does not rescue the
+kinetic routes from desynchronisation, which is a separate axis and remains the
+binding ensemble constraint (\texttt{open1\_ensemble\_desync\_floor.json}); the
+scan of this section is \texttt{open6\_tau\_c\_heterogeneity.json}.
+
+\section{Anisotropic hyperfine coupling and the nuclear spin quantum number}
+\label{sec:aniso}
+The main text uses isotropic couplings and models $^{14}$N as spin-$1/2$. We relax
+each in turn. Both scans use the same cycle, readout and estimator, and each is
+scored against its own $q=1$ floor (three seeds).
+
+\paragraph*{Anisotropy.} We hold the isotropic average fixed and grow an axial
+anisotropy, $\mathbf{A}=A_{\rm iso}(1-\eta,\,1-\eta,\,1+2\eta)$, at fixed
+molecular orientation. This is a \emph{scan}, not a calculation with the published
+tensor sets [Lee \textit{et al.}, J.~R.~Soc.~Interface \textbf{11}, 20131063
+(2014); Schleicher \textit{et al.}, Sci.~Rep.\ \textbf{11}, 18395 (2021)], and it
+bounds the sensitivity without removing the limitation.
+
+\begin{table}[H]
+\caption{\label{tab:aniso}Capacity against axial anisotropy $\eta$
+(eight-channel CIDNP route).}
+\begin{ruledtabular}
+\begin{tabular}{lccc}
+$\eta$ & IPC & floor & excess \\
+\hline
+$0$ (isotropic) & $4.660$ & $1.996$ & $\mathbf{2.664}$ \\
+$0.5$ & $2.863$ & $2.001$ & $0.862$ \\
+$1.0$ & $1.009$ & $1.009$ & $0.000$ \\
+$2.0$ & $2.730$ & $1.999$ & $0.731$ \\
+\end{tabular}
+\end{ruledtabular}
+\end{table}
+
+This is the least comfortable result in the paper. Realistic axial anisotropy
+costs roughly two-thirds of the capacity, and at $\eta=1$ it vanishes exactly.
+The mechanism is transparent and is the same one that makes CIDNP the write
+channel: $\eta=1$ is the pure-Ising point $A_{xx}=A_{yy}=0$, where the hyperfine
+term commutes with $I_z$ and $S_z$, so there are no flip-flops, no
+singlet--triplet mixing driven by the nuclei, and no polarisation transfer. The
+capacity is carried by the \emph{perpendicular} components of the hyperfine
+tensor, and $\eta=2$---where $|A_\perp|$ is restored with opposite sign---recovers
+to $0.731$. A real flavin or tryptophan coupling has substantial $A_\perp$, so
+the physical conclusion is that the reservoir survives anisotropy with a
+substantially reduced capacity, and fails only in an Ising limit that no real
+radical realises. We report the reduction rather than quoting the isotropic
+number as though it were general.
+
+\paragraph*{$^{14}$N as spin-1.} A four-spin reduction ($e_1$, $e_2$, one N, one
+H) is run with the nitrogen as spin-$1/2$ and then as spin-$1$, everything else
+fixed, so the difference isolates the spin quantum number.
+
+\begin{table}[H]
+\caption{\label{tab:spin1}The spin-$1/2$ approximation for $^{14}$N is conservative.}
+\begin{ruledtabular}
+\begin{tabular}{lcccc}
+model & dim & IPC & floor & excess \\
+\hline
+N as spin-$1/2$ (main text) & $16$ & $3.267$ & $1.984$ & $1.283$ \\
+N as spin-$1$ (real $^{14}$N) & $24$ & $3.639$ & $1.997$ & $\mathbf{1.642}$ \\
+\end{tabular}
+\end{ruledtabular}
+\end{table}
+
+Treating $^{14}$N correctly \emph{increases} the excess capacity by $28\%$: the
+larger nuclear Hilbert space is a larger register. The approximation used in the
+main text therefore understates the reservoir, and no conclusion depends on it.
+
+\section{Predicting the two unmeasured constants}
+\label{sec:predict}
+The criterion is stated in terms of $T_{\rm turnover}/T_{1n}$ and neither quantity
+has been measured for a neuronal cryptochrome. Neither can be measured here, but
+both can be \emph{predicted} from measured constants, and doing so changes the
+conclusion. We validate the relaxation calculator against three independent
+measured systems before applying it to the unmeasured one.
+
+\begin{table}[H]
+\caption{\label{tab:valid}Validation of the relaxation calculator.}
+\begin{ruledtabular}
+\begin{tabular}{lccc}
+system & predicted & measured & ratio \\
+\hline
+$^2$H in D$_2$O (quadrupolar) & $0.432$~s & $0.40$~s & $1.08$ \\
+$^{14}$N of free amino acid & $2.3$~ms & $2.9$--$8.8$~ms & $0.5$ \\
+$^1$H$_2$O intramolecular (dipolar) & $5.55$~s & $3.6$~s\footnotemark[1] & $1.54$ \\
+\end{tabular}
+\end{ruledtabular}
+\footnotetext[1]{Measured value is the total, including the intermolecular
+contribution; the intramolecular prediction must exceed it, and does.}
+\end{table}
+
+\paragraph*{The relaxation time is a low-field quantity.}
+For a $60$~kDa protein at $310$~K, Stokes--Einstein--Debye gives
+$\tau_c=15.2$~ns. At the geomagnetic field $\omega\tau_c\approx2\times10^{-4}$, so
+every nucleus here sits deep in extreme narrowing, where $1/T_1\propto\tau_c$ is
+\emph{maximal}. This is the point the $T_{1n}\approx1$~s assumption misses: that
+value is a high-field number.
+
+\begin{table}[H]
+\caption{\label{tab:predT1}Predicted $T_1$ of candidate register nuclei.}
+\begin{ruledtabular}
+\begin{tabular}{lcc}
+nucleus & at $50~\mu$T & at $9.4$~T \\
+\hline
+Trp H$\beta$ (CH$_2$) & $2.4$~ms & $9.0$~s \\
+flavin $8\alpha$-CH$_3$ & $5.0$~ms & $2.3$~s \\
+$^{14}$N5 / N10 (flavin) & $0.34$ / $0.19~\mu$s & $7$ / $4~\mu$s \\
+\end{tabular}
+\end{ruledtabular}
+\end{table}
+
+The protein-bound proton relaxes in milliseconds at the field the organism
+actually experiences, not in seconds. Because $1/T_1\propto\tau_c$ in this
+regime, the register's lifetime is governed by how fast the product reorients:
+$T_1$ rises to $37$~ms at $\tau_c=1$~ns and to $0.37$~s at $\tau_c=0.1$~ns.
+
+\paragraph*{The drive cannot be light.}
+With the measured flavin extinction coefficient ($\varepsilon_{450}\approx
+11\,300~\mathrm{M^{-1}cm^{-1}}$, cross-section $4.3\times10^{-17}$~cm$^2$) and a
+quantum yield of $0.1$, a single flavin turns over once per $7.7$~s in full
+sunlight, once per $77$~s under overcast sky, and---for a blue-light attenuation
+of $10^{-9}$ through a centimetre of tissue---once per $\sim\!250$~years inside
+the skull. A light-driven cryptochrome reservoir in a neuron fails by roughly ten
+orders of magnitude. The drive must therefore be catalytic, and a flavoenzyme
+turnover number of $1$--$1000~\mathrm{s^{-1}}$ puts $T_{\rm turnover}$ at
+$1$~ms--$1$~s, which is the right range.
+
+\paragraph*{Putting the two together.}
+Requiring simultaneously that (a)~the register be reused, (b)~$T_1$ follow from
+the calculation above, and (c)~the horizon $(\mathrm{MC}-C_0)T_{\rm turnover}$
+land in the $10$~ms--$1$~s band, and interpolating $\mathrm{MC}(q)$ from the
+measured reuse curve of Table~\ref{tab:reuse}:
+
+\begin{table}[H]
+\caption{\label{tab:feasible}Feasible region. The retained memory is required to
+exceed $0.5$, about four times the seed dispersion, so that the residual
+$\mathrm{MC}(q{=}1)-C_0=0.002$ cannot manufacture a horizon.}
+\begin{ruledtabular}
+\begin{tabular}{lccc}
+$\tau_c$ & $T_1$ ($50~\mu$T) & viable $T_{\rm turn}$ & horizon \\
+\hline
+$0.1$~ns & $372$~ms & $5$--$1100$~ms & $840$~ms \\
+$1$~ns & $37$~ms & $6$--$110$~ms & $84$~ms \\
+$5$~ns & $7.5$~ms & $10$--$22$~ms & $17$~ms \\
+$10$~ns & $3.7$~ms & none & $8.4$~ms \\
+$15.2$~ns (bound) & $2.4$~ms & \textbf{none} & $\mathbf{5.5}$~\textbf{ms} \\
+\end{tabular}
+\end{ruledtabular}
+\end{table}
+
+\textbf{A register rigidly bound to the intact protein cannot reach the neural
+band at all}: its best horizon is $5.5$~ms, below the band under every turnover
+rate. The mechanism requires the register to reorient at least three times faster
+than the $60$~kDa protein ($\tau_c\lesssim5$~ns), which a tethered or locally
+mobile cofactor could plausibly do and a rigidly buried one could not.
+
+This converts the paper's weakest statement---a criterion whose two parameters
+were simply unknown---into a quantitative and falsifiable one:
+
+\begin{quote}
+\emph{The radical pair must be regenerated catalytically, not photochemically, on
+a register that reorients with $\tau_c\lesssim5$~ns while remaining part of the
+same molecule, at a turnover interval drawn from the corresponding row of
+Table~\ref{tab:feasible}: $10$--$22$~ms at $\tau_c=5$~ns, $6$--$110$~ms at
+$1$~ns, $5$--$1100$~ms at $0.1$~ns. The two conditions are not independent, and
+quoting a single interval alongside a single $\tau_c$ bound would overstate the
+region.}
+\end{quote}
+
+Both halves are measurable with existing methods: $\tau_c$ by NMR relaxation
+dispersion on the isolated protein, and the turnover number by steady-state
+kinetics. Neither requires a neuron.
 
 \section{Spin parameters}
 \label{sec:params}
@@ -296,7 +880,9 @@ $A_{e_2a}$ & TrpH$^{\bullet+}$, H$\beta$1 & $\sim1.43$ & $40$ \\
 The engineered operating point uses $A_{e_1a}=80$, $A_{e_1b}=40$, $A_{e_2a}=15$~MHz,
 $J=2$~MHz, $B=1$~mT and $\tau=T_2^e=50$~ns. The conclusions depend on these
 magnitudes lying in the few--$40$~MHz range typical of flavin and tryptophan
-radicals, not on the precise values; the register criterion of Sec.~\ref{sec:clock}
-is independent of the hyperfine assignment altogether.
+radicals, not on the precise values. The register criterion is \emph{not}
+independent of the hyperfine assignment, however: Sec.~\ref{sec:aniso} shows that
+the capacity is carried by the perpendicular components of the hyperfine tensor
+and vanishes when they do.
 
 \end{document}

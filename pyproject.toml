@@ -52,3 +52,14 @@ testpaths = ["qbscreen/tests"]
 markers = [
     "slow: marks tests as slow (deselect with '-m \"not slow\"')",
 ]
+# Apple's Accelerate BLAS sets divide-by-zero / overflow / invalid flags on
+# matmuls with entirely finite operands, so a clean run reported 67 RuntimeWarning
+# lines that have nothing to do with this code. They are suppressed here rather
+# than at the twenty-three call sites across six files that raise them, and
+# test_blas_flag_artifact.py proves they are spurious --
+# genuine non-finite results would still fail that test and the value tests.
+filterwarnings = [
+    "ignore:divide by zero encountered in matmul:RuntimeWarning",
+    "ignore:overflow encountered in matmul:RuntimeWarning",
+    "ignore:invalid value encountered in matmul:RuntimeWarning",
+]

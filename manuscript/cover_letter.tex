@@ -1,5 +1,6 @@
 \documentclass[11pt]{letter}
 \usepackage[a4paper,margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
 \usepackage{hyperref}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{8pt}
@@ -47,27 +48,61 @@ separated pair, CIDNP is not an optional additional channel; it is the write
 mechanism.
 
 \textbf{Second}, there is no quantum advantage. A classical echo-state network given
-the same number of readout features matches or exceeds the five-spin reservoir. We
-report this rather than argue around it.
+the same number of readout features exceeds the five-spin reservoir---at the
+cryptochrome operating point by $49\%$ at eight matched channels and $123\%$ at
+five. Matched by physical unit rather than channel count the two are
+indistinguishable ($4\%$, half a standard deviation); on no accounting is the
+radical pair ahead by more than its own scatter. We report this rather than argue around it.
 
 \textbf{Third}, the timescale objection usually raised against this system does not
 survive. It rests on identifying the reservoir's clock with the microsecond
 radical-pair lifetime, but the memory is carried by the nuclear register, which is
-not consumed by recombination and departs in the diamagnetic product. Inserting a
-physiological $1$--$100$~ms turnover leaves the memory capacity unchanged to within
-$0.2\%$ and places the horizon at $3$--$280$~ms, inside the neural band. What
-replaces the timescale argument is a sharper and falsifiable chemical criterion: the
-\emph{same} nuclear register must be reused from one turnover to the next, failing
-which the capacity collapses to a memoryless read-back. Unlike a comparison of two
-timescales, which requires no quantum mechanics at all, this criterion can only be
-evaluated by the kind of spin-dynamical analysis performed here---and it is directly
-testable in synthetic donor--bridge--acceptor radical pairs by cycling the system and
-asking whether the yield at one turnover depends on the input at the previous one.
+not consumed by recombination and departs in the diamagnetic product. Across five
+decades of turnover interval the memory capacity falls by only $1.6\%$
+(twelve input realisations, paired), so a $10$--$100$~ms turnover places the
+horizon at $19$--$188$~ms, inside the neural band---provided the register itself
+survives the pause, which we show is now the binding condition: at the geomagnetic
+field nuclear relaxation is in the extreme-narrowing regime, and a proton on the
+intact protein relaxes in milliseconds rather than seconds. What replaces the timescale
+argument is a falsifiable chemical criterion: the \emph{same} nuclear register must
+be reused from one turnover to the next, failing which the capacity collapses to a
+memoryless read-back. The spin-dynamical analysis is what makes that criterion
+usable, because it identifies what the register actually stores: pure nuclear
+dephasing at any rate leaves the capacity untouched, so the memory lives in
+nuclear populations and not in coherence. We should add at once that this
+distinction, which we had expected to be the rescue, changes none of the numbers
+at the operating point: the geomagnetic field puts the register in extreme
+narrowing, where $T_1$ and $T_2$ coincide.
+
+We should be equally plain about where that leaves the biological reading, since
+it is less favourable than in the withdrawn version. Predicting the relaxation
+time rather than assuming it---from measured flavin quadrupole couplings and
+standard geometry, with the calculator validated against three measured
+systems---shows that a rigidly protein-bound register cannot reach the neural band
+at all: at the geomagnetic field the system is in extreme narrowing, a proton on a
+$60$~kDa protein relaxes in $2.4$~ms, and the horizon is capped at $5.5$~ms. The
+register must reorient at least three times faster than the whole protein for the
+band to open. The $^{14}$N of the flavin, being quadrupolar, cannot hold a
+register at all. And the drive cannot be light: a single flavin absorbs once per
+$7.7$~s in full sunlight and once per some hundreds of years inside a skull, so
+the regeneration must be catalytic. What survives is a specific and testable
+statement---catalytic regeneration on a proton register that reorients with
+$\tau_c\lesssim5$~ns, at a turnover interval set by that mobility ($10$--$22$~ms
+at $\tau_c=5$~ns, up to $5$--$1100$~ms at $0.1$~ns)---and both of its parameters are
+measurable in vitro, by relaxation dispersion and steady-state kinetics, without
+a neuron. We would rather submit the smaller claim with its constraints made
+explicit than the larger one.
 
 The work is entirely computational. All code and numerical outputs are openly
 released in the \texttt{qbscreen} package, every capacity is reported out of sample
 with its null floor and its convergence in sample length, and the central claims are
-covered by an automated test suite (28 tests, all passing). A companion study on the
+covered by an automated test suite (243 tests, all passing): twenty-six bind the
+headline quantities and one hundred and twenty-eight bind the capacity and
+standard-deviation cells of every table, with the expected values transcribed
+from the manuscript rather than from the data files. A further six parse the
+printed cells back out of the \texttt{.tex} and check them against the data, so
+the suite fails if either side moves, and twelve bind the input-parameter table.
+Derived-time and raw-IPC columns are not yet covered. A companion study on the
 corresponding weak-field magnetosensing analysis is under consideration elsewhere;
 the two are physically independent and we are glad to share it. This manuscript is
 not under consideration at any other journal. The authors declare no competing
