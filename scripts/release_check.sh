@@ -108,10 +108,22 @@ else
 fi
 rm -rf "$tmp"
 
+# The overfull/undefined counts come from LaTeX's .log, which is gitignored
+# (it embeds absolute paths). So it may be absent on a fresh clone, or -- as
+# happened when this branch was merged into main -- three days older than the
+# .tex beside it, in which case its numbers describe a document that no longer
+# exists. Trusting it blindly reported overfull boxes that had been fixed two
+# rounds earlier. A log that cannot be shown to match its source is treated as
+# no evidence, not as evidence of failure.
 for d in main supplementary cover_letter data_availability; do
   log="manuscript/$d.log"
   if [ ! -f "$log" ]; then
-    echo "$d: no log -- not compiled"
+    echo "$d: no log -- run with --fix to compile, then re-verify"
+    fail=1
+    continue
+  fi
+  if [ "manuscript/$d.tex" -nt "$log" ]; then
+    echo "$d: log is older than the .tex -- stale, cannot verify; run with --fix"
     fail=1
     continue
   fi
