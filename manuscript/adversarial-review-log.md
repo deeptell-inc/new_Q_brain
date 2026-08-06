@@ -1021,3 +1021,45 @@ DAS の冗長な `ensemble_pooled floor` も削除（引数なし実行が既に
 
 README の「Two further modules」重複（`the last three` に既に含まれる2つを "further" と
 呼んでいた、Opus 5-2）も解消。
+
+---
+
+# セット10 — 投稿先確定（PCCP）と図の基準適合
+
+## 私の誤りの訂正
+
+「原稿は revtex4-2（aps,prx）で組まれているのにカバーレターは PCCP 宛て。
+投稿前に組み直しが要る」と述べたが、**これは誤りだった**。RSC の著者ガイドラインは:
+
+> "Use of the template is optional for our journals."
+> "There are no restrictions on the length of a paper."
+> "Article text as a Word, PDF or LaTeX file (if you use LaTeX, please also include a PDF version)"
+
+**テンプレートは任意で、体裁の組み直しは初回投稿の要件ではない。**
+推測でブロッカーと呼んでいた。
+
+## ただし図には実害があった
+
+RSC の図の規定は **単段 8.3 cm / 双段 17.1 cm / 高さ上限 23.3 cm、文字 7 pt**。
+セット6で行ったフォント較正は **PRX の段幅（18.0 cm）基準**であり、
+RSC の狭い段幅では基準を割っていた:
+
+| 図 | 現レイアウト | RSC 段幅 |
+|---|---|---|
+| fig_criterion | 7.00 pt | **6.65 pt** ✗ |
+| fig_schematic | 7.20 pt | **6.89 pt** ✗ |
+| fig_readout | 7.89 pt | 7.49 pt ✓ |
+
+**狭いほう（RSC）で 7 pt を満たすよう再較正した。**
+こうすればどちらの体裁で組まれても基準を満たす。再測定値:
+
+| 図 | RSC 段幅での最小文字 | 高さ |
+|---|---|---|
+| fig_schematic | 7.14 pt | 13.2 cm |
+| fig_readout | 7.89 pt | 8.4 cm |
+| fig_criterion | 7.00 pt | 6.8 cm |
+
+いずれも 7 pt 以上、高さ上限 23.3 cm 以内。図中の衝突がないことはレンダー画像で目視確認した。
+
+出典: RSC 著者ガイドライン（PCCP）
+https://www.rsc.org/publishing/publish-with-us/publish-a-journal-article/pccp
