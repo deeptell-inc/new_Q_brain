@@ -2,7 +2,7 @@
 
 対象: `main.tex` / `supplementary.tex` / `cover_letter.tex` / `data_availability.tex` / `README.md`
 凍結基準: `FREEZE_MANIFEST.txt`（99ファイル、SHA-256）
-試験: 243 passed（`pytest exit=0`）
+試験: 246 passed（`pytest exit=0`）
 
 ## 論拠の種別（この区別が本台帳の要点）
 
@@ -90,11 +90,11 @@
 |---|---|---|---|---|---|
 | E1 | $\tau_c(60$ kDa$)=15.2$ ns | SI S12 | DERIVED-LIT | Stokes–Einstein–Debye、$\bar v=0.73$、水和 1.3 | `test_predicted_T1_row` |
 | E2 | 検算器の検証：$^2$H/D$_2$O 比 $1.08$、$^{14}$N 比 $0.46$、$^1$H$_2$O 比 $1.54$ | SI S12 表 | COMPUTED vs MEASURED-LIT | `open5_relaxation_estimate.json:validation` | `test_validation_row` |
-| E3 | 蛋白質結合プロトン：$50~\mu$T で $2.4$ ms、$9.4$ T で $9.0$ s | SI S12 表 | **DERIVED-LIT** | BPP 双極子＋幾何（1.78 Å） | `test_predicted_T1_row`, `test_register_relaxation_is_a_low_field_problem` |
+| E3 | 蛋白質結合プロトン：$50~\mu$T で $2.4$ ms、$9.4$ T で $9.0$ s | SI S12 表 | **DERIVED-LIT** | BPP 双極子＋幾何（1.78 Å） | `test_predicted_T1_row`, `test_register_relaxation_is_a_low_field_problem`  **分子内双極子のみの上界。**浴込みは $1.6$ ms（浴比 $f=0.54$ は本パッケージ自身の水検算行から） |
 | E4 | フラビン $^{14}$N：$0.14$–$0.34~\mu$s | SI S12 表 | **DERIVED-LIT** | 四極子式＋**測定 QCC**（Martínez 2025, N5 3.6 / N10 4.8 MHz） | `test_predicted_T1_row` |
 | E5 | 光駆動：日光下 $7.7$ s、頭蓋内 $\sim250$ 年 | SI S12, Limitations | **DERIVED-LIT** | 測定吸光係数 $\varepsilon_{450}=11{,}300$＋光子流束仮定＋量子収率 $0.1$ | `test_light_driven_row`, `test_light_cannot_drive_the_cycle_in_a_brain` |
-| E6 | 蛋白質結合レジスタの horizon 上限は $5.5$ ms（帯域外） | Results, Limitations, SI S12 | COMPUTED＋DERIVED-LIT | `open5_turnover_estimate.json:feasible_region` | `test_protein_bound_register_cannot_reach_the_neural_band`, `test_feasible_region_row` |
-| E7 | 実行可能なのは $\tau_c\lesssim5$ ns、窓は $\tau_c$ 依存（5 ns で 10–22 ms） | criterion box, SI S12 | COMPUTED | 同上 | `test_feasible_window_string` |
+| E6 | 蛋白質結合レジスタの horizon 上限は $5.5$ ms（帯域外） | Results, Limitations, SI S12 | COMPUTED＋DERIVED-LIT | `open5_turnover_estimate.json:feasible_region` | `test_protein_bound_register_cannot_reach_the_neural_band`, `test_feasible_region_row`  同上、浴込みの上限は $3.6$ ms。**マスター方程式に依存**（MC($q$) 曲線経由） |
+| E7 | 実行可能なのは $\tau_c\lesssim5$ ns、窓は $\tau_c$ 依存（5 ns で 10–22 ms） | criterion box, SI S12 | COMPUTED | 同上 | `test_feasible_window_string`  根拠を**格子最終 true 点から二分法へ変更**。浴なし $8.37$ ns（$1.82\times$）、浴込み $5.43$ ns（$2.81\times$）。**マスター方程式に依存** |
 
 **この節の要点**: E3–E5 はすべて **DERIVED-LIT**——測定された定数と標準理論からの導出であり、
 **測定値そのものではない**。かつ**ラジカル対マスター方程式を必要としない**。
@@ -171,8 +171,12 @@ the neural band … would have followed without the master equation」）。
 ## J. 本台帳が明らかにした帰属の要点
 
 1. **生き残った基準の数値は、ほぼすべて DERIVED-LIT である。**
-   $2.4$ ms（E3）、$5.5$ ms（E6）、$\tau_c\lesssim5$ ns（E7）、光子収支（E5）は
+   $2.4$ ms（E3）と光子収支（E5）は
    緩和理論・光物理と測定定数からの導出であり、**マスター方程式を要さない**。
+   **ただし $5.5$ ms（E6）と $\tau_c\lesssim5$ ns（E7）は要する** —— どちらも
+   $q=1-\exp(-T_{\rm d}/T_{1n})$ を、マスター方程式の出力である
+   `register_reuse.json` の $\mathrm{MC}(q)$ 曲線に通して得るものである。
+   当初この4件すべてを非依存としたのは誤りだった（`new_Q_volition` パネル指摘）。
 2. **リザバー計算が固有に寄与しているのは** $\mathrm{MC}-C_0\simeq1.9$（D3）、
    経路固有の床（B2）、書き込み機構としての CIDNP（B7）、および
    「占有数レジスタである」という構造的知見（D4）である。

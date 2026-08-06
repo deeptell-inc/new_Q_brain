@@ -828,11 +828,40 @@ $15.2$~ns (bound) & $2.4$~ms & \textbf{none} & $\mathbf{5.5}$~\textbf{ms} \\
 \end{ruledtabular}
 \end{table}
 
-\textbf{A register rigidly bound to the intact protein cannot reach the neural
-band at all}: its best horizon is $5.5$~ms, below the band under every turnover
-rate. The mechanism requires the register to reorient at least three times faster
-than the $60$~kDa protein ($\tau_c\lesssim5$~ns), which a tethered or locally
-mobile cofactor could plausibly do and a rigidly buried one could not.
+Two corrections are needed before this table can be read as a boundary, and they
+pull in opposite directions.
+
+\paragraph*{The boundary is solved, not read off the grid.} The scan above
+samples $\tau_c$ at $\ldots,5,10,15.2$~ns and never evaluates anything between $5$
+and $10$, so quoting ``feasible only for $\tau_c\le5$~ns'' reports the last
+sampled point rather than the boundary. Bisecting on the same feasibility
+predicate puts it at $8.37$~ns, a requirement of $1.8\times$ rather than
+$3\times$.
+
+\paragraph*{The relaxation calculation omitted the intermolecular bath.} Our
+$T_1$ counted only the intramolecular partner. The validation table above
+measures the size of that omission without being asked to: liquid water's
+intramolecular-only prediction is $5.55$~s against a measured total of $3.6$~s, a
+bath contributing $54\%$ of the intramolecular rate. Restoring it shortens
+$T_1$ for the protein-bound proton from $2.4$ to $1.6$~ms, the ceiling from $5.5$
+to $3.6$~ms, and moves the boundary back from $8.37$ to $5.43$~ns---a requirement
+of $2.8\times$. The two errors very nearly cancel, which is why the published
+$\tau_c\lesssim5$~ns and ``about three times'' survive; but they were reached by
+a route that does not support them, and the corrected route is what we now give.
+
+\textbf{A register whose dipolar vector reorients only with the intact protein
+cannot reach the neural band}: its ceiling is $5.5$~ms on the intramolecular
+term alone and $3.6$~ms with the bath, below the band under every turnover rate.
+The criterion is a statement about $\tau_{\rm eff}=S^2\tau_c+(1-S^2)\tau_{\rm int}$
+and about the total dipolar sum, not about chemical binding. The flavin
+$8\alpha$-CH$_3$ makes the distinction concrete: its intramethyl H--H vector has
+the exact geometric value $S^2=1/4$ and therefore does not co-rotate with the
+protein despite being covalently attached, which on the intramolecular term alone
+would give $T_1=5.0$~ms and a ceiling of $11.3$~ms---inside the band. Its own
+boundary sits at $17.3$~ns without the bath, i.e.\ it would be feasible even at
+the protein's own tumbling rate. With the bath that boundary falls to $5.5$~ns
+and the escape closes. Both candidate nuclei therefore land within a few per cent
+of the same requirement, $\tau_{\rm eff}\lesssim5$~ns.
 
 This converts the paper's weakest statement---a criterion whose two parameters
 were simply unknown---into a quantitative and falsifiable one:

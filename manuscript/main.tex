@@ -65,7 +65,11 @@ $T_1$ rather than assuming it removes the remaining latitude: at the geomagnetic
 field the register is in extreme narrowing, where relaxation is fastest, and a
 proton on the intact protein relaxes in $2.4$~ms rather than the second we had
 assumed---capping the horizon at $5.5$~ms unless the register reorients at least
-three times faster than the protein. What survives is a smaller claim on firmer
+three times faster than the protein. Those two figures count only the
+intramolecular dipolar partner and are therefore upper bounds; restoring the
+intermolecular proton bath, which this work's own validation table measures at
+$54\%$ of the intramolecular rate, shortens them to $1.6$ and $3.6$~ms and
+leaves the threefold requirement intact. What survives is a smaller claim on firmer
 ground: a criterion whose two constants can be measured in vitro, in place of one
 whose central relaxation time was never measured at all.
 \end{abstract}  
@@ -600,10 +604,13 @@ $(\mathrm{MC}-C_0)\times T_{1n}$; without it, the system retains nothing.}
 This criterion is a statement about a spin register. We should be exact about how
 much of it needed the spin dynamics. The quantity $\mathrm{MC}-C_0\simeq1.9$, and
 with it the horizon, comes from the reservoir calculation. The constants that
-decide whether the horizon reaches the neural band---the proton $T_1$ of $2.4$~ms,
-the $5.5$~ms cap, the $\tau_c\lesssim5$~ns requirement and the photon budget---come
-from relaxation theory and photophysics, and would have followed without the
-master equation. The population-versus-coherence finding is real, but at the
+decide whether the horizon reaches the neural band divide unevenly. The proton
+$T_1$ of $2.4$~ms and the photon budget are relaxation theory and photophysics
+and would have followed without the master equation. The $5.5$~ms cap and the
+$\tau_c\lesssim5$~ns requirement would not: both are obtained by feeding
+$q=1-\exp(-T_{\rm d}/T_{1n})$ into the measured $\mathrm{MC}(q)$ curve, which is
+itself an output of the master equation. We previously claimed all four were
+independent of the spin dynamics; that was wrong for the last two. The population-versus-coherence finding is real, but at the
 operating point it changes none of those numbers. We therefore claim the spin
 dynamics for the capacity, not for the criterion's parameters. We
 should not, however, overstate the distinction we originally drew. Once $q$ is
@@ -835,12 +842,26 @@ neuron (Supplemental Material, Sec.~S12). Two results follow, and the first is
 adverse. Nuclear relaxation at the geomagnetic field is in the extreme-narrowing
 regime, where $1/T_1\propto\tau_c$ is maximal, so the second-long $T_{1n}$ we
 assumed is a \emph{high-field} value: a proton on a $60$~kDa protein relaxes in
-$2.4$~ms at $50~\mu$T against $9.0$~s at $9.4$~T. A register rigidly bound to the
-intact protein therefore reaches a horizon of at most $5.5$~ms and cannot enter
-the neural band under any turnover rate. It enters only if the register reorients
-at least three times faster than the whole protein
-($\tau_c\lesssim5$~ns)---plausible for a tethered or locally mobile cofactor,
-impossible for a rigidly buried one. Second, the drive cannot be light: with the
+$2.4$~ms at $50~\mu$T against $9.0$~s at $9.4$~T. What sets the ceiling is not
+whether the register is chemically bound to the protein but the effective
+correlation time of its dipolar vector,
+$\tau_{\rm eff}=S^2\tau_c+(1-S^2)\tau_{\rm int}$, together with the dipolar sum
+$\Sigma=\sum_j S_j^2 r_j^{-6}$ over intramolecular \emph{and} intermolecular
+partners. For a vector that reorients only with the intact $60$~kDa protein
+($S^2=1$, $\tau_c=15.2$~ns) the intramolecular geminal term alone gives
+$T_1\le2.4$~ms and a ceiling of $\le5.5$~ms; adding the intermolecular proton
+bath---which the water row of our own validation table measures independently at
+$54\%$ of the intramolecular rate---shortens these to $1.6$ and $3.6$~ms. Fast
+internal motion lengthens $T_1$: the intramethyl H--H vector of the flavin
+$8\alpha$-CH$_3$ has the exact geometric value $S^2=1/4$, because that vector does
+\emph{not} co-rotate rigidly with the protein even though the methyl is
+covalently attached, and the intramethyl coupling alone would give $T_1=5.0$~ms
+and a ceiling of $11.3$~ms---inside the band. That escape does not survive the
+bath: it moves the methyl's own boundary from $17.3$ to $5.5$~ns. The criterion is
+therefore quantitative and vector-specific rather than a statement about binding:
+the register's dipolar vector must lose orientational memory about three times
+faster than the intact protein ($\tau_{\rm eff}\lesssim5$~ns), a factor that
+would be $1.8$ if the intermolecular bath were neglected. Second, the drive cannot be light: with the
 measured flavin extinction coefficient, a single flavin turns over once per
 $7.7$~s in full sunlight and once per some hundreds of years inside a skull, so a
 photochemical cycle fails by about ten orders of magnitude and the regeneration
@@ -1035,7 +1056,7 @@ list is given under Data and code availability below. We note there that
 \texttt{run\_reservoir} driver in \texttt{reservoir.py} still implement the
 superseded single-electron reset and are retained only as controls, so no result
 reported here is taken from them; the capacity estimators in
-\texttt{reservoir.py} are used throughout (243/243 tests pass).
+\texttt{reservoir.py} are used throughout (246/246 tests pass).
 
 
 \section{Data and code availability}
@@ -1049,7 +1070,7 @@ protocol-consistent capacity, coherence fraction and classical baselines are in
 \texttt{qbscreen/master\_equation.py}. Numerical outputs are in
 \texttt{simulation\_results/}. The capacity bound and the agreement of the solver
 with the closed-form coherent limit are checked in \texttt{qbscreen/tests/}
-(243 tests, all passing). Twenty-six tests in \texttt{test\_panel\_claims.py} bind
+(246 tests, all passing). Twenty-nine tests in \texttt{test\_panel\_claims.py} bind
 the headline quantities and load-bearing claims, and a further one hundred and twenty-eight in
 \texttt{test\_table\_rows.py} bind the capacity and standard-deviation cells of
 every table in the main text and Supplemental Material, with the expected values
