@@ -941,7 +941,7 @@ We model the reservoir as $N=5$ spins---two radical-pair electrons
 $(e_1,e_2)$ and three spin-$1/2$ nuclei---with Hamiltonian
 (in MHz). At the cryptochrome point the three nuclei carry the hyperfine
 couplings of $^{14}$N5 and $^{14}$N10 on FAD$^{\bullet-}$ and H$\beta$1 on
-TrpH$^{\bullet+}$ (Supplemental Material, Table~S18), with $^{14}$N modelled as
+TrpH$^{\bullet+}$ (Supplemental Material, Table~S19), with $^{14}$N modelled as
 spin-$1/2$; no $^{31}$P is present in the cryptochrome model, and the
 $^{31}$P-based proposal of Ref.~\cite{Fisher2015} is therefore \emph{not} the
 system tested here.
@@ -1056,7 +1056,7 @@ list is given under Data and code availability below. We note there that
 \texttt{run\_reservoir} driver in \texttt{reservoir.py} still implement the
 superseded single-electron reset and are retained only as controls, so no result
 reported here is taken from them; the capacity estimators in
-\texttt{reservoir.py} are used throughout (246/246 tests pass).
+\texttt{reservoir.py} are used throughout (258/258 tests pass).
 
 
 \section{Data and code availability}
@@ -1070,15 +1070,15 @@ protocol-consistent capacity, coherence fraction and classical baselines are in
 \texttt{qbscreen/master\_equation.py}. Numerical outputs are in
 \texttt{simulation\_results/}. The capacity bound and the agreement of the solver
 with the closed-form coherent limit are checked in \texttt{qbscreen/tests/}
-(246 tests, all passing). Twenty-nine tests in \texttt{test\_panel\_claims.py} bind
-the headline quantities and load-bearing claims, and a further one hundred and twenty-eight in
+(258 tests, all passing). Twenty-nine tests in \texttt{test\_panel\_claims.py} bind
+the headline quantities and load-bearing claims, and a further one hundred and forty in
 \texttt{test\_table\_rows.py} bind the capacity and standard-deviation cells of
 every table in the main text and Supplemental Material, with the expected values
 transcribed from the manuscript rather than from the data files. The opposite
 direction is checked by \texttt{test\_printed\_cells.py}, which parses the numeric
 cells back out of the \texttt{.tex}: the headline tables are matched column by
 column against their data files, and every other printed table cell must equal
-some shipped value. The suite therefore fails if either side moves. The spin-parameter table (S18) is now bound as well, by
+some shipped value. The suite therefore fails if either side moves. The spin-parameter table (S19) is now bound as well, by
 \texttt{test\_spin\_parameters.py}: it parses the printed values and compares them
 to the dictionaries the Hamiltonian is built from, checking the millitesla column
 as the megahertz column divided by the electron gyromagnetic ratio rather than as

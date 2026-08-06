@@ -481,3 +481,37 @@ def test_tau_c_pooled_excess_never_falls_below_the_uniform_pool():
     for r in _TAUC:
         assert r["excess_8ch"] >= base - 1e-9, (
             f"sigma={r['sigma_ln']}: excess {r['excess_8ch']:.4f} < uniform {base:.4f}")
+
+
+# ── SI robustness table (set 12): every motivated variation of the ceiling ──
+# Added when the printed-cell guard flagged the table as having no data behind
+# it -- the same orphan-table problem the set-5 audit found, caught by a guard
+# this time instead of by a reviewer.
+_ROBUST = _load(PANEL, "open5_turnover_estimate")["robustness"]
+
+
+@pytest.mark.parametrize("variation,tau_c,T1,ceiling", [
+    ("as published, hydration 1.3", 15.24, 2.442, 5.49),
+    ("hydration 1.0", 11.73, 3.175, 7.14),
+    ("hydration 1.6", 18.76, 1.984, 4.46),
+    ("viscosity x2", 30.49, 1.221, 2.75),
+    ("viscosity x4", 60.97, 0.611, 1.37),
+    ("120 kDa dimer", 30.49, 1.221, 2.75),
+    ("2 dipolar partners", 15.24, 1.221, 2.75),
+    ("3 dipolar partners", 15.24, 0.814, 1.83),
+    ("memory threshold 0.2", 15.24, 2.442, 5.49),
+    ("memory threshold 1.0", 15.24, 2.442, 4.12),
+    ("+ bath (f=0.54)", 15.24, 1.584, 3.56),
+])
+def test_robustness_row(variation, tau_c, T1, ceiling):
+    r = next(x for x in _ROBUST if x["variation"] == variation)
+    assert r["tau_c_ns"] == pytest.approx(tau_c, abs=0.005)
+    assert r["T1_ms"] == pytest.approx(T1, abs=0.0005)
+    assert r["ceiling_ms"] == pytest.approx(ceiling, abs=0.005)
+
+
+def test_no_motivated_variation_reaches_the_band():
+    """The point of the table. If any row ever lands in the band, the paper's
+    central exclusion is conditional on something it does not state."""
+    inside = [r["variation"] for r in _ROBUST if r["in_band"]]
+    assert not inside, f"these variations reach the 10 ms band: {inside}"

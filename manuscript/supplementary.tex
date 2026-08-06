@@ -863,6 +863,52 @@ the protein's own tumbling rate. With the bath that boundary falls to $5.5$~ns
 and the escape closes. Both candidate nuclei therefore land within a few per cent
 of the same requirement, $\tau_{\rm eff}\lesssim5$~ns.
 
+\paragraph*{How much of this depends on the band edge.} The requirement scales
+linearly with where the neural band is taken to start. In extreme narrowing
+$1/T_1\propto\tau_{\rm eff}$, so the ceiling is exactly inversely proportional to
+$\tau_{\rm eff}$ and the required speed-up is
+\begin{equation*}
+\text{speed-up} = 1.82\,(1+f)\times\frac{\text{band edge}}{10~\mathrm{ms}},
+\end{equation*}
+with $f$ the intermolecular bath ratio. Bisecting numerically agrees with the
+closed form to two decimals. A register that reorients only with the protein
+becomes feasible once the band edge falls below $5.5$~ms on the intramolecular
+term alone, but below only $3.6$~ms once the bath is included. Taking the band to
+start at $5$~ms rather than $10$~ms therefore does \emph{not} rescue it. We state
+this because the $10$~ms edge is a convention, and the conclusion should be read
+as conditional on it.
+
+\begin{table}[H]
+\caption{\label{tab:robust}Robustness of the ceiling. Every variation we can
+motivate leaves the horizon below the $10$~ms band edge; several were already
+computed for the paper and not reported.}
+\begin{ruledtabular}
+\begin{tabular}{lccc}
+variation & $\tau_c$ (ns) & $T_1$ (ms) & ceiling (ms) \\
+\hline
+as published, hydration $1.3$ & $15.24$ & $2.44$ & $5.49$ \\
+hydration $1.0$ & $11.73$ & $3.18$ & $7.14$ \\
+hydration $1.6$ & $18.76$ & $1.98$ & $4.46$ \\
+viscosity $\times2$ & $30.49$ & $1.22$ & $2.75$ \\
+viscosity $\times4$ & $60.97$ & $0.61$ & $1.37$ \\
+$120$~kDa dimer & $30.49$ & $1.22$ & $2.75$ \\
+$2$ dipolar partners & $15.24$ & $1.22$ & $2.75$ \\
+$3$ dipolar partners & $15.24$ & $0.81$ & $1.83$ \\
+memory threshold $0.2$ & $15.24$ & $2.44$ & $5.49$ \\
+memory threshold $1.0$ & $15.24$ & $2.44$ & $4.12$ \\
+$+$ bath ($f=0.54$) & $15.24$ & $1.58$ & $3.56$ \\
+\end{tabular}
+\end{ruledtabular}
+\end{table}
+
+The one variation that would move the ceiling the other way is a rank error:
+$\tau_{\rm rot}$ here is the \emph{rank-2} correlation time, $1/(6D_r)$, which is
+what the dipolar spectral densities require. The rank-1 value used in dielectric
+and fluorescence-anisotropy work is three times longer ($45.7$~ns), and feeding it
+into $J(\omega)$ would give $T_1=0.81$~ms and a ceiling of $1.8$~ms. That mistake
+would strengthen the exclusion, so we name the rank in the function itself rather
+than rely on a reader catching it.
+
 This converts the paper's weakest statement---a criterion whose two parameters
 were simply unknown---into a quantitative and falsifiable one:
 
