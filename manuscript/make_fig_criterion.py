@@ -63,22 +63,22 @@ ax.plot([], [], color=RED, lw=1.6, label="memoryless floor of that route ($q=1$)
 for i, (v, e, f) in enumerate(zip(val, err, flo)):
     excess = v - f
     if excess < 0.12:                      # bar sits on its own floor
-        ax.text(i, v + e + 0.12, "no memory", fontsize=7.02, color=RED,
+        ax.text(i, v + e + 0.12, "no memory", fontsize=7.39, color=RED,
                 ha="center", va="bottom", fontweight="bold")
         continue
     # shade the part of the bar that is genuinely above the floor
     ax.bar(i, excess, bottom=f, width=0.66, facecolor="none",
            edgecolor="#37474f", lw=0.6, ls=(0, (2, 1.5)), zorder=3)
-    ax.text(i, v + e + 0.12, f"+{excess:.2f}", fontsize=7.50, color="#263238",
+    ax.text(i, v + e + 0.12, f"+{excess:.2f}", fontsize=7.89, color="#263238",
             ha="center", va="bottom", fontweight="bold")
 
-ax.set_xticks(range(7)); ax.set_xticklabels(lab, fontsize=7.26)
+ax.set_xticks(range(7)); ax.set_xticklabels(lab, fontsize=7.64)
 ax.set_ylabel("information processing capacity")
 ax.set_ylim(0, 6.0)
 ax.set_title("What biology can read: excess over each route's own floor",
-             loc="left", fontweight="bold", fontsize=10.89)
+             loc="left", fontweight="bold", fontsize=11.46)
 bars[5].set_label("capacity from a classical downstream integrator")
-ax.legend(fontsize=7.02, loc="upper left", framealpha=0.95)
+ax.legend(fontsize=7.39, loc="upper left", framealpha=0.95)
 ax.grid(True, axis="y", alpha=0.25, zorder=0)
 fig.tight_layout()
 fig.savefig("manuscript/figures/fig_readout.pdf", bbox_inches="tight")
@@ -97,7 +97,7 @@ h_corr = (mc8 - C0) * cyc
 e_naive, e_corr = sd8 * cyc, sd8 * cyc
 
 ax[0].axhspan(1e-2, 1.0, color="#ffe0b2", alpha=0.7, zorder=0)
-ax[0].text(2e-6, 3.0e-2, "neural band\n(10 ms - 1 s)", fontsize=7.86, color="#e65100")
+ax[0].text(2e-6, 3.0e-2, "neural band\n(10 ms - 1 s)", fontsize=8.27, color="#e65100")
 ax[0].errorbar(td, h_naive, yerr=e_naive, fmt="o-", c=GREY, ms=3.5, lw=1.1,
                capsize=2, zorder=3, label=r"$\mathrm{MC}\times T$  (counts $d\!=\!0$)")
 ax[0].errorbar(td, h_corr, yerr=e_corr, fmt="o-", c=GREEN, ms=4, lw=1.5,
@@ -106,13 +106,13 @@ ax[0].errorbar(td, h_corr, yerr=e_corr, fmt="o-", c=GREEN, ms=4, lw=1.5,
 h_tau = (mc8[0] - C0) * 1e-6
 ax[0].axhline(h_tau, color=RED, ls=":", lw=1, zorder=2)
 ax[0].text(6e-4, h_tau * 1.35, "horizon if the clock were the pair lifetime (8 ch)",
-           fontsize=7.02, color=RED, ha="center")
+           fontsize=7.39, color=RED, ha="center")
 ax[0].set_xscale("log"); ax[0].set_yscale("log")
 ax[0].set_xlabel("turnover interval $T_{\\rm d}$ (s)")
 ax[0].set_ylabel("memory horizon (s)")
 ax[0].set_title("(a) the clock is the turnover, not $\\tau$",
-                loc="left", fontweight="bold", fontsize=10.89)
-ax[0].legend(fontsize=7.02, loc="upper left"); ax[0].grid(True, which="both", alpha=0.25)
+                loc="left", fontweight="bold", fontsize=11.46)
+ax[0].legend(fontsize=7.39, loc="upper left"); ax[0].grid(True, which="both", alpha=0.25)
 
 q = np.array([c["q"] for c in CH])
 dep = np.array([c["MC_8_depolarise"] for c in CH])
@@ -122,18 +122,18 @@ ax[1].plot(q, dep, "o-", c=GREEN, ms=4, lw=1.5,
 ax[1].plot(q, deph, "^--", c=ORANGE, ms=4, lw=1.3,
            label="dephasing ($T_{2n}$): preserves $\\langle I_z\\rangle$")
 ax[1].axhline(1.0, color=RED, ls=":", lw=1)
-ax[1].text(0.97, 1.06, "memoryless floor (MC = 1)", color=RED, fontsize=7.50,
+ax[1].text(0.97, 1.06, "memoryless floor (MC = 1)", color=RED, fontsize=7.89,
            ha="right", va="bottom")
 ax[1].annotate("the register stores\npopulations, not phase",
-               xy=(0.72, 2.88), xytext=(0.50, 2.28), fontsize=7.02, color=ORANGE,
+               xy=(0.72, 2.88), xytext=(0.50, 2.28), fontsize=7.39, color=ORANGE,
                ha="center",
                arrowprops=dict(arrowstyle="->", color=ORANGE, lw=0.8))
 ax[1].set_xlabel("nuclear relaxation per turnover  $q$")
 ax[1].set_ylabel("memory capacity MC (8 ch)")
 ax[1].set_ylim(0.55, 3.3)
 ax[1].set_title("(b) the criterion: register reuse",
-                loc="left", fontweight="bold", fontsize=10.89)
-ax[1].legend(fontsize=7.02, loc="lower left", framealpha=0.95)
+                loc="left", fontweight="bold", fontsize=11.46)
+ax[1].legend(fontsize=7.39, loc="lower left", framealpha=0.95)
 ax[1].grid(True, alpha=0.25)
 fig.tight_layout()
 fig.savefig("manuscript/figures/fig_criterion.pdf", bbox_inches="tight")
