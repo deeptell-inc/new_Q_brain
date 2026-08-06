@@ -1,0 +1,22 @@
+[
+  {
+    "model": "N as spin-1/2 (main text)",
+    "nuclear_spin": 0.5,
+    "dim": 16,
+    "IPC_kinetics": 1.8255981097273146,
+    "IPC_cidnp": 3.2666610763733317,
+    "MC_cidnp": 2.187212165610718,
+    "floor_cidnp": 1.983938928757972,
+    "excess_cidnp": 1.2827221476153596
+  },
+  {
+    "model": "N as spin-1 (real 14N)",
+    "nuclear_spin": 1.0,
+    "dim": 24,
+    "IPC_kinetics": 1.9422256836553415,
+    "IPC_cidnp": 3.639334367274438,
+    "MC_cidnp": 2.5828611670591246,
+    "floor_cidnp": 1.9972073911156638,
+    "excess_cidnp": 1.642126976158774
+  }
+]

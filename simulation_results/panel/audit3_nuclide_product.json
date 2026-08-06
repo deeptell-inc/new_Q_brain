@@ -1,0 +1,33 @@
+{
+  "rows": [
+    {
+      "scenario": "all three retained (main text)",
+      "IPC_5ch": 2.7420275992887024,
+      "IPC_8ch": 4.908772977210877,
+      "excess_5ch": 1.7229854492782215,
+      "excess_8ch": 2.903736252804798
+    },
+    {
+      "scenario": "14N wiped, 1H retained (literature)",
+      "IPC_5ch": 1.0190441665785237,
+      "IPC_8ch": 2.866469765848672,
+      "excess_5ch": 2.0165680427730592e-06,
+      "excess_8ch": 0.8614330414425933
+    },
+    {
+      "scenario": "1H wiped, 14N retained",
+      "IPC_5ch": 1.503278058126174,
+      "IPC_8ch": 3.8179346423033897,
+      "excess_5ch": 0.48423590811569306,
+      "excess_8ch": 1.812897917897311
+    },
+    {
+      "scenario": "all three wiped (floor)",
+      "IPC_5ch": 1.019042150010481,
+      "IPC_8ch": 2.0050367244060787,
+      "excess_5ch": 0.0,
+      "excess_8ch": 0.0
+    }
+  ],
+  "proton_fraction": 0.29666366585825815
+}

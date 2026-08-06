@@ -1,0 +1,7 @@
+{
+  "quantum_reference_IPC": 5.420585739613524,
+  "classical_IPC": 0.7639431622198433,
+  "classical_IPC_sd": 0.014673833833381616,
+  "M_trajectories": 512,
+  "semiclassical_coherence_fraction": 0.859066307790879
+}

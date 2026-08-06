@@ -7,7 +7,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.patches import FancyBboxPatch, FancyArrowPatch, Circle
 try:
-    plt.rcParams.update({"font.family": "Arial", "mathtext.fontset": "stix"})
+    plt.rcParams.update({"pdf.fonttype": 42, "ps.fonttype": 42, "font.family": "Arial", "mathtext.fontset": "stix"})
 except Exception:
     pass
 
@@ -25,13 +25,13 @@ def arrow(ax, x1, y1, x2, y2, c=GREY, lw=1.5, style="-|>"):
                  mutation_scale=11, lw=lw, color=c, shrinkA=0, shrinkB=0))
 
 
-fig, (axA, axB) = plt.subplots(2, 1, figsize=(3.4, 4.4),
-                               gridspec_kw={"height_ratios": [1.0, 1.2]})
+fig, (axA, axB) = plt.subplots(2, 1, figsize=(3.4, 5.0),
+                               gridspec_kw={"height_ratios": [1.0, 1.45]})
 for ax in (axA, axB):
     ax.set_xlim(0, 10); ax.set_ylim(0, 10); ax.axis("off")
 
 # ---- Panel (a): one molecule, two functions ----
-axA.text(0.2, 9.5, "(a) one molecule, two functions", ha="left", fontsize=8,
+axA.text(0.2, 9.5, "(a) one molecule, two functions", ha="left", fontsize=9.59,
          fontweight="bold")
 box(axA, 5, 5, 5.0, 1.5, "separated radical pair\n(cryptochrome: $J\\approx0$, $\\tau\\sim\\mu$s)",
     "#eef2f7", GREY, 7)
@@ -39,40 +39,43 @@ box(axA, 2.6, 8.4, 3.6, 1.1, "magnetosensor", "#e3f0fb", BLUE, 7.5, BLUE)
 box(axA, 7.4, 8.4, 3.6, 1.1, "quantum reservoir", "#e7f3e7", GREEN, 7.5, GREEN)
 arrow(axA, 4.0, 5.75, 2.7, 7.8, BLUE)
 arrow(axA, 6.0, 5.75, 7.3, 7.8, GREEN)
-axA.text(1.2, 6.7, "long $T_2^e$\n$\\to$ sensitive", ha="center", fontsize=6, color=BLUE)
-axA.text(8.8, 6.7, "fading memory\n$\\to$ computes", ha="center", fontsize=6, color=GREEN)
-axA.text(5, 2.7, "decoherence: enemy of the sensor,\nfriend of the reservoir",
-         ha="center", fontsize=6.3, color=RED, style="italic")
+axA.text(1.2, 6.7, "long $T_2^e$\n$\\to$ sensitive", ha="center", fontsize=7.20, color=BLUE)
+axA.text(8.8, 6.7, "fading memory\n$\\to$ computes", ha="center", fontsize=7.20, color=GREEN)
+axA.text(5, 2.7, "the open cycle — not electronic decoherence —\nsupplies the fading memory",
+         ha="center", fontsize=7.56, color=RED, style="italic")
 
 # ---- Panel (b): three-layer reservoir ----
-axB.text(0.2, 9.6, "(b) nuclei are the register that must persist", ha="left", fontsize=8,
+axB.text(0.2, 9.6, "(b) nuclei are the register that must persist", ha="left", fontsize=9.59,
          fontweight="bold")
 # input
-axB.text(0.5, 6.4, "input\n$s_k$", ha="center", fontsize=6.5, color="black")
+axB.text(0.5, 6.4, "input\n$s_k$", ha="center", fontsize=7.80, color="black")
 arrow(axB, 1.1, 6.4, 2.2, 6.4, "black")
 # Layer 2: radical-pair electrons (read/write head)
 box(axB, 3.3, 6.4, 2.0, 1.5, "$e_1\\!-\\!e_2$\nradical pair", "#e7f3e7", GREEN, 6.8, GREEN)
-axB.text(3.3, 5.25, "Layer 2: read/write head", ha="center", fontsize=5.8, color=GREEN)
+axB.text(3.3, 5.35, "Layer 2: read/write head", ha="center", fontsize=6.96, color=GREEN)
 # Layer 1: nuclei (memory) above
 for i, dx in enumerate((-0.7, 0.0, 0.7)):
-    axB.add_patch(Circle((3.3 + dx, 8.25), 0.30, fc="#e3f0fb", ec=BLUE, lw=1.1))
-axB.text(3.3, 8.95, "Layer 1: nuclear-spin memory (long $T_2$)", ha="center",
-         fontsize=5.8, color=BLUE)
-axB.add_patch(FancyArrowPatch((3.3, 7.2), (3.3, 7.9), arrowstyle="<|-|>",
+    axB.add_patch(Circle((3.3 + dx, 7.90), 0.30, fc="#e3f0fb", ec=BLUE, lw=1.1))
+axB.text(4.8, 8.40, "Layer 1: nuclear-spin memory\n(populations, long $T_{1n}$)",
+         ha="center", fontsize=6.96, color=BLUE, linespacing=1.3)
+axB.add_patch(FancyArrowPatch((3.3, 7.18), (3.3, 7.56), arrowstyle="<|-|>",
              mutation_scale=8, lw=1.4, color=BLUE, shrinkA=0, shrinkB=0))
-axB.text(4.55, 7.5, "hyperfine\nwrite/read", ha="left", fontsize=5.5, color=BLUE)
+axB.text(4.55, 7.15, "hyperfine\nwrite/read", ha="left", fontsize=6.60, color=BLUE)
 # Layer 3: readout
 box(axB, 6.7, 6.4, 2.3, 1.5, "product\nreadout\n(yield, CIDNP)", "#fdeaea", RED, 6.5, RED)
-axB.text(6.7, 5.25, "Layer 3: classical readout", ha="center", fontsize=5.8, color=RED)
+axB.text(6.9, 4.45, "Layer 3: classical readout", ha="center", fontsize=6.96, color=RED)
 arrow(axB, 4.35, 6.4, 5.5, 6.4, "black")
 # linear map -> output
 arrow(axB, 7.9, 6.4, 9.1, 6.4, "black")
-axB.text(9.5, 6.4, "trained\nlinear\nmap", ha="center", fontsize=6, color="black")
+axB.text(9.5, 6.4, "trained\nlinear\nmap", ha="center", fontsize=7.20, color="black")
 # memory-horizon caption strip
-axB.text(5, 3.9, "memory horizon $=\\mathrm{MC}\\times T_{\\rm turnover}$",
-         ha="center", fontsize=6.8, color="black")
-axB.text(5, 2.9, "reaches ms–s $\\it{if}$ the register is reused",
-         ha="center", fontsize=6.8, color=RED)
+axB.text(5, 3.9,
+         "memory horizon $=(\\mathrm{MC}-C_0)\\times T_{\\rm turnover}$",
+         ha="center", fontsize=8.16, color="black")
+axB.text(5, 3.15, "reaches ms–s only if the register is reused $\\it{and}$ survives:",
+         ha="center", fontsize=7.92, color=RED)
+axB.text(5, 1.75, "proton-carried ($^{14}$N is quadrupolar), $\\tau_c\\lesssim5$ ns,\ncatalytic turnover 5–100 ms — not light-driven",
+         ha="center", fontsize=7.20, color=RED)
 
 fig.tight_layout(h_pad=0.6)
 fig.savefig("manuscript/figures/fig_schematic.pdf", bbox_inches="tight")
