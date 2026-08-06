@@ -47,12 +47,26 @@ def J(w, tau):
 
 
 def dipolar_T1(r_ang, tau_c, B_tesla, gamma=GAMMA_H, n_partners=1, S2=1.0,
-               tau_int=None):
+               tau_int=None, sum_ext=0.0, S2_ext=1.0):
     """T1 (s) from dipolar coupling to n_partners equivalent spins at r_ang (A).
 
     S2 < 1 with tau_int models fast internal motion (model-free): a rotating
     methyl has S2 = 1/4 for its intra-methyl vectors, because the H-H vector is
     perpendicular to the rotation axis and P2(cos 90 deg) = -1/2.
+
+    sum_ext is the INTERMOLECULAR sum Sum_j r_j^-6 over partners that are not
+    the named geminal one, in A^-6. Until this was added the calculator counted
+    only the intramolecular partner, which the validation table below already
+    showed to be incomplete: liquid water's intramolecular-only prediction is
+    5.55 s against a measured total of 3.6 s, and the row's own note says
+    "measured total incl. intermolecular". The missing rate was being printed
+    and not propagated.
+
+    The bath vectors are taken to reorient with the molecule as a whole
+    (S2_ext = 1), not with the internal motion that averages the intramolecular
+    vector: a proton on a neighbouring residue does not know the methyl is
+    spinning. For a methyl proton the true value lies between S2 and 1, so
+    S2_ext = 1 is the upper bound on the bath rate.
     """
     r = r_ang * 1e-10
     b = MU0_4PI * gamma ** 2 * HBAR / r ** 3          # rad/s
@@ -65,6 +79,13 @@ def dipolar_T1(r_ang, tau_c, B_tesla, gamma=GAMMA_H, n_partners=1, S2=1.0,
         return out
 
     rate = 0.3 * b ** 2 * (Jeff(w) + 4.0 * Jeff(2 * w)) * n_partners
+    if sum_ext:
+        # same prefactor, its own geometric sum and its own spectral density.
+        # Left as a separate term so that sum_ext = 0 reproduces the previous
+        # result bit for bit.
+        C = MU0_4PI * gamma ** 2 * HBAR
+        Jext = lambda wx: S2_ext * J(wx, tau_c)
+        rate = rate + 0.3 * C ** 2 * (sum_ext * 1e60) * (Jext(w) + 4.0 * Jext(2 * w))
     return 1.0 / rate
 
 
@@ -134,6 +155,30 @@ GEOM = {
     "Trp H-beta (CH2, geminal partner)": dict(r=1.78, n=1, S2=1.0, tau_int=None),
     "flavin 8-alpha CH3 (intra-methyl)": dict(r=1.79, n=2, S2=0.25, tau_int=10e-12),
 }
+
+
+def bath_ratio_from_water():
+    """f = R_inter / R_intra, taken from this file's own validation table.
+
+    Row 3 predicts 5.55 s for the intramolecular H-H of liquid water against a
+    measured 3.6 s, and its own note reads "measured total incl. intermolecular".
+    The shortfall IS the intermolecular bath, already measured here and, until
+    now, not carried into any conclusion.
+
+    Calibrating on water rather than on a structure is deliberate. A structural
+    sum over a cryptochrome model gives a larger f (denser proton environment
+    than bulk water), so water is the WEAKEST defensible bath -- the choice that
+    makes it hardest to exclude a protein-bound register. Excluding it anyway is
+    the robust result.
+    """
+    return dipolar_T1(1.51, 2.5e-12, 9.4, n_partners=1) / 3.6 - 1.0
+
+
+def sum_ext_for(g, f=None):
+    """Intermolecular sum (A^-6) for a GEOM entry, scaled from the water row."""
+    if f is None:
+        f = bath_ratio_from_water()
+    return f * g["n"] / g["r"] ** 6
 
 
 def predict(mass_kda=60.0, fields=(50e-6, 1e-3, 0.5, 9.4)):

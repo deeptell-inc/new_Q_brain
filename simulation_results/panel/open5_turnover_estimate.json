@@ -180,5 +180,19 @@
       "max_horizon_s": 0.0055111406119762495,
       "feasible": false
     }
-  ]
+  ],
+  "critical_tau_c": {
+    "bath_f": 0.5416817168179355,
+    "tau_protein_ns": 15.243007897844024,
+    "per_nucleus": {
+      "Trp H-beta (CH2, geminal partner)": {
+        "tau_crit_dry_ns": 8.373515820503236,
+        "tau_crit_wet_ns": 5.43147180080414
+      },
+      "flavin 8-alpha CH3 (intra-methyl)": {
+        "tau_crit_dry_ns": 17.28962972164154,
+        "tau_crit_wet_ns": 5.459781765937805
+      }
+    }
+  }
 }

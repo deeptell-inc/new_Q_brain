@@ -241,13 +241,54 @@ def test_register_relaxation_is_a_low_field_problem():
 
 def test_protein_bound_register_cannot_reach_the_neural_band():
     """SI S12. The three requirements (reuse, relaxation, neural-band horizon)
-    have no common solution for a rigidly protein-bound register."""
+    have no common solution for a register whose dipolar vector reorients only
+    with the whole protein."""
     rows = {r["tau_c_ns"]: r for r in _load("open5_turnover_estimate")["feasible_region"]}
     assert rows[15.2]["feasible"] is False
     assert rows[15.2]["max_horizon_s"] < 1e-2, "must fall below the 10 ms band edge"
     assert rows[1.0]["feasible"] is True, "a mobile register does work"
-    viable = [t for t, r in rows.items() if r["feasible"]]
-    assert max(viable) <= 5.0, "feasible only for tau_c <= ~5 ns"
+
+
+def test_critical_tau_c_is_solved_not_read_off_the_grid():
+    """The boundary used to be quoted as the last grid point that happened to be
+    feasible. With the default grid (..., 5.0, 10.0, 15.2) that is 5.0, and
+    nothing between 5 and 10 ns was ever evaluated -- so the published threefold
+    requirement was 15.2/5, an artefact of grid spacing. It is now bisected."""
+    c = _load("open5_turnover_estimate")["critical_tau_c"]
+    trp = c["per_nucleus"]["Trp H-beta (CH2, geminal partner)"]
+    assert trp["tau_crit_dry_ns"] == pytest.approx(8.37, abs=0.05), \
+        "intramolecular-only boundary"
+    assert trp["tau_crit_dry_ns"] > 5.0 + 1e-9, \
+        "the grid's 5.0 ns was not the boundary; a test that pins it pins the artefact"
+    assert c["tau_protein_ns"] == pytest.approx(15.243, abs=0.01)
+
+
+def test_the_intermolecular_bath_is_what_makes_the_requirement_threefold():
+    """Two errors were cancelling: the grid overstated the boundary, and the T1
+    calculation omitted the intermolecular bath, which shortens it again. With
+    the bath restored the requirement is ~2.8x, which is what the manuscript's
+    'about three times' rests on -- not the 1.8x the grid-free dry number gives.
+    """
+    c = _load("open5_turnover_estimate")["critical_tau_c"]
+    assert c["bath_f"] == pytest.approx(0.542, abs=0.01), \
+        "bath ratio taken from this package's own water validation row"
+    for name, n in c["per_nucleus"].items():
+        speedup = c["tau_protein_ns"] / n["tau_crit_wet_ns"]
+        assert 2.5 < speedup < 3.2, f"{name}: {speedup:.2f}x, manuscript says about three"
+
+
+def test_the_methyl_escape_route_dies_with_the_bath():
+    """The flavin 8-alpha methyl has S^2 = 1/4, so its intramethyl vector does not
+    co-rotate with the protein and its T1 is long enough to reach the band --
+    an escape the manuscript would have had to concede. The intermolecular bath
+    closes it, and that is why the bath had to be implemented rather than the
+    published numbers rewritten."""
+    c = _load("open5_turnover_estimate")["critical_tau_c"]
+    me = c["per_nucleus"]["flavin 8-alpha CH3 (intra-methyl)"]
+    assert me["tau_crit_dry_ns"] > c["tau_protein_ns"], \
+        "without the bath the methyl is feasible even bound to the whole protein"
+    assert me["tau_crit_wet_ns"] < c["tau_protein_ns"], \
+        "with the bath it is not"
 
 
 def test_light_cannot_drive_the_cycle_in_a_brain():

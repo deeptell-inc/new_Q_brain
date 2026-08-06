@@ -99,7 +99,7 @@ def combine(relax_path=f"{OUT}/open5_relaxation_estimate.json"):
 
 
 
-def feasible_region(min_memory=0.5, band=(1e-2, 1.0),
+def feasible_region(min_memory=0.5, band=(1e-2, 1.0), return_boundaries=False,
                     taus_ns=(0.01, 0.05, 0.1, 0.5, 1.0, 2.0, 5.0, 10.0, 15.2)):
     """Can ANY (product mobility, turnover rate) satisfy all three requirements?
 
@@ -120,15 +120,24 @@ def feasible_region(min_memory=0.5, band=(1e-2, 1.0),
         reuse = json.load(f)
     qs = np.array([r["q_nuc"] for r in reuse])
     mcs = np.array([r["MC_8"] for r in reuse])
-    g = GEOM["Trp H-beta (CH2, geminal partner)"]
+    from qbscreen.relaxation_estimate import tau_c_protein
+    TAU_PROTEIN_NS = tau_c_protein(60.0) * 1e9
     C0 = 1.0
     Tds = np.logspace(-4, 1, 6000)
 
-    rows = []
-    print(f"\n  feasible region (retained memory must exceed {min_memory})")
-    print(f"    {'tau_c (ns)':>11} {'T1 (s)':>10} {'T_turn window':>22} {'max horizon':>13}")
-    for tc_ns in taus_ns:
-        T1 = dipolar_T1(g["r"], tc_ns * 1e-9, 50e-6, n_partners=g["n"])
+    def horizon_of(tc_ns, g, sum_ext=0.0):
+        """(best horizon, list of in-band turnover intervals) for one nucleus.
+
+        Pulled out of the loop below so that critical_tau_c() bisects on exactly
+        the predicate the table prints, rather than on a re-derivation of it.
+        S2/tau_int are now passed through: omitting them silently treated every
+        candidate as if its dipolar vector were rigid with the protein, which is
+        false for the methyl and is why the methyl row never reached the
+        conclusion.
+        """
+        T1 = dipolar_T1(g["r"], tc_ns * 1e-9, 50e-6, n_partners=g["n"],
+                        S2=g.get("S2", 1.0), tau_int=g.get("tau_int"),
+                        sum_ext=sum_ext)
         ok, best = [], 0.0
         for Td in Tds:
             m = float(np.interp(1 - np.exp(-Td / T1), qs, mcs)) - C0
@@ -138,18 +147,73 @@ def feasible_region(min_memory=0.5, band=(1e-2, 1.0),
             best = max(best, h)
             if band[0] <= h <= band[1]:
                 ok.append(Td)
+        return T1, best, ok
+
+    g = GEOM["Trp H-beta (CH2, geminal partner)"]
+    rows = []
+    print(f"\n  feasible region (retained memory must exceed {min_memory})")
+    print(f"    {'tau_c (ns)':>11} {'T1 (s)':>10} {'T_turn window':>22} {'max horizon':>13}")
+    for tc_ns in taus_ns:
+        T1, best, ok = horizon_of(tc_ns, g)
         w = f"{min(ok)*1e3:.2g} - {max(ok)*1e3:.3g} ms" if ok else "NONE"
         rows.append(dict(tau_c_ns=tc_ns, T1_s=float(T1), window=w,
                          max_horizon_s=float(best), feasible=bool(ok)))
         print(f"    {tc_ns:>11.3g} {T1:>10.3g} {w:>22} {best*1e3:>10.3g} ms")
 
+    # P0-2: the boundary, solved rather than read off the grid.
+    def critical_tau_c(g_, sum_ext=0.0, lo=0.1, hi=200.0, tol=1e-4):
+        """Largest tau_c (ns) that still reaches the band, by bisection.
+
+        The printed "feasible only for tau_c <= X" used to be the last grid
+        point that happened to be true. With the default grid
+        (..., 5.0, 10.0, 15.2) that is 5.0, because nothing between 5 and 10 was
+        ever evaluated -- the quoted threefold speed-up was 15.2/5, an artefact
+        of grid spacing rather than a solved boundary.
+        """
+        if not horizon_of(lo, g_, sum_ext)[2]:
+            return None                      # infeasible even at the fast end
+        if horizon_of(hi, g_, sum_ext)[2]:
+            return hi                        # feasible everywhere in range
+        while hi - lo > tol:
+            mid = 0.5 * (lo + hi)
+            if horizon_of(mid, g_, sum_ext)[2]:
+                lo = mid
+            else:
+                hi = mid
+        return 0.5 * (lo + hi)
+
+    # P1-6: every candidate nucleus, not just the hardcoded Trp. The methyl row
+    # was printed in the SI and bound by a test while never reaching the
+    # conclusion, because this function only ever evaluated Trp.
+    from qbscreen.relaxation_estimate import sum_ext_for, bath_ratio_from_water
+    f_bath = bath_ratio_from_water()
+    boundaries = {}
+    print(f"\n    bisected boundary per candidate nucleus "
+          f"(bath f = {f_bath:.3f}, from the water validation row)")
+    print(f"    {'nucleus':36s} {'no bath':>12s} {'with bath':>12s} {'speed-up':>10s}")
+    for nm, gg in GEOM.items():
+        dry = critical_tau_c(gg, 0.0)
+        wet = critical_tau_c(gg, sum_ext_for(gg, f_bath))
+        boundaries[nm] = dict(tau_crit_dry_ns=dry, tau_crit_wet_ns=wet)
+        su = (TAU_PROTEIN_NS / wet) if wet else float("nan")
+        print(f"    {nm[:35]:36s} {dry if dry else float('nan'):11.3f}s"
+              .replace("s", " ") + f" {wet if wet else float('nan'):11.3f} {su:9.2f}x")
+
+    tau_crit = boundaries[list(GEOM)[0]]["tau_crit_dry_ns"]
+
     viable = [r for r in rows if r["feasible"]]
     if viable:
         tmax = max(r["tau_c_ns"] for r in viable)
-        pb = [r for r in rows if r["tau_c_ns"] == 15.2][0]
+        # was `== 15.2`, which raised IndexError when handed this repo's own
+        # tau_c_protein(60.0) = 15.243...; pick the nearest row instead
+        pb = min(rows, key=lambda r: abs(r["tau_c_ns"] - 15.2))
         print(f"\n    feasible only for tau_c <= {tmax:g} ns; a 60 kDa protein-bound")
         print(f"    nucleus has tau_c = 15.2 ns and reaches at most "
               f"{pb['max_horizon_s']*1e3:.2g} ms -- below the band.")
+    if return_boundaries:
+        return rows, dict(bath_f=float(f_bath),
+                          tau_protein_ns=float(TAU_PROTEIN_NS),
+                          per_nucleus=boundaries)
     return rows
 
 
@@ -157,7 +221,12 @@ if __name__ == "__main__":
     os.makedirs(OUT, exist_ok=True)
     out = {"light_driven": light_driven(), "reaction_driven": reaction_driven()}
     out["register_survival"] = combine()
-    out["feasible_region"] = feasible_region()
+    rows, bounds = feasible_region(return_boundaries=True)
+    out["feasible_region"] = rows
+    # P0-2/P1-6: the solved boundary, per candidate nucleus, with and without
+    # the intermolecular bath. The old "feasible only for tau_c <= 5 ns" was the
+    # last true point of a grid that never sampled between 5 and 10 ns.
+    out["critical_tau_c"] = bounds
     with open(f"{OUT}/open5_turnover_estimate.json", "w") as f:
         json.dump(out, f, indent=2)
     print(f"\n  [checkpoint] {OUT}/open5_turnover_estimate.json")
