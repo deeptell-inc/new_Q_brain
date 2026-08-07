@@ -301,7 +301,8 @@ def tau_c_scan(taus_ns=(0.05, 0.1, 0.5, 1.0, 5.0, 15.2), B=50e-6):
     return rows
 
 
-def dipolar_T2(r_ang, tau_c, B_tesla, gamma=GAMMA_H, n_partners=1):
+def dipolar_T2(r_ang, tau_c, B_tesla, gamma=GAMMA_H, n_partners=1,
+               sum_ext=0.0, S2_ext=1.0):
     """Transverse relaxation for the same dipolar pair.
 
     This exists to check a claim the main text makes: that the register survives
@@ -310,12 +311,27 @@ def dipolar_T2(r_ang, tau_c, B_tesla, gamma=GAMMA_H, n_partners=1):
     w*tau_c >> 1. At the geomagnetic field w*tau_c ~ 2e-4 -- extreme narrowing --
     where J(0) = J(w) = J(2w) and therefore T1 = T2 EXACTLY. The rescue argument
     is vacuous at the operating point, and this function makes that checkable.
+
+    sum_ext carries the intermolecular bath, exactly as in dipolar_T1. It was
+    added later than the T1 term and the omission mattered: the T1 = T2 identity
+    was being checked between a bath-corrected T1 and a bath-free T2, so the
+    ratio was not the one the operating point actually has. It is still 1 --
+    extreme narrowing does not care which spins supply the coupling, only that
+    J(0) = J(w) = J(2w) -- but that now follows from the computation rather than
+    from an argument about it.
     """
     r = r_ang * 1e-10
     b = MU0_4PI * gamma ** 2 * HBAR / r ** 3
     w = larmor(gamma, B_tesla)
     rate = 0.15 * b ** 2 * (3 * J(0.0, tau_c) + 5 * J(w, tau_c)
                             + 2 * J(2 * w, tau_c)) * n_partners
+    if sum_ext:
+        # same prefactor and its own geometric sum, as in dipolar_T1, so that
+        # sum_ext = 0 reproduces the previous result bit for bit.
+        C = MU0_4PI * gamma ** 2 * HBAR
+        Jext = lambda wx: S2_ext * J(wx, tau_c)
+        rate = rate + 0.15 * C ** 2 * (sum_ext * 1e60) * (
+            3 * Jext(0.0) + 5 * Jext(w) + 2 * Jext(2 * w))
     return 1.0 / rate
 
 
@@ -323,12 +339,13 @@ def t1_t2_ratio(fields=(50e-6, 1e-3, 0.5, 9.4), mass_kda=60.0):
     """Where does T2 << T1 actually hold?"""
     tau_c = tau_c_protein(mass_kda)
     g = GEOM["Trp H-beta (CH2, geminal partner)"]
+    se = sum_ext_for()
     rows = []
     print(f"\n  is the T1/T2 distinction real at the operating point?")
     print(f"    {'field':>10} {'w*tau_c':>10} {'T1 (s)':>11} {'T2 (s)':>11} {'T2/T1':>8}")
     for B in fields:
-        T1 = dipolar_T1(g["r"], tau_c, B, n_partners=g["n"])
-        T2 = dipolar_T2(g["r"], tau_c, B, n_partners=g["n"])
+        T1 = dipolar_T1(g["r"], tau_c, B, n_partners=g["n"], sum_ext=se)
+        T2 = dipolar_T2(g["r"], tau_c, B, n_partners=g["n"], sum_ext=se)
         wt = larmor(GAMMA_H, B) * tau_c
         rows.append(dict(field_T=B, omega_tau_c=float(wt), T1_s=float(T1),
                          T2_s=float(T2), T2_over_T1=float(T2 / T1)))
