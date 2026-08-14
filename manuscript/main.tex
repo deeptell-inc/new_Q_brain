@@ -127,8 +127,9 @@ The molecular-spin and NMR communities have demonstrated quantum RC explicitly i
 nuclear- and electron-spin ensembles~\cite{Fujii2017,Nakajima2019,Martinez2021},
 part of a broad physical-reservoir-computing effort~\cite{Tanaka2019}.
 In this system the fading memory is supplied not by electronic dephasing---varying
-$T_2^e$ over the physically plausible range $50$--$2000$~ns changes the capacity by
-under $2\%$---but by the turnover itself: each cycle discards the electron pair and
+$T_2^e$ over the physically plausible range $50$--$2000$~ns at the engineered
+operating point changes the capacity by under $2\%$ (the two operating points are
+defined in Methods and must not be conflated)---but by the turnover itself: each cycle discards the electron pair and
 keeps only the nuclei, which is a dissipative, non-unitary map. It is the openness
 of the chemical cycle, not the rate of electronic decoherence, that makes the
 system a reservoir. This is consistent with the large coherence fraction reported
@@ -943,11 +944,16 @@ $B=1$~mT: representative molecular-spin-RC values chosen to give effective hyper
 writing, not a fit to a specific protein. For the cryptochrome point we set $J=0$,
 $B=50~\mu$T and $\tau=1~\mu$s, with hyperfine magnitudes representative of the
 dominant FAD$^{\bullet-}$ and TrpH$^{\bullet+}$ couplings~\cite{Lee2014,Schleicher2021}.
-The capacity is not fine-tuned to these numbers: it varies by under $2\%$ over
-$T_2^e=50$--$2000$~ns. It does fall steeply \emph{below} the operating point
-($-47\%$ from $50$ to $5$~ns), where the pair lifetime becomes
-decoherence-limited, so the insensitivity claimed here is to $T_2^e$ at or above
-$\tau$, not to $T_2^e$ generally. The register
+The capacity is not fine-tuned to these numbers: at the engineered point it
+varies by under $2\%$ over $T_2^e=50$--$2000$~ns, and that insensitivity is
+estimator-robust (a full-rank readout gives $-1.7\%$ over the same range).
+Below the operating point the two estimators disagree: the ridge readout
+recovers a steep fall ($-47\%$ from $50$ to $5$~ns), but this is an artifact
+of the fixed absolute ridge penalising the small-amplitude features at short
+$T_2^e$ --- a full-rank readout gives $+2.5\%$ for the same comparison
+(cf.\ the Regularisation paragraph of Sec.~\ref{sec:errorbudget}). The
+insensitivity claimed here is therefore to $T_2^e$ at or above $\tau$, and we
+make no claim below the operating point. The register
 criterion of Sec.~\ref{sec:criterion}, however, is \emph{not} independent of the
 hyperfine assignment---it is carried by the perpendicular tensor components and
 vanishes with them (Supplemental Material, Sec.~S11).
@@ -961,10 +967,12 @@ in its standard form~\cite{Jones2010}) with electronic pure dephasing,
 \frac{d\rho}{dt}
  &= -i[H,\rho]
  - \tfrac12\{k_S P_S + k_T P_T,\rho\} \nonumber\\
- &\quad + \sum_{i}\frac{1}{T_2^e}\!\left(S_z^i\rho S_z^i-\tfrac14\rho\right),
+ &\quad + \sum_{i}\frac{2}{T_2^e}\!\left(S_z^i\rho S_z^i-\tfrac14\rho\right),
 \label{eq:me}
 \end{align}
-solved exactly in Liouville space. The third term is the electronic decoherence
+solved exactly in Liouville space. The coefficient $2/T_2^e$ makes the
+single-electron transverse coherence decay as $e^{-t/T_2^e}$, so $T_2^e$ is
+the single-electron transverse relaxation time in the usual sense. The third term is the electronic decoherence
 that the companion sensing analysis showed to be decisive; it is not, however,
 what supplies the fading memory here, which comes from the openness of the
 chemical cycle and from inter-cycle nuclear depolarisation. We verified that, in the limit $1/T_2^e\to0$ and $k_S=k_T$, the
