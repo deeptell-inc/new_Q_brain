@@ -34,3 +34,7 @@ manuscript/.stale_backup/
 
 # bibtex output; main.tex ships a thebibliography block, so this is a build product
 *.bbl
+
+# derivable from scripts/make_bundle.sh; a committed copy only goes stale
+manuscript/submission/
+manuscript/pccp_submission.tar.gz
