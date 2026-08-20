@@ -80,3 +80,28 @@ def test_every_hardcoded_supplement_reference_is_covered():
         assert len(found) == covered, (
             f"{doc} has {len(found)} hardcoded supplement table references "
             f"({found}) but only {covered} are guarded in REFS")
+
+
+def test_esi_footnote_names_every_supplementary_section():
+    """The dagger footnote on the title page lists what is in the ESI.
+
+    It was inherited from the withdrawn submission and still advertised
+    "throughput and finite-size scans", which this supplement does not contain
+    -- nothing checked it, because it is prose in one document about the
+    headings of another. Each section must now leave a distinctive word in the
+    footnote, so adding a section to the ESI without announcing it fails here.
+    """
+    foot = re.search(r"\\footnotetext\{\\dag~(.*?)See DOI",
+                     (ROOT / "main.tex").read_text(), re.S)
+    assert foot, "the ESI footnote is missing from main.tex"
+    text = foot.group(1).lower()
+    missing = []
+    for title in re.findall(r"^\\section\{(.+?)\}",
+                            (ROOT / "supplementary.tex").read_text(), re.M):
+        words = [w for w in re.findall(r"[a-z-]{6,}", title.lower())]
+        assert words, f"ESI section {title!r} has no word long enough to key on"
+        if not any(w in text for w in words):
+            missing.append((title, words))
+    assert not missing, (
+        "ESI sections that the title-page footnote does not mention: "
+        + "; ".join(f"{t} (none of {w})" for t, w in missing))

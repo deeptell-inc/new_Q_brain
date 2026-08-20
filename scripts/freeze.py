@@ -39,6 +39,8 @@ INCLUDE = [
     # artefacts, not build products: the .tif and the 250-character .txt are
     # uploaded as-is, so they are frozen alongside the .pdf that *.pdf catches
     ("manuscript", ("toc_entry.tif", "toc_entry.txt", "SUBMISSION_CHECKLIST.md")),
+    # the RSC template's own graphics; main.tex does not compile without them
+    ("manuscript/head_foot", ("*.pdf", "*.eps")),
 ]
 
 # LaTeX logs and .aux files are deliberately out of scope: they embed absolute

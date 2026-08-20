@@ -47,10 +47,14 @@ cp -f manuscript/SUBMISSION_CHECKLIST.md "$OUT/"
 # only the figures main.tex actually includes; figures/ also holds two outputs
 # that no document uses, and shipping those invites the "which figure is this?"
 # query at proof stage.
+# head_foot/ is the template's own furniture and is copied whole above; only
+# the paper's own figures are picked out here.
 for g in $(grep -o 'includegraphics\[[^]]*\]{[^}]*}' manuscript/main.tex |
-           sed 's/.*{//;s/}//' | sort -u); do
+           sed 's/.*{//;s/}//' | grep -v '^head_foot/' | sort -u); do
   cp -f "manuscript/figures/$g" "$OUT/figures/$g" || exit 1
 done
+# the RSC template graphics main.tex \includegraphics from
+cp -rf manuscript/head_foot "$OUT/"
 cp -f FREEZE_MANIFEST.txt "$OUT/"
 
 echo

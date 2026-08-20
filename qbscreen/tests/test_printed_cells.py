@@ -46,9 +46,14 @@ def _table_body(tex_name, label):
     body = t[t.find("\n", start) + 1:end]
     rows = []
     for line in body.split("\\\\"):
-        # strip \hline FIRST: a row that follows one used to be discarded whole,
-        # which silently dropped the sigma = 0 row of Table S12
-        line = line.replace("\\hline", "").strip()
+        # strip the rule macros FIRST: a row that follows one used to be
+        # discarded whole, which silently dropped the sigma = 0 row of Table S12.
+        # main.tex draws booktabs rules since the move to the RSC template
+        # (revtex's ruledtabular does not exist in that class); supplementary.tex
+        # still uses \hline, so both spellings are removed here.
+        for rule in ("\\hline", "\\toprule", "\\midrule", "\\bottomrule"):
+            line = line.replace(rule, "")
+        line = line.strip()
         if not line:
             continue
         rows.append([c.strip() for c in line.split("&")])
