@@ -1,7 +1,7 @@
 # claims-ledger — 全主張とその論拠
 
 対象: `main.tex` / `supplementary.tex` / `cover_letter.tex` / `data_availability.tex` / `README.md`
-凍結基準: `FREEZE_MANIFEST.txt`（102ファイル、SHA-256）
+凍結基準: `FREEZE_MANIFEST.txt`（108ファイル、SHA-256）
 試験: 290 passed（`pytest exit=0`）
 
 ## 論拠の種別（この区別が本台帳の要点）

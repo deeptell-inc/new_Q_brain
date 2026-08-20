@@ -35,6 +35,10 @@ INCLUDE = [
     # maintained by sync_test_counts.py; leaving it unfrozen meant the count
     # guard could be satisfied while the file itself was edited undetected
     ("manuscript", ("claims-ledger.md",)),
+    # the PCCP table-of-contents entry and the upload checklist are shipped
+    # artefacts, not build products: the .tif and the 250-character .txt are
+    # uploaded as-is, so they are frozen alongside the .pdf that *.pdf catches
+    ("manuscript", ("toc_entry.tif", "toc_entry.txt", "SUBMISSION_CHECKLIST.md")),
 ]
 
 # LaTeX logs and .aux files are deliberately out of scope: they embed absolute
@@ -84,7 +88,8 @@ def main():
              f"# scope: {len(files)} files -- manuscript sources, PDFs and",
              "#        supplementary.aux; embedded figure PDFs and their generators; the",
              "#        qbscreen package and its tests; every simulation_results JSON they",
-             "#        read or write; README.md; pyproject.toml; and scripts/.",
+             "#        read or write; the PCCP TOC entry and submission checklist;",
+             "#        README.md; pyproject.toml; and scripts/.",
              f"# note:  {EXCLUDE_NOTE}",
              ""]
     for rel in files:

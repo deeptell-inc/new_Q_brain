@@ -1,0 +1,1 @@
+A radical-pair reservoir is readable by ordinary chemistry but has no quantum advantage, and its memory horizon is capped by nuclear relaxation at 50 μT, not the microsecond pair lifetime: neural timescales need a register that outruns the protein.

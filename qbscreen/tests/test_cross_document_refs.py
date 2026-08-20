@@ -25,10 +25,10 @@ AUX = ROOT / "supplementary.aux"
 # (document, regex with the number as group 1, label the sentence refers to)
 REFS = [
     ("main.tex",
-     r"\(Supplemental Material, Table~S(\d+)\)",
+     r"\(ESI, Table~S(\d+)\)",
      "tab:params"),
     ("main.tex",
-     r"retained as Supplemental Table~S(\d+), whose",
+     r"retained as ESI Table~S(\d+), whose",
      "tab:clock"),
     ("data_availability.tex",
      r"superseded clock scan of ESI Table~S(\d+) are",
