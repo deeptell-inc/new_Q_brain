@@ -91,13 +91,15 @@ contributions. A companion study from
 this program places the conjecture on quantitative footing from the sensing side. Solving the radical-pair master equation with electronic
 decoherence explicitly included, it finds that the active-site radical pairs of
 the principal neurotransmitter-metabolising flavoenzymes (monoamine oxidase A/B,
-D-amino-acid oxidase) are magnetically inert: in the most favourable case that
+D-amino-acid oxidase) are magnetically inert: the computed geomagnetic effect on
+the singlet yield is $1.7\times10^{-12}\%$, and even the most favourable case that
 analysis can construct---the coherent limit with an unphysically long
-lifetime---the field effect is capped at $4.0\times10^{-6}\%$. The quench is not
-the exchange coupling by itself: the inter-radical exchange and \emph{dipolar}
-couplings act together ($|J|\sim0.75$~GHz with $D\approx-1.2$~GHz for monoamine
-oxidase), and the picosecond lifetime forbids weak-field S--T mixing
-independently of either. Only a \emph{spatially separated}
+lifetime---caps it at $4.0\times10^{-6}\%$. Cryptochrome in the identical
+framework gives $+1.0\%$. What decides this is the picosecond active-site
+lifetime rather than the exchange coupling: at $\tau\approx10$~ps the response is
+unchanged to within a few per cent whether or not the gigahertz $J$ is present.
+The discriminating variable is the inter-radical separation the protein scaffold
+imposes, not the flavin the two share. Only a \emph{spatially separated}
 radical pair, as in cryptochrome---with $J\approx0$ and a microsecond
 lifetime---sustains the coherence required for weak-field
 sensitivity~\cite{Efimova2008,Companion2026}. This premise is a standard result of
@@ -1048,7 +1050,7 @@ list is given under Data and code availability below. We note there that
 \texttt{run\_reservoir} driver in \texttt{reservoir.py} still implement the
 superseded single-electron reset and are retained only as controls, so no result
 reported here is taken from them; the capacity estimators in
-\texttt{reservoir.py} are used throughout (286/286 tests pass).
+\texttt{reservoir.py} are used throughout (290/290 tests pass).
 
 
 \section{Data and code availability}
@@ -1062,7 +1064,7 @@ protocol-consistent capacity, coherence fraction and classical baselines are in
 \texttt{qbscreen/master\_equation.py}. Numerical outputs are in
 \texttt{simulation\_results/}. The capacity bound and the agreement of the solver
 with the closed-form coherent limit are checked in \texttt{qbscreen/tests/}
-(286 tests, all passing). Twenty-nine tests in \texttt{test\_panel\_claims.py} bind
+(290 tests, all passing). Twenty-nine tests in \texttt{test\_panel\_claims.py} bind
 the headline quantities and load-bearing claims, and a further one hundred and forty in
 \texttt{test\_table\_rows.py} bind the capacity and standard-deviation cells of
 every table in the main text and Supplemental Material, with the expected values
@@ -1178,8 +1180,8 @@ flavocoenzyme radicals}, Sci. Rep. \textbf{11}, 18395 (2021).
 avian magnetic compass}, Biophys. J. \textbf{94}, 1565 (2008).
 
 \bibitem{Companion2026} H.~Wakaura and T.~Tanimae,
-\textit{Ultrafast recombination and exchange coupling preclude weak-field
-magnetosensitivity of neurotransmitter-metabolising flavoenzymes}
+\textit{Active-site geometry, not the shared flavin cofactor, sets the
+weak-field magnetosensitivity of neurotransmitter-metabolising flavoenzymes}
 (companion manuscript, 2026).
 
 \bibitem{Maass2002} W.~Maass, T.~Natschläger, and H.~Markram,
