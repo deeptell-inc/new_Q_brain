@@ -31,3 +31,6 @@ simulation_results/panel_before_regen/
 # superseded figure PDFs, moved aside when \graphicspath was found not to
 # override current-directory resolution. Kept locally for reference only.
 manuscript/.stale_backup/
+
+# bibtex output; main.tex ships a thebibliography block, so this is a build product
+*.bbl

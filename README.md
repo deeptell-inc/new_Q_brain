@@ -67,7 +67,7 @@ qbscreen/                    the package
   relaxation_estimate.py     predicted nuclear T1/T2, validated against measured systems (S12)
   turnover_estimate.py       turnover interval from photophysics/catalysis; feasible region (S12)
   product_carrier_audit.py   adverse results re-run with the product register (S4)
-  tests/                     286 tests: solver, capacity bound, estimators, claim-binding and table-row regressions (capacity and SD cells, input-parameter table, cross-document table references, criterion numbers printed in prose; derived-time and raw-IPC columns not yet bound)
+  tests/                     290 tests: solver, capacity bound, estimators, claim-binding and table-row regressions (capacity and SD cells, input-parameter table, cross-document table references, criterion numbers printed in prose; derived-time and raw-IPC columns not yet bound)
 manuscript/                  main.tex, supplementary.tex (ESI), cover letter, DAS, figures
 simulation_results/          archived JSON outputs behind every figure and table
 ```
