@@ -27,7 +27,7 @@ pair, CIDNP is not an optional extra readout channel; it is the write mechanism.
 
 ## What makes this repository different from its predecessor
 
-This work supersedes an earlier analysis (withdrawn from *PCCP* as
+This work supersedes an earlier analysis (rejected by *PCCP* as
 CP-ART-06-2026-002404) in which the reservoir was driven by resetting a single
 electron. That abstraction destroys the electron–electron correlation and, for a
 separated pair, pins the singlet probability at exactly $1/4$ regardless of
@@ -67,7 +67,7 @@ qbscreen/                    the package
   relaxation_estimate.py     predicted nuclear T1/T2, validated against measured systems (S12)
   turnover_estimate.py       turnover interval from photophysics/catalysis; feasible region (S12)
   product_carrier_audit.py   adverse results re-run with the product register (S4)
-  tests/                     291 tests: solver, capacity bound, estimators, claim-binding and table-row regressions (capacity and SD cells, input-parameter table, cross-document table references, criterion numbers printed in prose; derived-time and raw-IPC columns not yet bound)
+  tests/                     293 tests: solver, capacity bound, estimators, claim-binding and table-row regressions (capacity and SD cells, input-parameter table, cross-document table references, criterion numbers printed in prose; derived-time and raw-IPC columns not yet bound)
 manuscript/                  main.tex, supplementary.tex (ESI), cover letter, DAS, figures
 simulation_results/          archived JSON outputs behind every figure and table
 ```
