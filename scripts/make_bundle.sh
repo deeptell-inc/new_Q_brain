@@ -23,6 +23,7 @@ if ! bash scripts/release_check.sh; then
   echo
   echo "REFUSING to build a bundle from a tree that does not pass. Fix, or run"
   echo "  bash scripts/release_check.sh --fix"
+  rm -rf "$OUT" "$TAR"     # and do not leave an older bundle behind to be uploaded by mistake
   exit 1
 fi
 
@@ -37,12 +38,31 @@ if n > 250:
     sys.exit("PCCP allows at most 250 characters in the TOC entry text")
 PY
 
+echo
+echo "=== response to the referee ==="
+# the response skeleton ships TODO markers where the referee's comments go; a
+# bundle with those still in it is not a response, it is a template
+if grep -q "TODO" manuscript/response_to_referees.tex; then
+  echo "response_to_referees.tex still carries TODO markers -- paste the referee"
+  echo "comments from the CP-ART-06-2026-002404 report before building"
+  rm -rf "$OUT" "$TAR"
+  exit 1
+fi
+(cd manuscript && for _ in 1 2 3; do /Library/TeX/texbin/pdflatex -interaction=nonstopmode response_to_referees.tex > /dev/null 2>&1; done)
+echo "response_to_referees.pdf: $(pdfinfo manuscript/response_to_referees.pdf | awk '/^Pages/{print $2}') pages"
+
+echo
+echo "=== marked-up copies against the withdrawn submission ==="
+bash scripts/sync_diff.sh || exit 1
+
 rm -rf "$OUT"
 mkdir -p "$OUT/figures"
 for f in main supplementary cover_letter data_availability; do
   cp -f "manuscript/$f.tex" "manuscript/$f.pdf" "$OUT/"
 done
 cp -f manuscript/toc_entry.pdf manuscript/toc_entry.tif manuscript/toc_entry.txt "$OUT/"
+cp -f manuscript/response_to_referees.tex manuscript/response_to_referees.pdf \
+      manuscript/main_diff.pdf manuscript/supplementary_diff.pdf "$OUT/"
 cp -f manuscript/SUBMISSION_CHECKLIST.md "$OUT/"
 # only the figures main.tex actually includes; figures/ also holds two outputs
 # that no document uses, and shipping those invites the "which figure is this?"
