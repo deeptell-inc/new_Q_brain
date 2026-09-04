@@ -69,7 +69,9 @@ qbscreen/                    the package
   product_carrier_audit.py   adverse results re-run with the product register (S4)
   tests/                     293 tests: solver, capacity bound, estimators, claim-binding and table-row regressions (capacity and SD cells, input-parameter table, cross-document table references, criterion numbers printed in prose; derived-time and raw-IPC columns not yet bound)
 manuscript/                  main.pdf, supplementary.pdf (ESI) and data_availability.pdf as
-                             compiled, plus figures/ and the make_*.py that draw them from
+                             compiled, the marked-up copies main_diff.pdf and
+                             supplementary_diff.pdf against the withdrawn 2026-06-24 submission,
+                             plus figures/ and the make_*.py that draw them from
                              simulation_results/. The LaTeX sources, cover letter and response
                              are supplied to the journal and are not distributed here; the
                              tests that read them skip on a clone
