@@ -30,6 +30,10 @@ simulation_results/panel_before_regen/
 # draw them are results and stay tracked.
 manuscript/*.tex
 manuscript/*.pdf
+# ...except the compiled manuscript, ESI and DAS, which are results
+!manuscript/main.pdf
+!manuscript/supplementary.pdf
+!manuscript/data_availability.pdf
 manuscript/*.md
 manuscript/*.bib
 manuscript/toc_entry.*
@@ -51,3 +55,6 @@ manuscript/pccp_submission.tar.gz
 manuscript/*_diff.tex
 manuscript/*_diff.pdf
 manuscript/response_to_referees.pdf
+
+# the manuscript's own private history (see scripts/mgit.sh)
+.manuscript.git/
