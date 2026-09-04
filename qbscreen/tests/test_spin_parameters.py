@@ -23,6 +23,9 @@ import pytest
 from qbscreen.general_spin import G_E, MU_B, HBAR
 from qbscreen.final_numbers import ENG
 from qbscreen.readout_routes import CRY
+from qbscreen.tests._manuscript import requires_manuscript
+
+pytestmark = requires_manuscript
 
 SI = pathlib.Path(__file__).resolve().parents[2] / "manuscript" / "supplementary.tex"
 MAIN = pathlib.Path(__file__).resolve().parents[2] / "manuscript" / "main.tex"

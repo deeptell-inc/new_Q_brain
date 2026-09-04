@@ -106,6 +106,8 @@ def main():
              "#        supplementary.aux; embedded figure PDFs and their generators; the",
              "#        qbscreen package and its tests; every simulation_results JSON they",
              "#        read or write; the PCCP TOC entry and submission checklist;",
+             "#        the manuscript sources listed here are supplied with the",
+             "#        submission and are NOT in the public repository;",
              "#        README.md; pyproject.toml; and scripts/.",
              f"# note:  {EXCLUDE_NOTE}",
              ""]

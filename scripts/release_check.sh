@@ -78,17 +78,25 @@ fi
 
 python3 - <<'PY'
 import hashlib, pathlib, re, sys
-n = bad = 0
+n = bad = undistributed = 0
 for line in open("FREEZE_MANIFEST.txt"):
     m = re.match(r"^([0-9a-f]{64})  (.+)$", line.rstrip("\n"))
     if not m:
         continue
     n += 1
     p = pathlib.Path(m.group(2))
+    rel = m.group(2)
+    # the manuscript sources are frozen but not distributed (see .gitignore);
+    # on a clone they are absent, which is not a mismatch
+    if (not p.exists() and rel.startswith("manuscript/")
+            and not rel.startswith("manuscript/figures/") and "/make_" not in rel):
+        undistributed += 1
+        continue
     if not p.exists() or hashlib.sha256(p.read_bytes()).hexdigest() != m.group(1):
         bad += 1
-        print(f"  MISMATCH {m.group(2)}")
-print(f"manifest: {n - bad}/{n} match")
+        print(f"  MISMATCH {rel}")
+print(f"manifest: {n - bad - undistributed}/{n - undistributed} match"
+      + (f" ({undistributed} manuscript files not distributed here)" if undistributed else ""))
 sys.exit(1 if bad else 0)
 PY
 [ $? -ne 0 ] && fail=1

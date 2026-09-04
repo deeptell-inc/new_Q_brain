@@ -20,11 +20,12 @@ import shutil
 import subprocess
 
 import pytest
+from qbscreen.tests._manuscript import requires_manuscript
 
 MAN = pathlib.Path(__file__).resolve().parents[2] / "manuscript"
 
-pytestmark = pytest.mark.skipif(shutil.which("pdftotext") is None,
-                                reason="pdftotext (poppler) not installed")
+pytestmark = [requires_manuscript, pytest.mark.skipif(shutil.which("pdftotext") is None,
+                                reason="pdftotext (poppler) not installed")]
 
 
 @functools.lru_cache(maxsize=1)

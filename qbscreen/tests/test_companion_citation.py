@@ -19,6 +19,9 @@ import pathlib
 import re
 
 import pytest
+from qbscreen.tests._manuscript import requires_manuscript
+
+pytestmark = requires_manuscript
 
 HERE = pathlib.Path(__file__).resolve().parents[2]
 # walk up rather than guess a depth: this package is checked out both directly

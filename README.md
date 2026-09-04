@@ -68,7 +68,10 @@ qbscreen/                    the package
   turnover_estimate.py       turnover interval from photophysics/catalysis; feasible region (S12)
   product_carrier_audit.py   adverse results re-run with the product register (S4)
   tests/                     293 tests: solver, capacity bound, estimators, claim-binding and table-row regressions (capacity and SD cells, input-parameter table, cross-document table references, criterion numbers printed in prose; derived-time and raw-IPC columns not yet bound)
-manuscript/                  main.tex, supplementary.tex (ESI), cover letter, DAS, figures
+manuscript/figures/          the figures, drawn from simulation_results/ by manuscript/make_*.py
+                             (the LaTeX sources, PDFs, cover letter and response are supplied
+                             to the journal and are not distributed here; the tests that
+                             read them skip on a clone)
 simulation_results/          archived JSON outputs behind every figure and table
 ```
 

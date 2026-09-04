@@ -26,6 +26,9 @@ import pathlib
 import re
 
 import pytest
+from qbscreen.tests._manuscript import requires_manuscript
+
+pytestmark = requires_manuscript
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 MAN = ROOT / "manuscript"
