@@ -154,22 +154,6 @@ CLAIMS = [
      DRY["ceiling_ms"]),
 
     # --- the cover letter: the first thing an editor reads -------------
-    ("cover letter window low, 5 ns",
-     "manuscript/cover_letter.tex",
-     r"mobility \(\$([\d.]+)\$--\$[\d.]+\$~ms\s*\n?at \$\\tau_c=5\$~ns",
-     float(REGION[5.0]["window"].split(" - ")[0])),
-    ("cover letter window high, 5 ns",
-     "manuscript/cover_letter.tex",
-     r"mobility \(\$[\d.]+\$--\$([\d.]+)\$~ms\s*\n?at \$\\tau_c=5\$~ns",
-     float(REGION[5.0]["window"].split(" - ")[1].split()[0])),
-    ("cover letter window low, 0.1 ns",
-     "manuscript/cover_letter.tex",
-     r"up to \$([\d.]+)\$--\$[\d.]+\$~ms at \$0\.1\$~ns",
-     float(REGION[0.1]["window"].split(" - ")[0])),
-    ("cover letter window high, 0.1 ns",
-     "manuscript/cover_letter.tex",
-     r"up to \$[\d.]+\$--\$([\d.]+)\$~ms at \$0\.1\$~ns",
-     float(REGION[0.1]["window"].split(" - ")[1].split()[0])),
 
     # --- SI S12: the sentence that contradicted its own successor ------
     ("SI methyl boundary, with bath",

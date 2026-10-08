@@ -28,21 +28,21 @@ AUX = ROOT / "supplementary.aux"
 # (document, regex with the number as group 1, label the sentence refers to)
 REFS = [
     ("main.tex",
-     r"\(ESI, Table~S(\d+)\)",
+     r"\(Supplemental Material, Table~S(\d+)\)",
      "tab:params"),
     ("main.tex",
-     r"retained as ESI Table~S(\d+), whose",
+     r"retained as Supplemental Material, Table~S(\d+), whose",
      "tab:clock"),
     ("main.tex",
      r"routes move as Table~S(\d+)",
      "tab:premise_routes"),
     ("data_availability.tex",
-     r"superseded clock scan of ESI Table~S(\d+) are",
+     r"single-realisation clock scan of Supplemental Material Table~S(\d+) are",
      "tab:clock"),
     # README uses a plain space, not a tie -- which is exactly why the first
     # version of this guard missed it while all 200 tests passed
     ("../README.md",
-     r"superseded clock scan kept in ESI Table S(\d+)",
+     r"single-realisation clock scan kept in Supplemental Material Table S(\d+)",
      "tab:clock"),
 ]
 
@@ -88,26 +88,23 @@ def test_every_hardcoded_supplement_reference_is_covered():
             f"({found}) but only {covered} are guarded in REFS")
 
 
-def test_esi_footnote_names_every_supplementary_section():
-    """The dagger footnote on the title page lists what is in the ESI.
-
-    It was inherited from the withdrawn submission and still advertised
-    "throughput and finite-size scans", which this supplement does not contain
-    -- nothing checked it, because it is prose in one document about the
-    headings of another. Each section must now leave a distinctive word in the
-    footnote, so adding a section to the ESI without announcing it fails here.
+def test_see_supplemental_material_sentence_names_every_section():
+    """APS asks for a 'See Supplemental Material at [URL] for ...' sentence. It is
+    the one place the paper announces what the supplement contains, so each
+    \section of supplementary.tex must leave a distinctive word in it; adding a
+    section without announcing it fails here.
     """
-    foot = re.search(r"\\footnotetext\{\\dag~(.*?)See DOI",
-                     (ROOT / "main.tex").read_text(), re.S)
-    assert foot, "the ESI footnote is missing from main.tex"
-    text = foot.group(1).lower()
+    see = re.search(r"See Supplemental Material at \[URL[^\]]*\] for (.*?)\.\n",
+                    (ROOT / "main.tex").read_text(), re.S)
+    assert see, "the 'See Supplemental Material' sentence is missing from main.tex"
+    text = see.group(1).lower()
     missing = []
     for title in re.findall(r"^\\section\{(.+?)\}",
                             (ROOT / "supplementary.tex").read_text(), re.M):
         words = [w for w in re.findall(r"[a-z-]{6,}", title.lower())]
-        assert words, f"ESI section {title!r} has no word long enough to key on"
+        assert words, f"section {title!r} has no word long enough to key on"
         if not any(w in text for w in words):
             missing.append((title, words))
     assert not missing, (
-        "ESI sections that the title-page footnote does not mention: "
+        "Supplemental Material sections the sentence does not mention: "
         + "; ".join(f"{t} (none of {w})" for t, w in missing))
