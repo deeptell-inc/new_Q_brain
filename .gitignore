@@ -51,3 +51,4 @@ manuscript/pre_submission.tar.gz
 
 # the manuscript's own private history (see scripts/mgit.sh)
 .manuscript.git/
+pccp_archive/
