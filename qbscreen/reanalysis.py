@@ -19,7 +19,7 @@ import json
 import numpy as np
 from scipy.linalg import expm
 
-from qbscreen.reservoir import (
+from qbscreen.reservoir import (CRY_POINT, 
     build_reservoir_H, propagator, run_reservoir, _observable_set,
     memory_and_ipc, _legendre2, N_SPINS, DIM, ELECTRONS,
 )
@@ -29,7 +29,7 @@ from qbscreen.master_equation import build_liouvillian, _vec, electron_dephasing
 
 TWO_PI = 2.0 * np.pi
 ENG = dict(B_tesla=1e-3, A_e1_a=80, A_e1_b=40, A_e2_a=15, J=2.0)
-CRY = dict(B_tesla=50e-6, A_e1_a=14.0, A_e1_b=5.0, A_e2_a=40.0, J=0.0)
+CRY = dict(CRY_POINT)
 
 
 # ── generic capacity with optional clipping (for the null-floor control) ──

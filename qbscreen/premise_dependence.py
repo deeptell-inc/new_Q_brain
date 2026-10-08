@@ -173,8 +173,45 @@ def proton_only(n_seeds=6, L=700, cases=CASES[1:2] + CASES[3:4]):
         _save(d)
 
 
+def horizon(band_edge_s=1e-2):
+    """Ceiling and band-opening correlation time from the SAME eight-point MC(q)
+    scan for both premises, so the comparison is like for like. The main text
+    quotes the refined scan for the reference premise; this block is the
+    coarse-scan pair that the premise comparison is stated in terms of."""
+    d = _load()
+    rel = json.load(open("simulation_results/panel/open5_relaxation_estimate.json"))
+    tov = json.load(open("simulation_results/panel/open5_turnover_estimate.json"))
+    T1_dry = rel["prediction"]["T1_proton_geomagnetic_s"]
+    f = tov["critical_tau_c"]["bath_f"]; T1_wet = T1_dry / (1.0 + f)
+    tau_p = tov["critical_tau_c"]["tau_protein_ns"]
+    ref = json.load(open("simulation_results/register_reuse.json"))
+    curves = {"reference": ([r["q_nuc"] for r in ref], [r["MC_8"] for r in ref])}
+    for lab, v in d["reuse"].items():
+        curves[lab] = ([r["q_nuc"] for r in v["rows"]], [r["MC_8"]["mean"] for r in v["rows"]])
+
+    def ceiling(q, m, T1):
+        Td = np.logspace(-5, 0, 4000); qq = 1 - np.exp(-Td / T1)
+        return float(((np.interp(qq, q, m) - 1.0) * Td).max())
+
+    def boundary(q, m, T1_at_P):
+        taus = np.logspace(-1, 2, 3000)
+        ok = taus[np.array([ceiling(q, m, T1_at_P * tau_p / t) for t in taus]) >= band_edge_s]
+        return float(ok.max()) if ok.size else float("nan")
+
+    out = dict(note="eight-point MC(q) scan, linear interpolation in q; T1 at tau_c = tau_protein "
+                    "from open5 (intramolecular, and with the bath); band edge 10 ms",
+               T1_dry_s=T1_dry, T1_wet_s=T1_wet, tau_protein_ns=tau_p)
+    for lab, (q, m) in curves.items():
+        out[lab] = dict(ceil_dry=ceiling(q, m, T1_dry) * 1e3, ceil_wet=ceiling(q, m, T1_wet) * 1e3,
+                        tau_dry=boundary(q, m, T1_dry), tau_wet=boundary(q, m, T1_wet))
+        o = out[lab]
+        print(f"[horizon] {lab:24s} ceiling {o['ceil_dry']:.2f}/{o['ceil_wet']:.2f} ms  boundary "
+              f"{o['tau_dry']:.2f}/{o['tau_wet']:.2f} ns  (x{tau_p/o['tau_dry']:.2f}/x{tau_p/o['tau_wet']:.2f})", flush=True)
+    d["horizon_coarse_grid"] = out; _save(d)
+
+
 if __name__ == "__main__":
-    what = sys.argv[1:] or ["capacity", "routes", "proton_only", "clock", "reuse"]
+    what = sys.argv[1:] or ["capacity", "routes", "proton_only", "clock", "reuse", "horizon"]
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", RuntimeWarning)
         for w in what:

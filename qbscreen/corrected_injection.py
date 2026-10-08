@@ -32,7 +32,7 @@ import json
 import numpy as np
 from scipy.linalg import expm
 
-from qbscreen.reservoir import (
+from qbscreen.reservoir import (CRY_POINT, 
     build_reservoir_H, memory_and_ipc, run_reservoir_realistic,
     N_SPINS, DIM, ELECTRONS,
 )
@@ -93,7 +93,7 @@ def run_corrected(inputs, H_mhz, tau_us, T2e_ns, kinetic_times=(0.2, 0.4, 0.6, 0
 
 def compare(L=700, n_seeds=6):
     """Original vs corrected injection at the cryptochrome operating point."""
-    H = build_reservoir_H(B_tesla=50e-6, A_e1_a=14.0, A_e1_b=5.0, A_e2_a=40.0, J=0.0)
+    H = build_reservoir_H(**CRY_POINT)
     out = {}
     for label, fn in (("original_e1_reset",
                        lambda s: run_reservoir_realistic(s, H, 1.0, 1000.0,

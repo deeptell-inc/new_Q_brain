@@ -200,14 +200,14 @@ def test_prose_number_matches_the_data(name, doc, pattern, value):
 # Numbers inside the ledger's E-rows and the README result-3 row that the map
 # above deliberately does not bind, each with the reason it is exempt.
 WAIVED = {
-    "1.6": "MC falls by 1.6% -- bound by test_clock_effect_is_resolved_...",
-    "19": "horizon 19-188 ms -- bound by test_delay_kernel_and_horizon_definition",
-    "188": "horizon 19-188 ms -- same",
+    "8": "MC falls by 8% -- bound by test_clock_effect_is_resolved_...",
+    "19": "horizon 19-168 ms -- bound by test_delay_kernel_and_horizon_definition",
+    "168": "horizon 19-168 ms -- same",
     "10": "the 10-100 ms turnover interval, an input not an output",
     "100": "the 10-100 ms turnover interval, an input not an output",
     "12": "12 seeds -- bound by test_seed_counts",
     "2.4": "T1 without the bath -- bound by test_predicted_T1_row",
-    "6": "the tau_c <= 6 ns criterion, rounded from the bound boundary above",
+    "5.4": "the tau_c <= 5.4 ns criterion, rounded from the bound boundary above",
     "5": "the tau_c = 5 ns row label, an input to feasible_region",
     "0.542": "the bath ratio, bound by 'ledger E8 bath ratio' above",
     "1": "list markers and E-row indices",

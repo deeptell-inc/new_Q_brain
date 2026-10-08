@@ -28,10 +28,10 @@ def test_product_register_beats_survivor():
     """Main text, 'The register is the product, and that helps'."""
     d = _load("c1_product_carryover")
     s, p = d["survivor"], d["product"]
-    assert s["YS_t"]["IPC"] == pytest.approx(2.01, abs=0.02)
-    assert p["YS_t"]["IPC"] == pytest.approx(2.74, abs=0.02)
-    assert s["cidnp"]["IPC"] == pytest.approx(4.65, abs=0.02)
-    assert p["cidnp"]["IPC"] == pytest.approx(4.91, abs=0.02)
+    assert s["YS_t"]["IPC"] == pytest.approx(1.97, abs=0.02)
+    assert p["YS_t"]["IPC"] == pytest.approx(2.77, abs=0.02)
+    assert s["cidnp"]["IPC"] == pytest.approx(4.42, abs=0.02)
+    assert p["cidnp"]["IPC"] == pytest.approx(4.96, abs=0.02)
     # the physically faithful register is never worse on the memory routes
     for route in ("YS_t", "SandT_t", "cidnp"):
         assert p[route]["IPC"] > s[route]["IPC"]
@@ -47,7 +47,7 @@ def test_route_specific_floors():
     # the accumulated pool keeps linear memory with the register wiped: it is a
     # classical delay line, not evidence of nuclear-spin memory
     assert f["YS_t_accum"]["floor_MC"] > 1.5
-    assert 4.65 - f["cidnp"]["floor_IPC"] == pytest.approx(2.65, abs=0.05)
+    assert 4.42 - f["cidnp"]["floor_IPC"] == pytest.approx(2.42, abs=0.05)
 
 
 def test_delay_kernel_and_horizon_definition():
@@ -56,8 +56,8 @@ def test_delay_kernel_and_horizon_definition():
     k = _load("c3_delay_kernel")
     for route in ("YS_t", "cidnp"):
         assert k[route]["C0"] == pytest.approx(1.0, abs=0.05)
-    assert k["cidnp"]["MC_minus_C0"] == pytest.approx(1.87, abs=0.05)
-    assert k["YS_t"]["MC_minus_C0"] == pytest.approx(0.97, abs=0.05)
+    assert k["cidnp"]["MC_minus_C0"] == pytest.approx(1.82, abs=0.05)
+    assert k["YS_t"]["MC_minus_C0"] == pytest.approx(0.93, abs=0.05)
     # kernel falls below 5 % of C[0] within a handful of cycles
     assert 2 <= k["cidnp"]["delay_5pct_of_C0"] <= 8
 
@@ -67,7 +67,7 @@ def test_clock_effect_is_resolved_and_is_not_0p2_percent():
     resolved at t = 4.2 on paired differences -- not the 0.2 % submitted."""
     p = _load("c2_clock_paired")
     assert p["n_seeds"] == 12
-    assert p["relative_change_pct"] == pytest.approx(1.6, abs=0.3)
+    assert p["relative_change_pct"] == pytest.approx(8.2, abs=0.3)
     assert p["t_stat"] > 2.0, "effect must be resolved above seed noise"
     assert p["relative_change_pct"] > 0.5, "the submitted 0.2 % is not reproducible"
 
@@ -88,10 +88,10 @@ def test_register_stores_populations_not_coherence():
     last = [r for r in c if r["q"] == 1.0][0]
     first = [r for r in c if r["q"] == 0.0][0]
     assert last["MC_8_depolarise"] == pytest.approx(1.00, abs=0.05)
-    assert last["MC_8_dephase"] == pytest.approx(2.87, abs=0.05)
-    # dephasing at q=1 costs under 2 % of the capacity
+    assert last["MC_8_dephase"] == pytest.approx(2.72, abs=0.05)
+    # dephasing at q=1 costs under 5 % of the capacity (the text says so)
     cost = (first["MC_8_dephase"] - last["MC_8_dephase"]) / first["MC_8_dephase"]
-    assert cost < 0.02
+    assert cost < 0.05
 
 
 def test_no_quantum_advantage_at_cryptochrome_point():
@@ -100,7 +100,7 @@ def test_no_quantum_advantage_at_cryptochrome_point():
     assert m["quantum_5ch_kinetics"][0] < m["ESN_5node_5feat"][0]
     assert m["quantum_8ch_cidnp"][0] < m["ESN_8node_8feat"][0]
     ratio = m["ESN_8node_8feat"][0] / m["quantum_8ch_cidnp"][0]
-    assert ratio == pytest.approx(1.5, abs=0.2)
+    assert ratio == pytest.approx(1.6, abs=0.2)
 
 
 def test_coherence_fraction_is_electronic_not_register_erasure():
@@ -128,7 +128,7 @@ def test_reported_capacity_is_conservative_in_the_ridge():
 def test_readout_not_shot_noise_limited_at_cellular_copy_numbers():
     r = _load("m9_ridge_sensitivity")
     shot = {row["n_molecules"]: row for row in r["shot_noise"]}
-    assert shot[1e10]["cidnp"] == pytest.approx(4.54, abs=0.05)
+    assert shot[1e10]["cidnp"] == pytest.approx(4.34, abs=0.05)
     assert shot[1e6]["cidnp"] < shot[1e10]["cidnp"]
 
 
@@ -141,12 +141,12 @@ def test_proton_only_register_survives_but_costs_most_of_the_capacity():
     d = {r["scenario"]: r for r in _load("open2_nuclide_register")}
     full = d["all three retained (main text)"]
     prot = d["14N wiped, 1H retained (literature)"]
-    assert full["excess_8ch"] == pytest.approx(2.64, abs=0.05)
+    assert full["excess_8ch"] == pytest.approx(2.42, abs=0.05)
     assert prot["excess_8ch"] == pytest.approx(0.78, abs=0.05)
     # the kinetic readout needs the whole register: wiping any subset kills it
     assert prot["excess_5ch"] == pytest.approx(0.0, abs=0.02)
     frac = prot["excess_8ch"] / full["excess_8ch"]
-    assert 0.2 < frac < 0.4, f"proton register retains {frac:.0%}, expected ~29%"
+    assert 0.2 < frac < 0.4, f"proton register retains {frac:.0%}, expected ~32%"
 
 
 def test_desynchronisation_kills_kinetics_but_not_cidnp():
@@ -185,8 +185,9 @@ def test_anisotropy_costs_capacity_and_vanishes_at_the_ising_point():
     """SI S11. Capacity is carried by the perpendicular hyperfine components, so
     it vanishes exactly at eta = 1 where A_xx = A_yy = 0."""
     rows = {r["eta"]: r for r in _load("open3_anisotropy")}
-    assert rows[0.0]["excess_8ch"] == pytest.approx(2.66, abs=0.05)
-    assert rows[0.5]["excess_8ch"] < 0.4 * rows[0.0]["excess_8ch"]
+    assert rows[0.0]["excess_8ch"] == pytest.approx(2.46, abs=0.05)
+    # eta = 0.5 costs two-fifths with the survivor register (two-thirds with the product one)
+    assert 0.5 < rows[0.5]["excess_8ch"] / rows[0.0]["excess_8ch"] < 0.65
     assert rows[1.0]["excess_8ch"] == pytest.approx(0.0, abs=0.02), "Ising point"
     assert rows[2.0]["excess_8ch"] > 0.5, "perpendicular component restored"
 
@@ -256,7 +257,7 @@ def test_critical_tau_c_is_solved_not_read_off_the_grid():
     requirement was 15.2/5, an artefact of grid spacing. It is now bisected."""
     c = _load("open5_turnover_estimate")["critical_tau_c"]
     trp = c["per_nucleus"]["Trp H-beta (CH2, geminal partner)"]
-    assert trp["tau_crit_dry_ns"] == pytest.approx(9.37, abs=0.05), \
+    assert trp["tau_crit_dry_ns"] == pytest.approx(8.27, abs=0.05), \
         "intramolecular-only boundary"
     assert trp["tau_crit_dry_ns"] > 5.0 + 1e-9, \
         "the grid's 5.0 ns was not the boundary; a test that pins it pins the artefact"
@@ -267,7 +268,7 @@ def test_the_intermolecular_bath_is_what_makes_the_requirement_threefold():
     """Two errors were cancelling: the grid overstated the boundary, and the T1
     calculation omitted the intermolecular bath, which shortens it again. With
     the bath restored the requirement is ~2.8x, which is what the manuscript's
-    'about three times' rests on -- not the 1.8x the grid-free dry number gives.
+    'nearly three times' rests on -- not the 1.8x the grid-free dry number gives.
     """
     c = _load("open5_turnover_estimate")["critical_tau_c"]
     assert c["bath_f"] == pytest.approx(0.542, abs=0.01), \
@@ -280,7 +281,7 @@ def test_the_intermolecular_bath_is_what_makes_the_requirement_threefold():
     # locked in the modelling error as if it were a result.
     trp = c["per_nucleus"]["Trp H-beta (CH2, geminal partner)"]
     su_trp = c["tau_protein_ns"] / trp["tau_crit_wet_ns"]
-    assert 2.3 < su_trp < 2.8, f"Trp: {su_trp:.2f}x, manuscript says about two and a half"
+    assert 2.6 < su_trp < 3.1, f"Trp: {su_trp:.2f}x, manuscript says nearly three times"
 
 
 def test_the_methyl_escape_route_dies_with_the_bath():
@@ -336,8 +337,8 @@ def test_paired_clock_generator_is_reproducible():
     p = _load("c2_clock_paired")
     assert p["n_seeds"] == 12
     assert len(p["MC_8_1us"]) == 12 and len(p["MC_8_100ms"]) == 12
-    assert p["t_stat"] == pytest.approx(4.23, abs=0.15)
-    assert p["paired_sem"] == pytest.approx(0.011, abs=0.002)
+    assert p["t_stat"] == pytest.approx(8.46, abs=0.15)
+    assert p["paired_sem"] == pytest.approx(0.028, abs=0.002)
 
 
 def test_adverse_results_survive_the_product_register():

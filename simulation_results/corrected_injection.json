@@ -2,16 +2,16 @@
   "original_e1_reset": {
     "IPC_mean": 0.0,
     "IPC_sd": 0.0,
-    "max_flux_spread": 2.6950663922775675e-14
+    "max_flux_spread": 1.240442933555149e-13
   },
   "corrected_ST_birth": {
-    "IPC_mean": 2.941257153929984,
-    "IPC_sd": 0.1080191261621286,
-    "max_flux_spread": 0.4891196122508446
+    "IPC_mean": 2.5428875927449828,
+    "IPC_sd": 0.11979397651922478,
+    "max_flux_spread": 0.24250758283680574
   },
   "corrected_ST0_birth": {
-    "IPC_mean": 3.11605138800456,
-    "IPC_sd": 0.20870983645839633,
-    "max_flux_spread": 0.4342954201899289
+    "IPC_mean": 3.218068452507163,
+    "IPC_sd": 0.14725938233468988,
+    "max_flux_spread": 0.3715141839179404
   }
 }

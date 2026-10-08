@@ -46,8 +46,10 @@ def test_gyromagnetic_ratio_is_the_textbook_value():
 
 # ── Table S18: the cryptochrome-point hyperfine assignment ──────────────────
 @pytest.mark.parametrize("row,key,mhz,mt", [
-    ("A_{e_1a}", "A_e1_a", 14.0, 0.50),
-    ("A_{e_1b}", "A_e1_b",  5.0, 0.18),
+    # flavin values aligned with the companion study: Lee et al. (2014) isotropic
+    # N5 = 523 uT, N10 = 189 uT
+    ("A_{e_1a}", "A_e1_a", 14.66, 0.523),
+    ("A_{e_1b}", "A_e1_b",  5.30, 0.189),
     ("A_{e_2a}", "A_e2_a", 40.0, 1.43),
 ])
 def test_table_s18_row(row, key, mhz, mt):

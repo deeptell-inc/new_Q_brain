@@ -21,7 +21,7 @@ apples. Multi-seed mean +/- std is reported throughout.
 import json
 import numpy as np
 
-from qbscreen.reservoir import (
+from qbscreen.reservoir import (CRY_POINT, 
     build_reservoir_H, propagator, run_reservoir, _observable_set,
     memory_and_ipc, _capacity, _legendre2,
 )
@@ -151,7 +151,7 @@ def cryptochrome_reality(L=900, n_seeds=6):
     T2e_list = [100, 200, 500, 1000, 2000, 5000]
     ipc_m, ipc_s, mc_m = [], [], []
     for T2e in T2e_list:
-        H = build_reservoir_H(B_tesla=50e-6, A_e1_a=14.0, A_e1_b=5.0, A_e2_a=40.0, J=0.0)
+        H = build_reservoir_H(**CRY_POINT)
         iv, mv = [], []
         for sd in range(n_seeds):
             rng = np.random.default_rng(800 + sd)

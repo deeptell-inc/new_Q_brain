@@ -49,6 +49,12 @@ TWO_PI = 2.0 * np.pi
 # Reservoir Hamiltonian: [e1(input), e2, n1=³¹P, n2=¹H, n3=¹H]
 # ───────────────────────────────────────────────────────────────────
 N_SPINS = 5
+# The cryptochrome operating point. Flavin couplings are the isotropic values of
+# Lee et al. (2014) as used by the companion study, N5 = 523 uT = 14.66 MHz and
+# N10 = 189 uT = 5.30 MHz; the tryptophan H-beta1 coupling is 40 MHz. Every
+# module that runs the cryptochrome point builds from this dict so the two
+# papers of the programme share one parameter set.
+CRY_POINT = dict(B_tesla=50e-6, A_e1_a=14.66, A_e1_b=5.30, A_e2_a=40.0, J=0.0)
 DIM = 2 ** N_SPINS
 ELECTRONS = (0, 1)
 NUCLEI = (2, 3, 4)

@@ -25,7 +25,7 @@ import json
 import numpy as np
 from scipy.linalg import expm
 
-from qbscreen.reservoir import (build_reservoir_H, memory_and_ipc,
+from qbscreen.reservoir import (CRY_POINT, build_reservoir_H, memory_and_ipc,
                                 N_SPINS, DIM, ELECTRONS, NUCLEI)
 from qbscreen.corrected_injection import _electron_born_state
 from qbscreen.spin_dynamics import spin_op, singlet_projector, SZ
@@ -33,7 +33,7 @@ from qbscreen.master_equation import build_liouvillian, _vec, electron_dephasing
 
 TWO_PI = 2.0 * np.pi
 D_NUC = DIM // 4
-CRY = dict(B_tesla=50e-6, A_e1_a=14.0, A_e1_b=5.0, A_e2_a=40.0, J=0.0)
+CRY = dict(CRY_POINT)
 
 
 def _cycle_operators(H_mhz, tau_us, T2e_ns, kS, kT, n_t=24):
@@ -330,3 +330,6 @@ if __name__ == "__main__":
     if which in ("all", "grid"):
         print()
         grid_convergence()
+    if which in ("all", "refined"):
+        print()
+        register_reuse_refined()

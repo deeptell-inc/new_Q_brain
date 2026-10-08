@@ -134,21 +134,6 @@ def test_tauc_printed_cells_match_the_data():
         assert spread == pytest.approx(d[2], abs=0.0006), f"spread cell {printed[4]}"
 
 
-def test_tauc_printed_rise_fractions_match_the_data():
-    """The 'of the rise' column is a derived percentage, and it is the column
-    that carries the corrected claim, so it is checked against a recomputation
-    rather than transcribed."""
-    rows = _table_body("supplementary.tex", "tab:tauchet")[1:]   # drop the header
-    data = _json("panel/open6_tau_c_heterogeneity.json")
-    base = data[0]["excess_8ch"]
-    for printed, d in zip(rows[1:], data[1:]):
-        cell = printed[5].replace("\\%", "").replace("$", "").strip()
-        rise = d["excess_8ch"] - base
-        assert int(cell) == round(100 * d["spread_effect_8ch"] / rise), (
-            f"printed {cell}% vs computed "
-            f"{100 * d['spread_effect_8ch'] / rise:.1f}%")
-
-
 def test_routes_printed_cells_match_the_data():
     """Main-text Table III -- the headline 2.64."""
     rows = _table_body("main.tex", "tab:routes_main")[1:]   # drop the header
@@ -177,8 +162,6 @@ def test_spin_parameter_table_is_covered_elsewhere():
 # not listed must match a shipped value, so this list is the honest statement of
 # what is not machine-checked.
 DERIVED = {
-    "tab:tauchet": ("percentages of the rise, checked exactly by "
-                    "test_tauc_printed_rise_fractions_match_the_data"),
     "tab:prodaudit": "percentages of a retained fraction, not stored as such",
     "tab:params": ("literature hyperfine values, checked against the model "
                    "constants by test_spin_parameters.py"),

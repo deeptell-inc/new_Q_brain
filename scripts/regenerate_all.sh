@@ -43,6 +43,9 @@ sleep 1
 
 run qbscreen.final_numbers
 run qbscreen.readout_routes
+# the 21-point register-reuse scan the ceiling is read from (~25 min); it is not
+# part of 'all' because of its cost, so it is run explicitly
+run qbscreen.readout_routes refined
 run qbscreen.corrected_injection
 run qbscreen.reanalysis
 run qbscreen.qrc_benchmarks
