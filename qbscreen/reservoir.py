@@ -55,8 +55,16 @@ NUCLEI = (2, 3, 4)
 
 
 def build_reservoir_H(B_tesla=50e-6, A_e1_a=200.0, A_e1_b=20.0,
-                      A_e2_a=10.0, J=0.5):
+                      A_e2_a=10.0, J=0.5, D=0.0, D_axis="z"):
     """Reservoir spin Hamiltonian (MHz) for a *separated* radical pair.
+
+    D is the electron-electron dipolar coupling (MHz) in the Efimova-Hore
+    convention -- the T+/- - T0 splitting -- entered as the axial tensor
+        2 D (S1.n)(S2.n) - (2D/3) S1.S2
+    with the inter-radical axis n along D_axis ("z" is parallel to B, "x"
+    perpendicular). D = 0 reproduces the Hamiltonian without the term exactly.
+    Convention check: at B = 0 with no hyperfine coupling the triplet levels
+    sit at D/3 (T+/-) and -2D/3 (T0), i.e. <T_m|H_D|T_m> = D (m^2 - 2/3).
 
     Topology (each radical carries its OWN nuclei — they are not shared, which is
     what "spatially separated pair" means):
@@ -82,6 +90,10 @@ def build_reservoir_H(B_tesla=50e-6, A_e1_a=200.0, A_e1_b=20.0,
             H += A_e2_a * spin_op(op, 1, n) @ spin_op(op, 4, n)   # e2–nucleus 3
             if abs(J) > 1e-12:
                 H += J * spin_op(op, 0, n) @ spin_op(op, 1, n)
+        if abs(D) > 1e-12:
+            ax = {"x": SX, "y": SY, "z": SZ}[D_axis]
+            S1S2 = sum(spin_op(o, 0, n) @ spin_op(o, 1, n) for o in (SX, SY, SZ))
+            H += 2 * D * spin_op(ax, 0, n) @ spin_op(ax, 1, n) - (2 * D / 3) * S1S2
     return H
 
 

@@ -56,6 +56,8 @@ run qbscreen.general_spin
 run qbscreen.relaxation_estimate
 run qbscreen.turnover_estimate
 run qbscreen.product_carrier_audit
+# every cryptochrome-point quantity rerun with the Efimova-Hore J and D (~45 min)
+run qbscreen.premise_dependence
 # superseded single-electron-reset controls. No reported result depends on them,
 # but they are shipped and frozen, so a clean-room run must be able to recreate
 # them or the reproducible set is smaller than the frozen set.

@@ -15,15 +15,18 @@ nor the pessimistic one usually assumed.
 
 | | Result | Where |
 |---|---|---|
-| 1 | The reservoir is **readable by ordinary chemistry**. Time-resolved product yield gives out-of-sample IPC $= 2.0$; the nuclear polarisation carried away by the product raises it to $4.7$. No spectroscopy required. **Caveat added in revision:** once the register is restricted to protons (the flavin ¹⁴N is quadrupolar and relaxes in µs) and the ensemble is allowed to desynchronise, the time-resolved kinetic readout dies and CIDNP survives at ~29% of the excess capacity. Only these two of the seven routes were re-evaluated under those restrictions. | `readout_routes.py` |
+| 1 | The reservoir is **readable by ordinary chemistry**. Time-resolved product yield gives out-of-sample IPC $= 2.0$ under the reference premise ($J=0$, no dipolar term; $2.2$–$2.9$ with the Efimova–Hore couplings, see `premise_dependence.py`); the nuclear polarisation carried away by the product raises it to $4.7$ ($4.0$–$5.0$ across the coupling range). No spectroscopy required. **Caveat added in revision:** once the register is restricted to protons (the flavin ¹⁴N is quadrupolar and relaxes in µs) and the ensemble is allowed to desynchronise, the time-resolved kinetic readout dies and CIDNP survives at ~29% of the excess capacity. Only these two of the seven routes were re-evaluated under those restrictions. | `readout_routes.py` |
 | 2 | There is **no quantum advantage**. A classical echo-state network with the same number of readout features exceeds the five-spin reservoir ($9.4$ vs $5.6$); at the cryptochrome point it wins on both channel-matched accountings (ESN 8-node $6.9$ vs quantum 8-channel $4.7$; ESN 5-node $4.5$ vs quantum 5-channel $2.0$), and the physical-unit accounting separates them by less than one standard deviation. | `final_numbers.py`, `qrc_benchmarks.py` |
 | 3 | The memory horizon is set **not** by the microsecond pair lifetime but by the turnover interval, because the nuclear register survives recombination in the diamagnetic product. Across five decades of turnover interval MC falls by $1.6\%$ (12 seeds, paired), putting the horizon at $19$–$188$ ms for a $10$–$100$ ms turnover — but only if the register outlives the pause. At the geomagnetic field nuclear relaxation is in the extreme-narrowing regime, so a proton on the intact protein relaxes in $2.4$ ms and caps the horizon at $6.1$ ms on the intramolecular dipolar term alone — $1.6$ ms and $4.0$ ms once the intermolecular proton bath is restored; the register must reorient $\gtrsim2.5\times$ faster than the protein. That factor is $1.6\times$ from the solved boundary without the bath and $2.5\times$ with it; the two corrections very nearly cancel. The binding constraint is chemical: the **same nuclear register must be reused** between turnovers, or the capacity collapses to a memoryless read-back. | `readout_routes.py` (`clock_scan`, `register_reuse`) |
 
-A mechanistic point falls out of (1): at $J=0$ the reduced state of *either*
-electron of a newly born pair is maximally mixed for every input — the input
-lives entirely in the two-electron correlation. Spin-selective recombination is
-therefore what *writes* the input into the nuclear register. In a separated
-pair, CIDNP is not an optional extra readout channel; it is the write mechanism.
+A mechanistic point falls out of (1): the reduced state of *either* electron
+of a newly born pair is maximally mixed for every input — the input lives
+entirely in the two-electron correlation — so spin-selective recombination is
+what *writes* the input into the nuclear register. Whether it is the *only*
+write mechanism depends on the premise: at $J=0$ with no dipolar term nothing
+else can transfer the correlation (capacity $1.02$ without recombination), but
+with the electron–electron couplings Efimova & Hore report for FAD–W324 the
+coupled electrons write too (capacity $5.1$–$5.6$ without recombination).
 
 ## What makes this repository different from its predecessor
 
@@ -65,9 +68,10 @@ qbscreen/                    the package
                              and heterogeneous relaxation with its mean-field control (S10)
   general_spin.py            anisotropic hyperfine tensors and spin-1 14N (S11)
   relaxation_estimate.py     predicted nuclear T1/T2, validated against measured systems (S12)
+  premise_dependence.py      every cryptochrome-point quantity rerun with the Efimova–Hore J and D (ESI S14)
   turnover_estimate.py       turnover interval from photophysics/catalysis; feasible region (S12)
   product_carrier_audit.py   adverse results re-run with the product register (S4)
-  tests/                     293 tests: solver, capacity bound, estimators, claim-binding and table-row regressions (capacity and SD cells, input-parameter table, cross-document table references, criterion numbers printed in prose; derived-time and raw-IPC columns not yet bound)
+  tests/                     299 tests: solver, capacity bound, estimators, claim-binding and table-row regressions (capacity and SD cells, input-parameter table, cross-document table references, criterion numbers printed in prose; derived-time and raw-IPC columns not yet bound)
 manuscript/                  main.pdf, supplementary.pdf (ESI) and data_availability.pdf as
                              compiled, the marked-up copies main_diff.pdf and
                              supplementary_diff.pdf against the withdrawn 2026-06-24 submission,
