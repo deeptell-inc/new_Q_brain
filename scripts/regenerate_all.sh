@@ -74,6 +74,11 @@ run qbscreen.input_carrier
 run qbscreen.axial_tensor_model
 run qbscreen.axial_tensor_model ratio
 run qbscreen.proton_register_reuse closed
+# the published hyperfine tensors (Hiscock et al. 2016 SI, Tables S1/S2): the
+# three nuclei of the main model, then a fourth (6 spins, ~2-3 h each)
+run qbscreen.published_tensors published5
+run qbscreen.published_tensors published6a
+run qbscreen.published_tensors published6b
 # every cryptochrome-point quantity rerun with the Efimova-Hore J and D (~45 min)
 run qbscreen.premise_dependence
 # superseded single-electron-reset controls. No reported result depends on them,

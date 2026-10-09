@@ -1,0 +1,42 @@
+{
+  "nuclei": [
+    "N5",
+    "N10",
+    "Hb1",
+    "H1"
+  ],
+  "3-axis average/full": {
+    "case": "3-axis average",
+    "register": "full",
+    "n_directions": 3,
+    "n_seeds": 3,
+    "n_channels": 9,
+    "L": 400,
+    "n_t": 48,
+    "kinetics_5ch": 1.6437444872141895,
+    "kinetics_5ch_sd": 0.017179459635151332,
+    "kinetics_5ch_floor": 1.034747368694477,
+    "kinetics_5ch_excess": 0.6089971185197125,
+    "cidnp": 2.785248154228744,
+    "cidnp_sd": 0.08191051438909461,
+    "cidnp_floor": 2.0107868332963643,
+    "cidnp_excess": 0.7744613209323798
+  },
+  "3-axis average/proton_only": {
+    "case": "3-axis average",
+    "register": "proton_only",
+    "n_directions": 3,
+    "n_seeds": 3,
+    "n_channels": 9,
+    "L": 400,
+    "n_t": 48,
+    "kinetics_5ch": 1.63980218746992,
+    "kinetics_5ch_sd": 0.019713776933177395,
+    "kinetics_5ch_floor": 1.034747368694477,
+    "kinetics_5ch_excess": 0.605054818775443,
+    "cidnp": 2.9943891571722947,
+    "cidnp_sd": 0.10198113394948866,
+    "cidnp_floor": 2.0107868332963643,
+    "cidnp_excess": 0.9836023238759304
+  }
+}

@@ -81,7 +81,9 @@ qbscreen/                    the package
                              small-signal singlet fraction, each against its own floor (S3)
   axial_tensor_model.py      flavin N5/N10 as axial tensors (Lee et al. 2014 characteristics),
                              field orientation scan and 6-direction average (S11)
-  tests/                     315 tests: solver, capacity bound, estimators, claim-binding and table-row regressions (capacity and SD cells, input-parameter table, cross-document table references, criterion numbers printed in prose; derived-time and raw-IPC columns not yet bound)
+  published_tensors.py       the published FAD/TrpH tensors (Hiscock et al. 2016 SI), three
+                             nuclei with orientation scan, and two six-spin extensions (S11)
+  tests/                     316 tests: solver, capacity bound, estimators, claim-binding and table-row regressions (capacity and SD cells, input-parameter table, cross-document table references, criterion numbers printed in prose; derived-time and raw-IPC columns not yet bound)
 manuscript/                  main.pdf, supplementary.pdf (Supplemental Material) and data_availability.pdf as
                              compiled, the marked-up copies main_diff.pdf and
                              supplementary_diff.pdf against the withdrawn 2026-06-24 submission,
@@ -135,6 +137,9 @@ python -m qbscreen.input_carrier           # S3  input carriers: B, kS, small-si
 python -m qbscreen.axial_tensor_model      # S11 axial nitrogen tensors, orientation scan
 python -m qbscreen.axial_tensor_model ratio  # S11 in-plane component scan
 python -m qbscreen.proton_register_reuse closed  # S9 proton register on the closed carrier
+python -m qbscreen.published_tensors published5   # S11 published tensors, three nuclei, orientation scan
+python -m qbscreen.published_tensors published6a  # S11 + Trp H1 (6 spins)
+python -m qbscreen.published_tensors published6b  # S11 + FAD H6 (6 spins)
 ```
 
 `relaxation_estimate` must be run before `turnover_estimate`, which consumes its

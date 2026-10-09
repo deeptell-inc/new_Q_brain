@@ -497,3 +497,20 @@ def test_axial_nitrogens_leave_the_proton_register():
     for k in ("-0.1/proton_only", "-0.2/proton_only", "-0.3/proton_only"):
         assert 0.8 * iso < r[k]["cidnp_8ch_excess"] < 1.15 * iso, k
     assert r["-0.3/full"]["cidnp_8ch_excess"] > 0.5 > r["-0.2/full"]["cidnp_8ch_excess"]
+
+
+def test_published_tensors_keep_the_proton_register():
+    """Limitations; SI S11 published-tensor table. Under the published FAD/TrpH
+    tensors the full register's CIDNP excess falls well below the isotropic
+    model's, the proton-only register keeps its excess, and the kinetic route
+    retains memory on the proton register."""
+    p5 = _load("open17_published5"); a6 = _load("open17_published6a"); b6 = _load("open17_published6b")
+    iso = _load("open14_axial_tensors")
+    isoF = iso["isotropic/full"]["cidnp_8ch_excess"]; isoP = iso["isotropic/proton_only"]["cidnp_8ch_excess"]
+    avgF = p5["6-direction average/full"]; avgP = p5["6-direction average/proton_only"]
+    assert avgF["cidnp_excess"] < 0.5 * isoF
+    assert 0.6 * isoP < avgP["cidnp_excess"] < 1.2 * isoP, "seven tenths in the orientation average"
+    assert avgP["kinetics_5ch_excess"] > 0.4
+    assert a6["3-axis average/proton_only"]["cidnp_excess"] > 0.8 * isoP
+    assert b6["3-axis average/proton_only"]["cidnp_excess"] > 0.8 * isoP
+    assert p5["theta=0/full"]["n_channels"] == 8 and a6["3-axis average/full"]["n_channels"] == 9
