@@ -27,19 +27,18 @@ else can transfer the correlation (capacity $1.02$ without recombination), but
 with the electron–electron couplings Efimova & Hore report for FAD–W324 the
 coupled electrons write too (capacity $5.1$–$5.6$ without recombination).
 
-## What makes this repository different from its predecessor
+## How the reservoir is driven
 
-This work supersedes an earlier analysis (rejected by *PCCP* as
-CP-ART-06-2026-002404) in which the reservoir was driven by resetting a single
-electron. That abstraction destroys the electron–electron correlation and, for a
+The reservoir is driven as a real turnover drives it: each cycle a spin-correlated
+pair is born whose singlet character encodes the input, and the nuclear register
+left by the previous cycle is retained. Resetting a single electron instead, a
+common abstraction, destroys the electron–electron correlation and, for a
 separated pair, pins the singlet probability at exactly $1/4$ regardless of
-input — the "readout collapse" it produced was an artifact, not chemistry. The
-correct drive, implemented here, retains the nuclei and creates a new
-spin-correlated pair each cycle:
+input; that construction is kept only as a control. The born electronic state is
 
 $$\rho_{\rm e}(s) = s\,|S\rangle\langle S| + (1-s)\,P_{\rm T}/3$$
 
-`qbscreen/corrected_injection.py` runs both side by side: IPC $0.000$ for the old
+`qbscreen/corrected_injection.py` runs both side by side: IPC $0.000$ for the
 single-electron reset, $2.54$ for the correlated S/T birth, $3.22$ for its
 S–T$_0$ coherent variant.
 
@@ -55,10 +54,10 @@ qbscreen/                    the package
   qrc_benchmarks.py          classical echo-state baselines, NARMA2, coherence-time scan
   final_numbers.py           protocol-consistent recomputation of every headline number
   reanalysis.py              the R1–R6 corrective analyses
-  ensemble.py                SUPERSEDED (single-electron reset) - control only, no reported result
-  quantum_vs_classical.py    SUPERSEDED (single-electron reset) - control only, no reported result
+  ensemble.py                single-electron-reset control; no reported result
+  quantum_vs_classical.py    single-electron-reset control; no reported result
   honest_mfe.py              5-spin magnetic-field-effect reference used by the solver tests
-  panel_response.py          referee controls: product register, route floors, delay kernel,
+  panel_response.py          controls: product register, route floors, delay kernel,
                              12-seed clock + paired test, MC grid, T1/T2 channel, CRY baselines,
                              ridge and shot-noise scans, electron-only coherence control
   semiclassical.py           classical-spin reference model for the coherence fraction (S8)
@@ -69,7 +68,7 @@ qbscreen/                    the package
   relaxation_estimate.py     predicted nuclear T1/T2, validated against measured systems (S12)
   premise_dependence.py      every cryptochrome-point quantity rerun with the Efimova–Hore J and D (Supplemental Material S14)
   turnover_estimate.py       turnover interval from photophysics/catalysis; feasible region (S12)
-  product_carrier_audit.py   adverse results re-run with the product register (S4)
+  product_carrier_audit.py   sensitivity analyses with the product register (S4)
   proton_register_reuse.py   the register the biology leaves: 14N wiped, product carried, proton
                              partially relaxed; its own ceiling and boundary (S9, S12)
   counting_noise.py          readout sampled as a pool of N molecules is counted, not as
@@ -118,7 +117,7 @@ runs all four when given none. The remaining generators are
 python -m qbscreen.corrected_injection
 python -m qbscreen.reanalysis
 python -m qbscreen.qrc_benchmarks
-python -m qbscreen.panel_response          # referee controls (writes simulation_results/panel/)
+python -m qbscreen.panel_response          # controls (writes simulation_results/panel/)
 python -m qbscreen.semiclassical           # S8  classical-spin reference
 python -m qbscreen.semiclassical floor     # S8  its own memoryless floor
 python -m qbscreen.semiclassical conv      # S8  integration-step convergence
@@ -127,7 +126,7 @@ python -m qbscreen.ensemble_pooled         # S10 heterogeneity, desync, q=1 floo
 python -m qbscreen.general_spin            # S11 anisotropy and spin-1 14N
 python -m qbscreen.relaxation_estimate     # S12 predicted nuclear T1/T2  (run before turnover)
 python -m qbscreen.turnover_estimate       # S12 turnover interval and feasible region
-python -m qbscreen.product_carrier_audit   # adverse results re-run with the product register
+python -m qbscreen.product_carrier_audit   # sensitivity analyses with the product register
 python -m qbscreen.proton_register_reuse   # S9/S12 proton-only product register: MC(q_H), ceiling, boundary (~1 h)
 python -m qbscreen.counting_noise          # S7  counting noise on a pool of N molecules
 python -m qbscreen.semiclassical_trajectories  # S8 trajectory-number convergence
@@ -144,9 +143,8 @@ python -m qbscreen.published_tensors published6b  # S11 + FAD H6 (6 spins)
 
 `relaxation_estimate` must be run before `turnover_estimate`, which consumes its
 `tau_c_scan` output. `open1_ensemble_desync_floor.json` — the register-wiped control that supplies the
-entire `excess` column of the SI jitter table — was orphaned until the set-5 audit
-and is now generated by `python -m qbscreen.ensemble_pooled floor`, which
-reproduces the shipped file exactly. One shipped file is deliberately outside the reproducible set:
+entire `excess` column of the SI jitter table — is generated by
+`python -m qbscreen.ensemble_pooled floor`. One shipped file is deliberately outside the reproducible set:
 `open5_feasible_region.json`, which duplicates the
 `feasible_region` block already inside `open5_turnover_estimate.json` and from
 which nothing is quoted independently. It is a snapshot predating the `feasible`
@@ -158,23 +156,15 @@ and is frozen with the rest of the outputs, but no manuscript figure uses it —
 the three figures in the paper are `fig_schematic`, `fig_readout` and
 `fig_criterion`.
 
-`simulation_results/panel_before_regen/` holds 26 JSON files (plus nine `.log`
-files, 35 entries in all) archived from an earlier
-revision round. No command writes them, no test reads them, and they are not in
-`FREEZE_MANIFEST.txt`; they are kept only so the pre-revision values remain
-inspectable. They are excluded from the reproducible set by
-`scripts/regenerate_all.sh`.
 
 The legacy root-level outputs `coherence_tradeoff.json`, `cryptochrome_reality.json`,
 `ensemble_results.json`, `quantum_vs_classical.json`, `reservoir_readout_realism.json`
 and `reservoir_results.json` come from `qbscreen.qrc_benchmarks tradeoff`,
 `qbscreen.qrc_benchmarks cryptochrome`, `qbscreen.ensemble`,
 `qbscreen.quantum_vs_classical` and `qbscreen.reservoir`. All five commands are in
-the reproduce list above, so a clean checkout recreates these files too; until
-set 9 they were shipped and frozen but produced by no documented command.
+the reproduce list above, so a clean checkout recreates these files too.
 `qbscreen.ensemble`, `qbscreen.quantum_vs_classical` and the `run_reservoir`
-driver in `qbscreen.reservoir` implement the **superseded** single-electron
-reset. They are retained as controls and no reported result derives from them.
+driver in `qbscreen.reservoir` implement the single-electron reset. They are retained as controls and no reported result derives from them.
 
 Figures are rebuilt from the JSON with `python manuscript/make_schematic.py` and
 `python manuscript/make_fig_criterion.py`.
