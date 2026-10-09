@@ -47,6 +47,7 @@ TAU_PROT = CRIT["tau_protein_ns"]
 # the register the biology keeps: 14N wiped, product carried, proton relaxed
 PROTON = json.loads((PANEL / "open8_proton_register_reuse.json").read_text())["product_criterion"]
 PTRP = PROTON["per_nucleus"]["Trp H-beta (CH2, geminal partner)"]
+PSEL = json.loads((PANEL / "open8_proton_register_reuse.json").read_text())["product_selected_criterion_mm0.5"]["per_nucleus"]["Trp H-beta (CH2, geminal partner)"]
 
 
 def _text(rel):
@@ -74,6 +75,14 @@ def _agrees(printed, value):
 # historical figures are listed in WAIVED below with the reason.
 CLAIMS = [
     # --- README result 3: the proton-only product register -----------
+    ("README closed-budget cap, no bath", "README.md",
+     r"tightens this to a cap of \$([\d.]+)\$ \(\$[\d.]+\$\) ms", PSEL["dry"]["ceiling_ms"]),
+    ("README closed-budget cap, with bath", "README.md",
+     r"tightens this to a cap of \$[\d.]+\$ \(\$([\d.]+)\$\) ms", PSEL["wet"]["ceiling_ms"]),
+    ("README closed-budget boundary, no bath", "README.md",
+     r"ms and \$\\tau_\{\\rm eff\}\\lesssim([\d.]+)\$ \(\$[\d.]+\$\) ns; if both", PSEL["dry"]["tau_crit_ns"]),
+    ("README closed-budget boundary, with bath", "README.md",
+     r"ms and \$\\tau_\{\\rm eff\}\\lesssim[\d.]+\$ \(\$([\d.]+)\$\) ns; if both", PSEL["wet"]["tau_crit_ns"]),
     ("README proton register cap, no bath",
      "README.md",
      r"the cap is \$([\d.]+)\$ ms \(\$[\d.]+\$ ms with the bath\)",
@@ -92,11 +101,11 @@ CLAIMS = [
      PTRP["wet"]["speedup"]),
     ("README proton register boundary, no bath",
      "README.md",
-     r"\\lesssim([\d.]+)\$ \(\$[\d.]+\$\) ns",
+     r"i\.e\. \$\\tau_\{\\rm eff\}\\lesssim([\d.]+)\$ \(\$[\d.]+\$\) ns",
      PTRP["dry"]["tau_crit_ns"]),
     ("README proton register boundary, with bath",
      "README.md",
-     r"\\lesssim[\d.]+\$ \(\$([\d.]+)\$\) ns",
+     r"i\.e\. \$\\tau_\{\\rm eff\}\\lesssim[\d.]+\$ \(\$([\d.]+)\$\) ns",
      PTRP["wet"]["tau_crit_ns"]),
     # --- the requirement, as each document states it -------------------
     ("README speed-up",

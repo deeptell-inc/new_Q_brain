@@ -431,6 +431,19 @@ def test_proton_register_criterion():
     assert me["wet"]["ceiling_ms"] == pytest.approx(3.0, abs=0.05)
     assert me["dry"]["tau_crit_ns"] == pytest.approx(8.2, abs=0.05)
     assert me["wet"]["tau_crit_ns"] == pytest.approx(4.6, abs=0.05)
+    # closing the molecule budget: product-selected (f = 0.34) and closed carrier
+    ps = d["product_selected_criterion_mm0.5"]
+    assert ps["reinjection_fraction"] == pytest.approx(0.34, abs=0.01)
+    pt = ps["per_nucleus"]["Trp H-beta (CH2, geminal partner)"]
+    assert pt["dry"]["ceiling_ms"] == pytest.approx(1.0, abs=0.05) and pt["wet"]["ceiling_ms"] == pytest.approx(0.66, abs=0.05)
+    assert pt["dry"]["tau_crit_ns"] == pytest.approx(1.55, abs=0.05) and pt["wet"]["tau_crit_ns"] == pytest.approx(1.0, abs=0.05)
+    c = _load("open16_proton_register_closed")
+    rows = {round(r["q_H"], 2): r for r in c["closed"]}
+    assert rows[0.0]["MC_8"] == pytest.approx(1.55, abs=0.03) and rows[0.5]["MC_8"] < 1.2
+    ct = c["closed_criterion_mm0.5"]["per_nucleus"]["Trp H-beta (CH2, geminal partner)"]
+    assert ct["dry"]["tau_crit_ns"] is None and ct["wet"]["tau_crit_ns"] is None, "not reachable at threshold 0.5"
+    c2 = c["closed_criterion_mm0.2"]["per_nucleus"]["Trp H-beta (CH2, geminal partner)"]
+    assert c2["dry"]["tau_crit_ns"] == pytest.approx(0.41, abs=0.02) and c2["wet"]["tau_crit_ns"] == pytest.approx(0.26, abs=0.02)
 
 
 def test_semiclassical_reference_holds_no_memory_at_every_M():
@@ -443,3 +456,44 @@ def test_semiclassical_reference_holds_no_memory_at_every_M():
     for r in rows:
         assert abs(r["excess"]) < 2 * max(r["excess_sd"], 0.01), r
         assert r["live"] < 1.0 and r["floor"] < 1.0
+
+
+def test_input_carrier_field_is_the_strongest():
+    """Main text Limitations (v); SI S3 Table. The field magnitude carries more
+    than the full-range s encoding; the rate carrier matches it on the CIDNP
+    route; a thousandth of the range carries nothing above the floor."""
+    d = _load("open13_input_carrier")
+    assert d["B"]["cidnp_8ch_excess"] > d["s:1"]["cidnp_8ch_excess"] > 2.5
+    assert d["kS"]["cidnp_8ch_excess"] > 2.0
+    assert d["kS"]["kinetics_5ch_excess"] < 0.2
+    assert d["s:0.1"]["cidnp_8ch_excess"] < d["s:1"]["cidnp_8ch_excess"]
+    assert abs(d["s:0.001"]["cidnp_8ch_excess"]) < 0.05
+
+
+def test_closed_cycle_lies_below_the_product_register():
+    """SI S4 Table. Summing the product and unreacted branches by molecule
+    number cancels part of the polarisation either branch carries alone: the
+    closed excess is below the product excess for both registers, and the
+    unreacted fraction at tau is about two thirds."""
+    d = _load("open12_closed_cycle")
+    assert 0.6 < d["full/closed"]["unreacted_fraction_at_tau"] < 0.7
+    assert d["full/survivor"]["cidnp_8ch_excess"] < d["full/closed"]["cidnp_8ch_excess"] < d["full/product"]["cidnp_8ch_excess"]
+    assert d["proton_only/closed"]["cidnp_8ch_excess"] < d["proton_only/survivor"]["cidnp_8ch_excess"] < d["proton_only/product"]["cidnp_8ch_excess"]
+    assert d["proton_only/closed"]["cidnp_8ch_excess"] > 0.4
+
+
+def test_axial_nitrogens_leave_the_proton_register():
+    """Limitations; SI S11 Table. With the flavin nitrogens axial (A_perp = 0)
+    the full register loses most of its memory at every orientation, while the
+    proton-only register keeps 0.7-0.95 of its isotropic excess across the
+    orientation and in-plane scans."""
+    d = _load("open14_axial_tensors"); r = _load("open15_axial_ratio")
+    iso = d["isotropic/proton_only"]["cidnp_8ch_excess"]
+    assert iso == pytest.approx(0.861, abs=0.01)
+    assert d["axial, theta=0/full"]["cidnp_8ch_excess"] < 0.3
+    assert d["axial, 6-direction average/full"]["cidnp_8ch_excess"] < 0.0
+    for k in ("axial, theta=54.7/proton_only", "axial, theta=90/proton_only", "axial, 6-direction average/proton_only"):
+        assert 0.7 * iso < d[k]["cidnp_8ch_excess"] < 1.1 * iso, k
+    for k in ("-0.1/proton_only", "-0.2/proton_only", "-0.3/proton_only"):
+        assert 0.8 * iso < r[k]["cidnp_8ch_excess"] < 1.15 * iso, k
+    assert r["-0.3/full"]["cidnp_8ch_excess"] > 0.5 > r["-0.2/full"]["cidnp_8ch_excess"]

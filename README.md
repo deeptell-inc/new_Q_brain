@@ -2,8 +2,7 @@
 
 Code, data and manuscript for
 
-> **What a radical-pair quantum reservoir would require: readable capacity, no
-> quantum advantage, and a nuclear-register criterion**
+> **A nuclear-register criterion for radical-pair computation in cryptochrome**
 > Hikaru Wakaura and Taiki Tanimae, QIRI (Quantum Integrated Research Institute Inc.)
 
 Can the spin chemistry of a cryptochrome-type radical pair *process* information?
@@ -17,7 +16,7 @@ nor the pessimistic one usually assumed.
 |---|---|---|
 | 1 | The reservoir is **readable by ordinary chemistry**. Time-resolved product yield gives out-of-sample IPC $= 2.0$ under the reference premise ($J=0$, no dipolar term; $1.3$–$3.4$ with the Efimova–Hore couplings, see `premise_dependence.py`); the nuclear polarisation carried away by the product raises it to $4.4$ ($3.9$–$5.2$ across the coupling range). No spectroscopy required. **Caveat added in revision:** once the register is restricted to protons (the flavin ¹⁴N is quadrupolar and relaxes in µs) and the ensemble is allowed to desynchronise, the time-resolved kinetic readout dies and CIDNP survives at ~32% of the excess capacity. Only these two of the seven routes were re-evaluated under those restrictions. | `readout_routes.py` |
 | 2 | There is **no quantum advantage**. A classical echo-state network with the same number of readout features exceeds the five-spin reservoir ($9.4$ vs $5.6$); at the cryptochrome point it wins on both channel-matched accountings (ESN 8-node $6.9$ vs quantum 8-channel $4.4$; ESN 5-node $4.5$ vs quantum 5-channel $2.0$), and the physical-unit accounting separates them by less than one standard deviation. | `final_numbers.py`, `qrc_benchmarks.py` |
-| 3 | The memory horizon is set **not** by the microsecond pair lifetime but by the turnover interval, because the nuclear register survives recombination in the diamagnetic product. Across five decades of turnover interval MC falls by $8\%$ (12 seeds, paired; the first three decades cost under 1%), putting the horizon at $19$–$168$ ms for a $10$–$100$ ms turnover — but only if the register outlives the pause. At the geomagnetic field nuclear relaxation is in the extreme-narrowing regime, so a proton on the intact protein relaxes in $2.4$ ms and caps the horizon at $5.4$ ms on the intramolecular dipolar term alone — $1.6$ ms and $3.5$ ms once the intermolecular proton bath is restored; the register must reorient $\gtrsim2.8\times$ faster than the protein. That factor is $1.8\times$ from the solved boundary without the bath and $2.8\times$ with it — for a register in which all three nuclei persist. On the register the biology can keep (proton only, product carried; `proton_register_reuse.py`) the cap is $2.6$ ms ($1.7$ ms with the bath) and the factor $3.8\times$ ($5.9\times$), i.e. $\tau_{\rm eff}\lesssim4.0$ ($2.6$) ns. The binding constraint is chemical: the **same nuclear register must be reused** between turnovers, or the capacity collapses to a memoryless read-back. | `readout_routes.py` (`clock_scan`, `register_reuse`) |
+| 3 | The memory horizon is set **not** by the microsecond pair lifetime but by the turnover interval, because the nuclear register survives recombination in the diamagnetic product. Across five decades of turnover interval MC falls by $8\%$ (12 seeds, paired; the first three decades cost under 1%), putting the horizon at $19$–$168$ ms for a $10$–$100$ ms turnover — but only if the register outlives the pause. At the geomagnetic field nuclear relaxation is in the extreme-narrowing regime, so a proton on the intact protein relaxes in $2.4$ ms and caps the horizon at $5.4$ ms on the intramolecular dipolar term alone — $1.6$ ms and $3.5$ ms once the intermolecular proton bath is restored; the register must reorient $\gtrsim2.8\times$ faster than the protein. That factor is $1.8\times$ from the solved boundary without the bath and $2.8\times$ with it — for a register in which all three nuclei persist. On the register the biology can keep (proton only, product carried; `proton_register_reuse.py`) the cap is $2.6$ ms ($1.7$ ms with the bath) and the factor $3.8\times$ ($5.9\times$), i.e. $\tau_{\rm eff}\lesssim4.0$ ($2.6$) ns. Closing the cycle's molecule budget (only the third that recombined by τ is regenerated) tightens this to a cap of $1.0$ ($0.7$) ms and $\tau_{\rm eff}\lesssim1.6$ ($1.0$) ns; if both branches hand on their registers the band is not reached at all. The binding constraint is chemical: the **same nuclear register must be reused** between turnovers, or the capacity collapses to a memoryless read-back. | `readout_routes.py` (`clock_scan`, `register_reuse`) |
 
 A mechanistic point falls out of (1): the reduced state of *either* electron
 of a newly born pair is maximally mixed for every input — the input lives
@@ -77,7 +76,12 @@ qbscreen/                    the package
                              relative Gaussian noise (S7)
   semiclassical_trajectories.py  trajectory-number convergence of the semiclassical reference (S8)
   ridge_cv_comparison.py     quantum vs ESN with the ridge chosen by cross-validation (S6)
-  tests/                     308 tests: solver, capacity bound, estimators, claim-binding and table-row regressions (capacity and SD cells, input-parameter table, cross-document table references, criterion numbers printed in prose; derived-time and raw-IPC columns not yet bound)
+  closed_cycle.py            product and unreacted branches summed by molecule number (S4)
+  input_carrier.py           input carried by the field magnitude, the recombination rate or a
+                             small-signal singlet fraction, each against its own floor (S3)
+  axial_tensor_model.py      flavin N5/N10 as axial tensors (Lee et al. 2014 characteristics),
+                             field orientation scan and 6-direction average (S11)
+  tests/                     315 tests: solver, capacity bound, estimators, claim-binding and table-row regressions (capacity and SD cells, input-parameter table, cross-document table references, criterion numbers printed in prose; derived-time and raw-IPC columns not yet bound)
 manuscript/                  main.pdf, supplementary.pdf (Supplemental Material) and data_availability.pdf as
                              compiled, the marked-up copies main_diff.pdf and
                              supplementary_diff.pdf against the withdrawn 2026-06-24 submission,
@@ -126,6 +130,11 @@ python -m qbscreen.proton_register_reuse   # S9/S12 proton-only product register
 python -m qbscreen.counting_noise          # S7  counting noise on a pool of N molecules
 python -m qbscreen.semiclassical_trajectories  # S8 trajectory-number convergence
 python -m qbscreen.ridge_cv_comparison     # S6  quantum vs ESN, ridge by cross-validation
+python -m qbscreen.closed_cycle            # S4  closed molecule-number cycle
+python -m qbscreen.input_carrier           # S3  input carriers: B, kS, small-signal s
+python -m qbscreen.axial_tensor_model      # S11 axial nitrogen tensors, orientation scan
+python -m qbscreen.axial_tensor_model ratio  # S11 in-plane component scan
+python -m qbscreen.proton_register_reuse closed  # S9 proton register on the closed carrier
 ```
 
 `relaxation_estimate` must be run before `turnover_estimate`, which consumes its
@@ -169,7 +178,7 @@ Every capacity in the paper is **out of sample** — trained on the first half o
 each run, scored on the held-out second half — and is quoted with its
 shuffled-input null floor and its convergence in sample length. Protocol
 constants (input length, seed count) are the defaults in each function's
-signature; capacities are means over 3–12 input realisations (the ridge, shot-noise and semiclassical step-size diagnostics, and the single-realisation clock scan kept in Supplemental Material Table S8, are single-realisation) (clock 12, register-reuse / nuclear-channel / semiclassical 4, ensemble/anisotropy 3, the rest 6–8).
+signature; capacities are means over 3–12 input realisations (the ridge, shot-noise and semiclassical step-size diagnostics, and the single-realisation clock scan kept in Supplemental Material Table S11, are single-realisation) (clock 12, register-reuse / nuclear-channel / semiclassical 4, ensemble/anisotropy 3, the rest 6–8).
 
 ## Requirements
 

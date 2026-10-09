@@ -67,6 +67,13 @@ run qbscreen.proton_register_reuse
 run qbscreen.counting_noise
 run qbscreen.semiclassical_trajectories
 run qbscreen.ridge_cv_comparison
+# the cycle closed over the molecule-number budget; input carried by B, kS or a
+# small-signal s; the flavin nitrogens as axial tensors with field orientation
+run qbscreen.closed_cycle
+run qbscreen.input_carrier
+run qbscreen.axial_tensor_model
+run qbscreen.axial_tensor_model ratio
+run qbscreen.proton_register_reuse closed
 # every cryptochrome-point quantity rerun with the Efimova-Hore J and D (~45 min)
 run qbscreen.premise_dependence
 # superseded single-electron-reset controls. No reported result depends on them,

@@ -72,7 +72,7 @@ def run_routes_v2(inputs, H_mhz, tau_us=1.0, T2e_ns=1000.0, kS=1.0, kT=0.2,
     Z_nuc = [spin_op(2 * SZ, i, N_SPINS) for i in NUCLEI]
     I_nuc = np.eye(D_NUC, dtype=complex) / D_NUC
 
-    rows = {k: [] for k in ("YS_end", "YS_t", "SandT_end", "SandT_t", "cidnp")}
+    rows = {k: [] for k in ("YS_end", "YS_t", "SandT_end", "SandT_t", "cidnp", "survival")}
     rho = singlet_projector(0, 1, N_SPINS).astype(complex)
     rho = rho / np.trace(rho)
     for s in inputs:
@@ -103,7 +103,7 @@ def run_routes_v2(inputs, H_mhz, tau_us=1.0, T2e_ns=1000.0, kS=1.0, kT=0.2,
             yT += kT * np.real(np.trace(P_T @ r)) * dt
             for j, O in enumerate(cid_ops):
                 yIz[j] += kS * np.real(np.trace(O @ P_S @ r)) * dt
-            if carrier == "product":
+            if carrier in ("product", "closed"):
                 # nuclear state leaving in the diamagnetic product this instant
                 aS = P_S @ r @ P_S
                 aT = P_T @ r @ P_T
@@ -115,12 +115,25 @@ def run_routes_v2(inputs, H_mhz, tau_us=1.0, T2e_ns=1000.0, kS=1.0, kT=0.2,
         rows["SandT_end"].append([yS, yT])
         rows["SandT_t"].append(list(yS_t) + list(yT_t))
         rows["cidnp"].append(list(yS_t) + list(yIz / (yS if yS else 1.0)))
+        rows["survival"].append([np.real(np.trace(v.reshape(DIM, DIM, order="F")))])
 
         if carrier == "product":
             M_prod = 0.5 * (M_prod + M_prod.conj().T)
             tp = np.trace(M_prod).real
             nuc_next = M_prod / (tp if tp else 1.0)
             rho = np.kron(np.eye(4, dtype=complex) / 4.0, nuc_next)
+        elif carrier == "closed":
+            # molecule-number budget: every molecule either recombined by tau
+            # (its nuclear state is in M_prod, weighted by the yield) or is
+            # still a pair at tau (its nuclear state is the survivor's, weighted
+            # by the surviving trace). Both branches regenerate and both hand
+            # their register on; neither is renormalised before they are summed.
+            M_prod = 0.5 * (M_prod + M_prod.conj().T)
+            rr = v.reshape(DIM, DIM, order="F"); rr = 0.5 * (rr + rr.conj().T)
+            M_surv = _sub_trace_e(rr)
+            M = M_prod + M_surv
+            tp = np.trace(M).real
+            rho = np.kron(np.eye(4, dtype=complex) / 4.0, M / (tp if tp else 1.0))
         else:
             rr = v.reshape(DIM, DIM, order="F"); rr = 0.5 * (rr + rr.conj().T)
             t2 = np.trace(rr).real

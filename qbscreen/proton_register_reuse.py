@@ -27,7 +27,7 @@ QS = tuple(np.round(np.concatenate([
     [0.97, 0.98, 0.99, 1.0]]), 4))
 
 
-def sweep(n_seeds=6, L=700, carriers=("product", "survivor"), qs=QS):
+def sweep(n_seeds=6, L=700, carriers=("product", "survivor"), qs=QS, name="open8_proton_register_reuse"):
     H = build_reservoir_H(**CRY)
     out = {}
     for carrier in carriers:
@@ -46,11 +46,11 @@ def sweep(n_seeds=6, L=700, carriers=("product", "survivor"), qs=QS):
             print(f"  {q:>6.3f} MC_8={rows[-1]['MC_8']:.4f} sd={rows[-1]['MC_8_sd']:.4f}"
                   f" IPC_8={rows[-1]['IPC_8']:.4f}", flush=True)
             out[carrier] = rows
-            _save("open8_proton_register_reuse", out)
+            _save(name, out)
     return out
 
 
-def ceiling_and_boundary(curve, min_memory=0.5, band=(1e-2, 1.0)):
+def ceiling_and_boundary(curve, min_memory=0.5, band=(1e-2, 1.0), reinjection_fraction=1.0):
     """max_Td (MC(q_H(Td)) - C0) Td and the bisected critical tau_c, for each
     candidate proton (Trp H-beta, flavin 8-alpha methyl), dry and wet.
 
@@ -69,7 +69,10 @@ def ceiling_and_boundary(curve, min_memory=0.5, band=(1e-2, 1.0)):
     def horizon_of(g, tc_ns, sx):
         T1 = dipolar_T1(g["r"], tc_ns * 1e-9, 50e-6, n_partners=g["n"], S2=g.get("S2", 1.0),
                         tau_int=g.get("tau_int"), sum_ext=sx, S2_ext=g.get("S2_ext", 1.0))
-        m = np.interp(1 - np.exp(-Tds / T1), qs, mcs) - C0
+        # reinjection_fraction f < 1: only that fraction of the molecules hands its
+        # register on (the rest are replaced by fresh ones every cycle), so the
+        # effective depolarisation is q = 1 - f exp(-Td/T1)
+        m = np.interp(1 - reinjection_fraction * np.exp(-Tds / T1), qs, mcs) - C0
         h = np.where(m > min_memory, m * Tds, 0.0)
         ok = Tds[(h >= band[0]) & (h <= band[1])]
         return float(T1), float(h.max()), ok
@@ -84,7 +87,8 @@ def ceiling_and_boundary(curve, min_memory=0.5, band=(1e-2, 1.0)):
             lo, hi = (mid, hi) if len(horizon_of(g, mid, sx)[2]) else (lo, mid)
         return 0.5 * (lo + hi)
 
-    res = dict(C0_measured=C0, min_memory=min_memory, tau_protein_ns=float(tau_protein), per_nucleus={})
+    res = dict(C0_measured=C0, min_memory=min_memory, reinjection_fraction=reinjection_fraction,
+               tau_protein_ns=float(tau_protein), per_nucleus={})
     for name in ("Trp H-beta (CH2, geminal partner)", "flavin 8-alpha CH3 (intra-methyl)"):
         g = GEOM[name]; out = {}
         for tag, sx in (("dry", 0.0), ("wet", sum_ext_for(g, f_bath))):
@@ -105,9 +109,11 @@ if __name__ == "__main__":
     import time
     os.makedirs(OUT, exist_ok=True)
     t0 = time.time()
-    out = sweep()
+    import sys
+    closed = "closed" in sys.argv
+    out = sweep(carriers=("closed",), name="open16_proton_register_closed") if closed else sweep()
     for carrier in list(out):
         print(f"\n  ceiling / boundary, carrier={carrier}")
         out[f"{carrier}_criterion"] = ceiling_and_boundary(out[carrier])
-    _save("open8_proton_register_reuse", out)
+    _save("open16_proton_register_closed" if closed else "open8_proton_register_reuse", out)
     print(f"  ({time.time()-t0:.0f} s)")

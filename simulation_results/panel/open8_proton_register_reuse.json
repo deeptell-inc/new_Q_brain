@@ -376,5 +376,93 @@
         }
       }
     }
+  },
+  "product_selected_criterion_mm0.5": {
+    "C0_measured": 1.0027624446003411,
+    "min_memory": 0.5,
+    "reinjection_fraction": 0.3402928953348753,
+    "tau_protein_ns": 15.243007897844024,
+    "per_nucleus": {
+      "Trp H-beta (CH2, geminal partner)": {
+        "dry": {
+          "T1_protein_ms": 2.442117708093426,
+          "ceiling_ms": 1.0170481155041429,
+          "in_band": false,
+          "window_at_protein": "NONE",
+          "tau_crit_ns": 1.550242304801941,
+          "speedup": 9.832661546280967
+        },
+        "wet": {
+          "T1_protein_ms": 1.5840608871810518,
+          "ceiling_ms": 0.6597514904020735,
+          "in_band": false,
+          "window_at_protein": "NONE",
+          "tau_crit_ns": 1.0055852651596067,
+          "speedup": 15.158344524295163
+        }
+      },
+      "flavin 8-alpha CH3 (intra-methyl)": {
+        "dry": {
+          "T1_protein_ms": 5.041280454874756,
+          "ceiling_ms": 2.099597267802535,
+          "in_band": false,
+          "window_at_protein": "NONE",
+          "tau_crit_ns": 3.1765878438949584,
+          "speedup": 4.7985475758648874
+        },
+        "wet": {
+          "T1_protein_ms": 2.8278300704472636,
+          "ceiling_ms": 1.1777789081991692,
+          "in_band": false,
+          "window_at_protein": "NONE",
+          "tau_crit_ns": 1.7803441762924188,
+          "speedup": 8.56183208888728
+        }
+      }
+    }
+  },
+  "product_selected_criterion_mm0.2": {
+    "C0_measured": 1.0027624446003411,
+    "min_memory": 0.2,
+    "reinjection_fraction": 0.3402928953348753,
+    "tau_protein_ns": 15.243007897844024,
+    "per_nucleus": {
+      "Trp H-beta (CH2, geminal partner)": {
+        "dry": {
+          "T1_protein_ms": 2.442117708093426,
+          "ceiling_ms": 1.019638547073038,
+          "in_band": false,
+          "window_at_protein": "NONE",
+          "tau_crit_ns": 1.5542457342147826,
+          "speedup": 9.807334556105385
+        },
+        "wet": {
+          "T1_protein_ms": 1.5840608871810518,
+          "ceiling_ms": 0.6613782123045527,
+          "in_band": false,
+          "window_at_protein": "NONE",
+          "tau_crit_ns": 1.0081588983535767,
+          "speedup": 15.119648224835752
+        }
+      },
+      "flavin 8-alpha CH3 (intra-methyl)": {
+        "dry": {
+          "T1_protein_ms": 5.041280454874756,
+          "ceiling_ms": 2.1048343396480558,
+          "in_band": false,
+          "window_at_protein": "NONE",
+          "tau_crit_ns": 3.184690022468567,
+          "speedup": 4.7863395778872775
+        },
+        "wet": {
+          "T1_protein_ms": 2.8278300704472636,
+          "ceiling_ms": 1.180677953387593,
+          "in_band": false,
+          "window_at_protein": "NONE",
+          "tau_crit_ns": 1.7849195241928095,
+          "speedup": 8.539885239216787
+        }
+      }
+    }
   }
 }

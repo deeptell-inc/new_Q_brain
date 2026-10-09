@@ -1,0 +1,74 @@
+{
+  "s:1": {
+    "encoding": "s:1",
+    "n_seeds": 6,
+    "kinetics_5ch": 2.770974473813679,
+    "kinetics_5ch_sd": 0.11933778298454069,
+    "kinetics_5ch_floor": 1.0190421500064681,
+    "kinetics_5ch_excess": 1.7519323238072106,
+    "cidnp_8ch": 4.962256402768645,
+    "cidnp_8ch_sd": 0.27402966625758635,
+    "cidnp_8ch_floor": 2.0049623002497436,
+    "cidnp_8ch_excess": 2.9572941025189015
+  },
+  "s:0.1": {
+    "encoding": "s:0.1",
+    "n_seeds": 6,
+    "kinetics_5ch": 1.3087682635225222,
+    "kinetics_5ch_sd": 0.07473957393998608,
+    "kinetics_5ch_floor": 1.0190411539976856,
+    "kinetics_5ch_excess": 0.2897271095248366,
+    "cidnp_8ch": 2.8096445833754267,
+    "cidnp_8ch_sd": 0.15400218052162615,
+    "cidnp_8ch_floor": 1.0599128307079126,
+    "cidnp_8ch_excess": 1.749731752667514
+  },
+  "s:0.01": {
+    "encoding": "s:0.01",
+    "n_seeds": 6,
+    "kinetics_5ch": 1.0108718945302955,
+    "kinetics_5ch_sd": 0.03255930699175218,
+    "kinetics_5ch_floor": 1.0187776055105457,
+    "kinetics_5ch_excess": -0.00790571098025028,
+    "cidnp_8ch": 1.7809461700342373,
+    "cidnp_8ch_sd": 0.1114762458933842,
+    "cidnp_8ch_floor": 1.0187925126653357,
+    "cidnp_8ch_excess": 0.7621536573689016
+  },
+  "s:0.001": {
+    "encoding": "s:0.001",
+    "n_seeds": 6,
+    "kinetics_5ch": 0.6805646985996189,
+    "kinetics_5ch_sd": 0.02780333376290303,
+    "kinetics_5ch_floor": 0.6857816034538842,
+    "kinetics_5ch_excess": -0.005216904854265292,
+    "cidnp_8ch": 0.7030465602162161,
+    "cidnp_8ch_sd": 0.037866318835248255,
+    "cidnp_8ch_floor": 0.6946564641612593,
+    "cidnp_8ch_excess": 0.008390096054956886
+  },
+  "B": {
+    "encoding": "B",
+    "n_seeds": 6,
+    "kinetics_5ch": 2.983508814989708,
+    "kinetics_5ch_sd": 0.08611795348265,
+    "kinetics_5ch_floor": 1.9961183916882117,
+    "kinetics_5ch_excess": 0.9873904233014965,
+    "cidnp_8ch": 5.1443375280689825,
+    "cidnp_8ch_sd": 0.28501504886649204,
+    "cidnp_8ch_floor": 2.003935411547277,
+    "cidnp_8ch_excess": 3.1404021165217055
+  },
+  "kS": {
+    "encoding": "kS",
+    "n_seeds": 6,
+    "kinetics_5ch": 2.050743609683859,
+    "kinetics_5ch_sd": 0.04340743080638787,
+    "kinetics_5ch_floor": 2.006031967762437,
+    "kinetics_5ch_excess": 0.044711641921422185,
+    "cidnp_8ch": 4.424700336116991,
+    "cidnp_8ch_sd": 0.21813075491894812,
+    "cidnp_8ch_floor": 2.006030292760357,
+    "cidnp_8ch_excess": 2.418670043356634
+  }
+}
