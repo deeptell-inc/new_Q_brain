@@ -59,6 +59,14 @@ run qbscreen.general_spin
 run qbscreen.relaxation_estimate
 run qbscreen.turnover_estimate
 run qbscreen.product_carrier_audit
+# the register the biology leaves (14N wiped, product carried, proton partially
+# relaxed) and its own ceiling / boundary (~1 h); counting noise on a pool of N
+# molecules; trajectory convergence of the semiclassical reference; the
+# quantum-vs-ESN comparison with the ridge chosen by cross-validation
+run qbscreen.proton_register_reuse
+run qbscreen.counting_noise
+run qbscreen.semiclassical_trajectories
+run qbscreen.ridge_cv_comparison
 # every cryptochrome-point quantity rerun with the Efimova-Hore J and D (~45 min)
 run qbscreen.premise_dependence
 # superseded single-electron-reset controls. No reported result depends on them,

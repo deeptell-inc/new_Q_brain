@@ -383,6 +383,20 @@ def test_feasible_window_string(tau_ns, window):
     assert rows[tau_ns]["window"] == window
 
 
+@pytest.mark.parametrize("tau_ns,window", [
+    (0.1, "5.6 - 792 ms"),
+    (1.0, "7.3 - 79.2 ms"),
+    (5.0, "10 - 13.9 ms"),
+    (10.0, "NONE"),
+    (15.2, "NONE"),
+])
+def test_feasible_window_string_with_bath(tau_ns, window):
+    """The boxed criterion quotes the windows WITH the bath, the condition the
+    boundary is solved under; the dry windows above are the other column."""
+    rows = {r["tau_c_ns"]: r for r in _load(PANEL, "open5_turnover_estimate")["feasible_region"]}
+    assert rows[tau_ns]["window_wet"] == window
+
+
 # ── SI S10: heterogeneity scan, at the documented default arguments ──
 @pytest.mark.parametrize("spread,ipc8", [(0.00, 4.460), (0.05, 4.795), (0.10, 4.806), (0.20, 4.738), (0.40, 4.801)])
 def test_heterogeneity_row(spread, ipc8):

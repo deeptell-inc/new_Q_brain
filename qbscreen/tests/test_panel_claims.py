@@ -377,3 +377,69 @@ def test_kinetic_readout_decays_smoothly_with_jitter():
     assert rows[1.5]["excess_5ch"] < 0.1
     assert rows[2.0]["excess_5ch"] == pytest.approx(0.0, abs=0.05)
     assert rows[0.0]["excess_5ch"] > rows[0.5]["excess_5ch"] > rows[1.0]["excess_5ch"]
+
+
+def test_ridge_cv_removes_the_margin():
+    """Main text Table III / SI S6. With one absolute ridge the ESN leads by
+    57% (8 ch) and 127% (5 ch); with the ridge chosen by cross-validation for
+    both systems the paired difference is within one SEM of zero. The
+    'classical wins' statement is a statement about the regulariser."""
+    d = _load("open11_ridge_cv_comparison")
+    assert d["n_seeds"] == 12
+    assert d["esn8_minus_q8_fixed"]["pct_of_quantum"] > 40
+    assert d["esn5_minus_q5_fixed"]["pct_of_quantum"] > 100
+    for k in ("esn8_minus_q8_cv", "esn5_minus_q5_cv"):
+        assert abs(d[k]["mean"]) < 2 * d[k]["sem"], f"{k}: margin survives CV"
+        assert abs(d[k]["pct_of_quantum"]) < 5
+
+
+def test_counting_noise_binds_the_readout_below_1e9():
+    """Main text Sec. II I and (iii); SI S7 Table. Counted as a pool, the CIDNP
+    excess is within 3% of noiseless at N = 1e10, loses about a fifth at 1e8 and
+    is gone at 1e6; the relative-Gaussian model keeps most of it at 1e6."""
+    d = _load("open9_counting_noise")
+    F = {r["n_molecules"]: r for r in d["full_survivor"]["rows"]}
+    P = {r["n_molecules"]: r for r in d["proton_product"]["rows"]}
+    ef, ep = d["full_survivor"]["noiseless_excess"], d["proton_product"]["noiseless_excess"]
+    assert F[1e10]["count_excess"] > 0.97 * ef
+    assert 0.7 * ef < F[1e8]["count_excess"] < 0.9 * ef
+    assert F[1e6]["count_excess"] < 0.25 * ef
+    assert P[1e8]["count_excess"] < 0.75 * ep and P[1e6]["count_excess"] < 0.1 * ep
+    assert F[1e6]["gauss_excess"] > 0.6 * ef, "the Gaussian model must be the optimistic one"
+
+
+def test_proton_register_criterion():
+    """Main text Sec. II G, abstract; SI S9 Table and S12. The register the
+    biology keeps (14N wiped, product carried, proton partially relaxed) has its
+    own MC(q_H) curve; the ceiling and boundary quoted for it come from that
+    curve, not from the three-nucleus survivor curve."""
+    d = _load("open8_proton_register_reuse")
+    rows = {round(r["q_H"], 2): r for r in d["product"]}
+    assert rows[0.0]["MC_8"] == pytest.approx(1.85, abs=0.02)
+    assert rows[0.5]["MC_8"] > rows[0.0]["MC_8"] - 0.05, "flat to q_H = 0.5"
+    assert rows[0.9]["MC_8"] == pytest.approx(1.30, abs=0.02)
+    assert rows[1.0]["MC_8"] == pytest.approx(1.00, abs=0.01)
+    c = d["product_criterion"]["per_nucleus"]
+    trp, me = c["Trp H-beta (CH2, geminal partner)"], c["flavin 8-alpha CH3 (intra-methyl)"]
+    assert trp["dry"]["ceiling_ms"] == pytest.approx(2.6, abs=0.05)
+    assert trp["wet"]["ceiling_ms"] == pytest.approx(1.7, abs=0.05)
+    assert trp["dry"]["tau_crit_ns"] == pytest.approx(4.0, abs=0.05)
+    assert trp["wet"]["tau_crit_ns"] == pytest.approx(2.6, abs=0.05)
+    assert trp["dry"]["speedup"] == pytest.approx(3.8, abs=0.05)
+    assert trp["wet"]["speedup"] == pytest.approx(5.9, abs=0.05)
+    assert me["dry"]["ceiling_ms"] == pytest.approx(5.4, abs=0.05) and not me["dry"]["in_band"]
+    assert me["wet"]["ceiling_ms"] == pytest.approx(3.0, abs=0.05)
+    assert me["dry"]["tau_crit_ns"] == pytest.approx(8.2, abs=0.05)
+    assert me["wet"]["tau_crit_ns"] == pytest.approx(4.6, abs=0.05)
+
+
+def test_semiclassical_reference_holds_no_memory_at_every_M():
+    """SI S8 Table. Live and floor are paired per seed; the paired excess is
+    zero within its own scatter at every trajectory number scanned, and the
+    absolute values stay below unity (sampling-limited), which is why no
+    coherence fraction is quoted from this reference."""
+    rows = _load("open10_semiclassical_trajectories")
+    assert rows and rows[0]["M_trajectories"] == 512
+    for r in rows:
+        assert abs(r["excess"]) < 2 * max(r["excess_sd"], 0.01), r
+        assert r["live"] < 1.0 and r["floor"] < 1.0

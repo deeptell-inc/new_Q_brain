@@ -17,7 +17,7 @@ nor the pessimistic one usually assumed.
 |---|---|---|
 | 1 | The reservoir is **readable by ordinary chemistry**. Time-resolved product yield gives out-of-sample IPC $= 2.0$ under the reference premise ($J=0$, no dipolar term; $1.3$–$3.4$ with the Efimova–Hore couplings, see `premise_dependence.py`); the nuclear polarisation carried away by the product raises it to $4.4$ ($3.9$–$5.2$ across the coupling range). No spectroscopy required. **Caveat added in revision:** once the register is restricted to protons (the flavin ¹⁴N is quadrupolar and relaxes in µs) and the ensemble is allowed to desynchronise, the time-resolved kinetic readout dies and CIDNP survives at ~32% of the excess capacity. Only these two of the seven routes were re-evaluated under those restrictions. | `readout_routes.py` |
 | 2 | There is **no quantum advantage**. A classical echo-state network with the same number of readout features exceeds the five-spin reservoir ($9.4$ vs $5.6$); at the cryptochrome point it wins on both channel-matched accountings (ESN 8-node $6.9$ vs quantum 8-channel $4.4$; ESN 5-node $4.5$ vs quantum 5-channel $2.0$), and the physical-unit accounting separates them by less than one standard deviation. | `final_numbers.py`, `qrc_benchmarks.py` |
-| 3 | The memory horizon is set **not** by the microsecond pair lifetime but by the turnover interval, because the nuclear register survives recombination in the diamagnetic product. Across five decades of turnover interval MC falls by $8\%$ (12 seeds, paired; the first three decades cost under 1%), putting the horizon at $19$–$168$ ms for a $10$–$100$ ms turnover — but only if the register outlives the pause. At the geomagnetic field nuclear relaxation is in the extreme-narrowing regime, so a proton on the intact protein relaxes in $2.4$ ms and caps the horizon at $5.4$ ms on the intramolecular dipolar term alone — $1.6$ ms and $3.5$ ms once the intermolecular proton bath is restored; the register must reorient $\gtrsim2.8\times$ faster than the protein. That factor is $1.8\times$ from the solved boundary without the bath and $2.8\times$ with it. The binding constraint is chemical: the **same nuclear register must be reused** between turnovers, or the capacity collapses to a memoryless read-back. | `readout_routes.py` (`clock_scan`, `register_reuse`) |
+| 3 | The memory horizon is set **not** by the microsecond pair lifetime but by the turnover interval, because the nuclear register survives recombination in the diamagnetic product. Across five decades of turnover interval MC falls by $8\%$ (12 seeds, paired; the first three decades cost under 1%), putting the horizon at $19$–$168$ ms for a $10$–$100$ ms turnover — but only if the register outlives the pause. At the geomagnetic field nuclear relaxation is in the extreme-narrowing regime, so a proton on the intact protein relaxes in $2.4$ ms and caps the horizon at $5.4$ ms on the intramolecular dipolar term alone — $1.6$ ms and $3.5$ ms once the intermolecular proton bath is restored; the register must reorient $\gtrsim2.8\times$ faster than the protein. That factor is $1.8\times$ from the solved boundary without the bath and $2.8\times$ with it — for a register in which all three nuclei persist. On the register the biology can keep (proton only, product carried; `proton_register_reuse.py`) the cap is $2.6$ ms ($1.7$ ms with the bath) and the factor $3.8\times$ ($5.9\times$), i.e. $\tau_{\rm eff}\lesssim4.0$ ($2.6$) ns. The binding constraint is chemical: the **same nuclear register must be reused** between turnovers, or the capacity collapses to a memoryless read-back. | `readout_routes.py` (`clock_scan`, `register_reuse`) |
 
 A mechanistic point falls out of (1): the reduced state of *either* electron
 of a newly born pair is maximally mixed for every input — the input lives
@@ -71,7 +71,13 @@ qbscreen/                    the package
   premise_dependence.py      every cryptochrome-point quantity rerun with the Efimova–Hore J and D (Supplemental Material S14)
   turnover_estimate.py       turnover interval from photophysics/catalysis; feasible region (S12)
   product_carrier_audit.py   adverse results re-run with the product register (S4)
-  tests/                     293 tests: solver, capacity bound, estimators, claim-binding and table-row regressions (capacity and SD cells, input-parameter table, cross-document table references, criterion numbers printed in prose; derived-time and raw-IPC columns not yet bound)
+  proton_register_reuse.py   the register the biology leaves: 14N wiped, product carried, proton
+                             partially relaxed; its own ceiling and boundary (S9, S12)
+  counting_noise.py          readout sampled as a pool of N molecules is counted, not as
+                             relative Gaussian noise (S7)
+  semiclassical_trajectories.py  trajectory-number convergence of the semiclassical reference (S8)
+  ridge_cv_comparison.py     quantum vs ESN with the ridge chosen by cross-validation (S6)
+  tests/                     308 tests: solver, capacity bound, estimators, claim-binding and table-row regressions (capacity and SD cells, input-parameter table, cross-document table references, criterion numbers printed in prose; derived-time and raw-IPC columns not yet bound)
 manuscript/                  main.pdf, supplementary.pdf (Supplemental Material) and data_availability.pdf as
                              compiled, the marked-up copies main_diff.pdf and
                              supplementary_diff.pdf against the withdrawn 2026-06-24 submission,
@@ -116,6 +122,10 @@ python -m qbscreen.general_spin            # S11 anisotropy and spin-1 14N
 python -m qbscreen.relaxation_estimate     # S12 predicted nuclear T1/T2  (run before turnover)
 python -m qbscreen.turnover_estimate       # S12 turnover interval and feasible region
 python -m qbscreen.product_carrier_audit   # adverse results re-run with the product register
+python -m qbscreen.proton_register_reuse   # S9/S12 proton-only product register: MC(q_H), ceiling, boundary (~1 h)
+python -m qbscreen.counting_noise          # S7  counting noise on a pool of N molecules
+python -m qbscreen.semiclassical_trajectories  # S8 trajectory-number convergence
+python -m qbscreen.ridge_cv_comparison     # S6  quantum vs ESN, ridge by cross-validation
 ```
 
 `relaxation_estimate` must be run before `turnover_estimate`, which consumes its
@@ -159,7 +169,7 @@ Every capacity in the paper is **out of sample** — trained on the first half o
 each run, scored on the held-out second half — and is quoted with its
 shuffled-input null floor and its convergence in sample length. Protocol
 constants (input length, seed count) are the defaults in each function's
-signature; capacities are means over 3–12 input realisations (the ridge, shot-noise and semiclassical step-size diagnostics, and the single-realisation clock scan kept in Supplemental Material Table S7, are single-realisation) (clock 12, register-reuse / nuclear-channel / semiclassical 4, ensemble/anisotropy 3, the rest 6–8).
+signature; capacities are means over 3–12 input realisations (the ridge, shot-noise and semiclassical step-size diagnostics, and the single-realisation clock scan kept in Supplemental Material Table S8, are single-realisation) (clock 12, register-reuse / nuclear-channel / semiclassical 4, ensemble/anisotropy 3, the rest 6–8).
 
 ## Requirements
 

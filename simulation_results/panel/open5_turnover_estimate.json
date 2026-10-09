@@ -122,63 +122,99 @@
       "T1_s": 3.7225214250344085,
       "window": "5.5 - 658 ms",
       "max_horizon_s": 8.271983461930054,
-      "feasible": true
+      "feasible": true,
+      "T1_wet_s": 2.4145849201077465,
+      "window_wet": "5.5 - 728 ms",
+      "max_horizon_wet_s": 5.364734087194478,
+      "feasible_wet": true
     },
     {
       "tau_c_ns": 0.05,
       "T1_s": 0.7445042850079687,
       "window": "5.6 - 1e+03 ms",
       "max_horizon_s": 1.6542228744300567,
-      "feasible": true
+      "feasible": true,
+      "T1_wet_s": 0.4829169840222544,
+      "window_wet": "5.6 - 1.58e+03 ms",
+      "max_horizon_wet_s": 1.0729993847508525,
+      "feasible_wet": true
     },
     {
       "tau_c_ns": 0.1,
       "T1_s": 0.37225214250568267,
       "window": "5.6 - 1.22e+03 ms",
       "max_horizon_s": 0.8272151639612856,
-      "feasible": true
+      "feasible": true,
+      "T1_wet_s": 0.24145849201222883,
+      "window_wet": "5.6 - 792 ms",
+      "max_horizon_wet_s": 0.5364449557458952,
+      "feasible_wet": true
     },
     {
       "tau_c_ns": 0.5,
       "T1_s": 0.07445042851200623,
       "window": "6 - 244 ms",
       "max_horizon_s": 0.16539893564775462,
-      "feasible": true
+      "feasible": true,
+      "T1_wet_s": 0.048291698409496306,
+      "window_wet": "6.4 - 158 ms",
+      "max_horizon_wet_s": 0.10731239929125583,
+      "feasible_wet": true
     },
     {
       "tau_c_ns": 1.0,
       "T1_s": 0.037225214272987,
       "window": "6.6 - 122 ms",
       "max_horizon_s": 0.0827097156530699,
-      "feasible": true
+      "feasible": true,
+      "T1_wet_s": 0.02414584921576462,
+      "window_wet": "7.3 - 79.2 ms",
+      "max_horizon_wet_s": 0.053650723345671614,
+      "feasible_wet": true
     },
     {
       "tau_c_ns": 2.0,
       "T1_s": 0.018612607170461263,
       "window": "7.9 - 61 ms",
       "max_horizon_s": 0.0413600437563716,
-      "feasible": true
+      "feasible": true,
+      "T1_wet_s": 0.012072924629915239,
+      "window_wet": "9.4 - 39.6 ms",
+      "max_horizon_wet_s": 0.026822624743191793,
+      "feasible_wet": true
     },
     {
       "tau_c_ns": 5.0,
       "T1_s": 0.007445042963294257,
       "window": "10 - 24.4 ms",
       "max_horizon_s": 0.01654181380474323,
-      "feasible": true
+      "feasible": true,
+      "T1_wet_s": 0.004829169913658305,
+      "window_wet": "10 - 13.9 ms",
+      "max_horizon_wet_s": 0.010731184299639733,
+      "feasible_wet": true
     },
     {
       "tau_c_ns": 10.0,
       "T1_s": 0.0037225216514859636,
       "window": "NONE",
       "max_horizon_s": 0.008270063619642345,
-      "feasible": false
+      "feasible": false,
+      "T1_wet_s": 0.0024145850669938075,
+      "window_wet": "NONE",
+      "max_horizon_wet_s": 0.00536569583195157,
+      "feasible_wet": false
     },
     {
       "tau_c_ns": 15.2,
       "T1_s": 0.002449027597518667,
       "window": "NONE",
       "max_horizon_s": 0.00544133576853425,
-      "feasible": false
+      "feasible": false,
+      "T1_wet_s": 0.0015885429338641397,
+      "window_wet": "NONE",
+      "max_horizon_wet_s": 0.0035297028042523063,
+      "feasible_wet": false
     }
   ],
   "critical_tau_c": {

@@ -44,6 +44,9 @@ WET = ROBUST["+ bath (f=0.54)"]
 REGION = {r["tau_c_ns"]: r for r in TURNOVER["feasible_region"]}
 
 TAU_PROT = CRIT["tau_protein_ns"]
+# the register the biology keeps: 14N wiped, product carried, proton relaxed
+PROTON = json.loads((PANEL / "open8_proton_register_reuse.json").read_text())["product_criterion"]
+PTRP = PROTON["per_nucleus"]["Trp H-beta (CH2, geminal partner)"]
 
 
 def _text(rel):
@@ -70,6 +73,31 @@ def _agrees(printed, value):
 # Every entry must be a number a reader would act on. Decorative or purely
 # historical figures are listed in WAIVED below with the reason.
 CLAIMS = [
+    # --- README result 3: the proton-only product register -----------
+    ("README proton register cap, no bath",
+     "README.md",
+     r"the cap is \$([\d.]+)\$ ms \(\$[\d.]+\$ ms with the bath\)",
+     PTRP["dry"]["ceiling_ms"]),
+    ("README proton register cap, with bath",
+     "README.md",
+     r"the cap is \$[\d.]+\$ ms \(\$([\d.]+)\$ ms with the bath\)",
+     PTRP["wet"]["ceiling_ms"]),
+    ("README proton register speed-up, no bath",
+     "README.md",
+     r"and the factor \$([\d.]+)\\times\$ \(\$[\d.]+\\times\$\)",
+     PTRP["dry"]["speedup"]),
+    ("README proton register speed-up, with bath",
+     "README.md",
+     r"and the factor \$[\d.]+\\times\$ \(\$([\d.]+)\\times\$\)",
+     PTRP["wet"]["speedup"]),
+    ("README proton register boundary, no bath",
+     "README.md",
+     r"\\lesssim([\d.]+)\$ \(\$[\d.]+\$\) ns",
+     PTRP["dry"]["tau_crit_ns"]),
+    ("README proton register boundary, with bath",
+     "README.md",
+     r"\\lesssim[\d.]+\$ \(\$([\d.]+)\$\) ns",
+     PTRP["wet"]["tau_crit_ns"]),
     # --- the requirement, as each document states it -------------------
     ("README speed-up",
      "README.md",

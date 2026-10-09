@@ -159,15 +159,26 @@ def feasible_region(min_memory=0.5, band=(1e-2, 1.0), return_boundaries=False,
         return T1, best, ok
 
     g = GEOM["Trp H-beta (CH2, geminal partner)"]
+    # the boundary below is solved with the intermolecular bath included, so the
+    # windows are printed under the same condition as well; a window quoted
+    # without the bath next to a boundary quoted with it is not one criterion
+    from qbscreen.relaxation_estimate import sum_ext_for, bath_ratio_from_water
+    sx_wet = sum_ext_for(g, bath_ratio_from_water())
     rows = []
     print(f"\n  feasible region (retained memory must exceed {min_memory})")
-    print(f"    {'tau_c (ns)':>11} {'T1 (s)':>10} {'T_turn window':>22} {'max horizon':>13}")
+    print(f"    {'tau_c (ns)':>11} {'T1 (s)':>10} {'T_turn window':>22} {'max horizon':>13}"
+          f" | {'T1 wet':>10} {'window wet':>22} {'horizon wet':>13}")
     for tc_ns in taus_ns:
         T1, best, ok = horizon_of(tc_ns, g)
+        T1w, bestw, okw = horizon_of(tc_ns, g, sx_wet)
         w = f"{min(ok)*1e3:.2g} - {max(ok)*1e3:.3g} ms" if ok else "NONE"
+        ww = f"{min(okw)*1e3:.2g} - {max(okw)*1e3:.3g} ms" if okw else "NONE"
         rows.append(dict(tau_c_ns=tc_ns, T1_s=float(T1), window=w,
-                         max_horizon_s=float(best), feasible=bool(ok)))
-        print(f"    {tc_ns:>11.3g} {T1:>10.3g} {w:>22} {best*1e3:>10.3g} ms")
+                         max_horizon_s=float(best), feasible=bool(ok),
+                         T1_wet_s=float(T1w), window_wet=ww,
+                         max_horizon_wet_s=float(bestw), feasible_wet=bool(okw)))
+        print(f"    {tc_ns:>11.3g} {T1:>10.3g} {w:>22} {best*1e3:>10.3g} ms"
+              f" | {T1w:>10.3g} {ww:>22} {bestw*1e3:>10.3g} ms")
 
     # P0-2: the boundary, solved rather than read off the grid.
     def critical_tau_c(g_, sum_ext=0.0, lo=0.1, hi=200.0, tol=1e-4):
