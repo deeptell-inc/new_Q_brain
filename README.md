@@ -66,7 +66,7 @@ qbscreen/                    the package
                              and heterogeneous relaxation with its mean-field control (S10)
   general_spin.py            anisotropic hyperfine tensors and spin-1 14N (S11)
   relaxation_estimate.py     predicted nuclear T1/T2, validated against measured systems (S12)
-  premise_dependence.py      every cryptochrome-point quantity rerun with the Efimova–Hore J and D (Supplemental Material S14)
+  premise_dependence.py      every cryptochrome-point quantity rerun with the Efimova–Hore J and D (supplementary material S14)
   turnover_estimate.py       turnover interval from photophysics/catalysis; feasible region (S12)
   product_carrier_audit.py   sensitivity analyses with the product register (S4)
   proton_register_reuse.py   the register the biology leaves: 14N wiped, product carried, proton
@@ -83,7 +83,7 @@ qbscreen/                    the package
   published_tensors.py       the published FAD/TrpH tensors (Hiscock et al. 2016 SI), three
                              nuclei with orientation scan, and two six-spin extensions (S11)
   tests/                     316 tests: solver, capacity bound, estimators, claim-binding and table-row regressions (capacity and SD cells, input-parameter table, cross-document table references, criterion numbers printed in prose; derived-time and raw-IPC columns not yet bound)
-manuscript/                  main.pdf, supplementary.pdf (Supplemental Material) and data_availability.pdf as
+manuscript/                  main.pdf, supplementary.pdf (supplementary material) and data_availability.pdf as
                              compiled, the marked-up copies main_diff.pdf and
                              supplementary_diff.pdf against the withdrawn 2026-06-24 submission,
                              plus figures/ and the make_*.py that draw them from
@@ -173,7 +173,7 @@ Every capacity in the paper is **out of sample** — trained on the first half o
 each run, scored on the held-out second half — and is quoted with its
 shuffled-input null floor and its convergence in sample length. Protocol
 constants (input length, seed count) are the defaults in each function's
-signature; capacities are means over 3–12 input realisations (the ridge, shot-noise and semiclassical step-size diagnostics, and the single-realisation clock scan kept in Supplemental Material Table S11, are single-realisation) (clock 12, register-reuse / nuclear-channel / semiclassical 4, ensemble/anisotropy 3, the rest 6–8).
+signature; capacities are means over 3–12 input realisations (the ridge, shot-noise and semiclassical step-size diagnostics, and the single-realisation clock scan kept in supplementary material Table S11, are single-realisation) (clock 12, register-reuse / nuclear-channel / semiclassical 4, ensemble/anisotropy 3, the rest 6–8).
 
 ## Requirements
 

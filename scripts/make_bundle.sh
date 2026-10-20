@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Build the Physical Review E submission bundle in manuscript/submission/.
+# Build the Journal of Chemical Physics submission bundle in manuscript/submission/.
 #
 # The bundle is a COPY of files that are checked elsewhere, which is exactly how
 # a bundle goes stale: someone edits main.tex, forgets to re-run this, and ships
@@ -16,7 +16,7 @@
 set -u
 cd "$(dirname "$0")/.."
 OUT=manuscript/submission
-TAR=manuscript/pre_submission.tar.gz
+TAR=manuscript/jcp_submission.tar.gz
 
 echo "=== gate: release_check ==="
 if ! bash scripts/release_check.sh; then
@@ -29,8 +29,8 @@ fi
 
 rm -rf "$OUT"
 mkdir -p "$OUT/figures"
-# APS wants the REVTeX source, the figures as separate files, the compiled
-# manuscript, the Supplemental Material as a separate PDF, and the cover letter.
+# AIP wants the REVTeX source, the figures as separate files, the compiled
+# manuscript, the supplementary material as a separate PDF, and the cover letter.
 for f in main supplementary cover_letter data_availability; do
   cp -f "manuscript/$f.tex" "manuscript/$f.pdf" "$OUT/"
 done

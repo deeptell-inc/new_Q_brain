@@ -28,21 +28,21 @@ AUX = ROOT / "supplementary.aux"
 # (document, regex with the number as group 1, label the sentence refers to)
 REFS = [
     ("main.tex",
-     r"\(Supplemental Material, Table~S(\d+)\)",
+     r"\(supplementary material, Table~S(\d+)\)",
      "tab:params"),
     ("main.tex",
-     r"retained as Supplemental Material, Table~S(\d+), whose",
+     r"retained as supplementary material, Table~S(\d+), whose",
      "tab:clock"),
     ("main.tex",
      r"routes move as Table~S(\d+)",
      "tab:premise_routes"),
     ("data_availability.tex",
-     r"single-realisation clock scan of Supplemental Material Table~S(\d+) are",
+     r"single-realisation clock scan of supplementary material Table~S(\d+) are",
      "tab:clock"),
     # README uses a plain space, not a tie -- which is exactly why the first
     # version of this guard missed it while all 200 tests passed
     ("../README.md",
-     r"single-realisation clock scan kept in Supplemental Material Table S(\d+)",
+     r"single-realisation clock scan kept in supplementary material Table S(\d+)",
      "tab:clock"),
 ]
 
@@ -89,14 +89,14 @@ def test_every_hardcoded_supplement_reference_is_covered():
 
 
 def test_see_supplemental_material_sentence_names_every_section():
-    """APS asks for a 'See Supplemental Material at [URL] for ...' sentence. It is
+    """AIP asks for a 'See the supplementary material for ...' sentence. It is
     the one place the paper announces what the supplement contains, so each
     \section of supplementary.tex must leave a distinctive word in it; adding a
     section without announcing it fails here.
     """
-    see = re.search(r"See Supplemental Material at \[URL[^\]]*\] for (.*?)\.\n",
+    see = re.search(r"See the supplementary material for (.*?)\.\n",
                     (ROOT / "main.tex").read_text(), re.S)
-    assert see, "the 'See Supplemental Material' sentence is missing from main.tex"
+    assert see, "the 'See the supplementary material' sentence is missing from main.tex"
     text = see.group(1).lower()
     missing = []
     for title in re.findall(r"^\\section\{(.+?)\}",
@@ -106,5 +106,5 @@ def test_see_supplemental_material_sentence_names_every_section():
         if not any(w in text for w in words):
             missing.append((title, words))
     assert not missing, (
-        "Supplemental Material sections the sentence does not mention: "
+        "supplementary material sections the sentence does not mention: "
         + "; ".join(f"{t} (none of {w})" for t, w in missing))

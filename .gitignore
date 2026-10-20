@@ -46,7 +46,7 @@ manuscript/.stale_backup/
 
 # derivable from scripts/make_bundle.sh; a committed copy only goes stale
 manuscript/submission/
-manuscript/pre_submission.tar.gz
+manuscript/jcp_submission.tar.gz
 
 
 # the manuscript's own private history (see scripts/mgit.sh)
