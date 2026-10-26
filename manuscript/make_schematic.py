@@ -74,7 +74,7 @@ axB.text(5, 3.9,
          ha="center", fontsize=8.29, color="black")
 axB.text(5, 3.15, "reaches ms–s only if the register is reused $\\it{and}$ survives:",
          ha="center", fontsize=8.05, color=RED)
-axB.text(5, 1.75, "proton-carried ($^{14}$N is quadrupolar), $\\tau_c\\lesssim5$ ns,\ncatalytic turnover 5–100 ms — not light-driven",
+axB.text(5, 1.75, "proton-carried ($^{14}$N is quadrupolar), $\\tau_{\\rm eff}\\lesssim2.6$–$4.0$ ns,\ncatalytic turnover 10–100 ms — not light-driven",
          ha="center", fontsize=7.32, color=RED)
 
 fig.tight_layout(h_pad=0.6)
