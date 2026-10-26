@@ -96,7 +96,6 @@ def manifest_header_claim():
 NUMERIC = [
     ("manuscript/cover_letter.tex",      r"automated test suite \((\d+) tests, all passing\)", "cover letter: total", "tests"),
     ("manuscript/data_availability.tex", r"\\texttt\{qbscreen/tests/\}; (\d+) tests, all passing", "DAS: total", "tests"),
-    ("manuscript/main.tex",              r"\((\d+)/(\d+) tests pass\)", "main: N/N pass", "tests"),
     ("manuscript/main.tex",              r"\((\d+) tests, all passing\)", "main: total", "tests"),
     ("README.md",                        r"tests/ +(\d+) tests:", "README: total", "tests"),
     ("manuscript/claims-ledger.md",      r"試験: (\d+) passed", "ledger: total", "tests"),

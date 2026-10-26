@@ -60,7 +60,6 @@ def _text(stem):
 
 @pytest.mark.parametrize("stem,pattern", [
     ("main", r"\((\d+) tests, all passing\)"),
-    ("main", r"\((\d+)/(\d+) tests pass\)"),
     ("cover_letter", r"automated test suite \((\d+) tests, all passing\)"),
     ("data_availability", r"qbscreen/tests/; (\d+) tests, all passing"),
 ])

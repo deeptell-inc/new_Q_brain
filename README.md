@@ -82,7 +82,7 @@ qbscreen/                    the package
                              field orientation scan and 6-direction average (S11)
   published_tensors.py       the published FAD/TrpH tensors (Hiscock et al. 2016 SI), three
                              nuclei with orientation scan, and two six-spin extensions (S11)
-  tests/                     316 tests: solver, capacity bound, estimators, claim-binding and table-row regressions (capacity and SD cells, input-parameter table, cross-document table references, criterion numbers printed in prose; derived-time and raw-IPC columns not yet bound)
+  tests/                     315 tests: solver, capacity bound, estimators, claim-binding and table-row regressions (capacity and SD cells, input-parameter table, cross-document table references, criterion numbers printed in prose; derived-time and raw-IPC columns not yet bound)
 manuscript/                  main.pdf, supplementary.pdf (supplementary material) and data_availability.pdf as
                              compiled, the marked-up copies main_diff.pdf and
                              supplementary_diff.pdf against the withdrawn 2026-06-24 submission,
