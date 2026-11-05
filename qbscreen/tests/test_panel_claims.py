@@ -514,3 +514,39 @@ def test_published_tensors_keep_the_proton_register():
     assert a6["3-axis average/proton_only"]["cidnp_excess"] > 0.8 * isoP
     assert b6["3-axis average/proton_only"]["cidnp_excess"] > 0.8 * isoP
     assert p5["theta=0/full"]["n_channels"] == 8 and a6["3-axis average/full"]["n_channels"] == 9
+
+
+def test_singlet_register_criterion():
+    """Main text Sec. on the criterion's constants (rows E, F), SI S9. Handing on
+    the nuclei of the singlet product alone: flatter relaxation curve than the
+    pooled product, higher conditional ceiling, and a tighter one once only the
+    singlet-recombined fraction of the molecules hands a register on."""
+    d = _load("open18_singlet_register")
+    rows = {round(r["q_H"], 2): r for r in d["singlet"]}
+    assert rows[0.0]["MC_8"] == pytest.approx(1.81, abs=0.02)
+    assert rows[0.8]["MC_8"] == pytest.approx(1.91, abs=0.02)
+    assert rows[0.9]["MC_8"] == pytest.approx(1.76, abs=0.02)
+    assert rows[0.96]["MC_8"] == pytest.approx(1.29, abs=0.02)
+    assert rows[1.0]["MC_8"] == pytest.approx(1.00, abs=0.01)
+    pooled = {round(r["q_H"], 2): r for r in _load("open8_proton_register_reuse")["product"]}
+    assert rows[0.9]["MC_8"] > pooled[0.9]["MC_8"] + 0.3, "more robust than the pooled product"
+    r = d["routes"]
+    assert r["full"]["cidnp_8ch_excess"] == pytest.approx(2.40, abs=0.02)
+    assert r["proton_only"]["cidnp_8ch_excess"] == pytest.approx(0.83, abs=0.02)
+    assert abs(r["proton_only"]["kinetics_5ch_excess"]) < 0.01
+    assert r["proton_only"]["singlet_yield_at_tau"] == pytest.approx(0.22, abs=0.005)
+    T, M = "Trp H-beta (CH2, geminal partner)", "flavin 8-alpha CH3 (intra-methyl)"
+    c = d["singlet_criterion"]["per_nucleus"]
+    for tag, ceil, tau, sp in (("dry", 4.3, 6.5, 2.3), ("wet", 2.8, 4.2, 3.6)):
+        assert c[T][tag]["ceiling_ms"] == pytest.approx(ceil, abs=0.05)
+        assert c[T][tag]["tau_crit_ns"] == pytest.approx(tau, abs=0.05)
+        assert c[T][tag]["speedup"] == pytest.approx(sp, abs=0.05)
+        assert not c[T][tag]["in_band"] and not c[M][tag]["in_band"]
+    assert c[M]["dry"]["ceiling_ms"] == pytest.approx(8.8, abs=0.05) and c[M]["wet"]["ceiling_ms"] == pytest.approx(4.9, abs=0.05)
+    assert c[M]["dry"]["tau_crit_ns"] == pytest.approx(13.4, abs=0.05) and c[M]["wet"]["tau_crit_ns"] == pytest.approx(7.5, abs=0.05)
+    f = d["singlet_selected_criterion"]
+    assert f["reinjection_fraction"] == pytest.approx(r["proton_only"]["singlet_yield_at_tau"])
+    for tag, ceil, tau, sp in (("dry", 1.6, 2.5, 6.2), ("wet", 1.1, 1.6, 9.5)):
+        assert f["per_nucleus"][T][tag]["ceiling_ms"] == pytest.approx(ceil, abs=0.05)
+        assert f["per_nucleus"][T][tag]["tau_crit_ns"] == pytest.approx(tau, abs=0.05)
+        assert f["per_nucleus"][T][tag]["speedup"] == pytest.approx(sp, abs=0.05)

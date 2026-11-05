@@ -74,6 +74,8 @@ run qbscreen.input_carrier
 run qbscreen.axial_tensor_model
 run qbscreen.axial_tensor_model ratio
 run qbscreen.proton_register_reuse closed
+run qbscreen.proton_register_reuse budget
+run qbscreen.singlet_register
 # the published hyperfine tensors (Hiscock et al. 2016 SI, Tables S1/S2): the
 # three nuclei of the main model, then a fourth (6 spins, ~2-3 h each)
 run qbscreen.published_tensors published5

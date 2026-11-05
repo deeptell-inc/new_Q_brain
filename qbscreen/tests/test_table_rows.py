@@ -499,3 +499,15 @@ def test_no_motivated_variation_reaches_the_band():
     central exclusion is conditional on something it does not state."""
     inside = [r["variation"] for r in _ROBUST if r["in_band"]]
     assert not inside, f"these variations reach the 10 ms band: {inside}"
+
+
+# ── SI S9: proton-only register on the singlet carrier (right-hand columns) ──
+@pytest.mark.parametrize("q,mc,sd,ipc", [(0.00, 1.812, 0.068, 2.836), (0.10, 1.833, 0.059, 2.856),
+                                         (0.30, 1.869, 0.041, 2.890), (0.50, 1.895, 0.033, 2.913),
+                                         (0.70, 1.912, 0.017, 2.930), (0.80, 1.906, 0.014, 2.924),
+                                         (0.90, 1.762, 0.016, 2.776), (1.00, 1.003, 0.004, 2.005)])
+def test_singlet_reuse_row(q, mc, sd, ipc):
+    rows = {round(r["q_H"], 2): r for r in _load(PANEL, "open18_singlet_register")["singlet"]}
+    assert rows[q]["MC_8"] == pytest.approx(mc, abs=0.001)
+    assert rows[q]["MC_8_sd"] == pytest.approx(sd, abs=0.001)
+    assert rows[q]["IPC_8"] == pytest.approx(ipc, abs=0.001)

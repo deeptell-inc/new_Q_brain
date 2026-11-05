@@ -64,6 +64,8 @@ def run_routes_v2(inputs, H_mhz, tau_us=1.0, T2e_ns=1000.0, kS=1.0, kT=0.2,
                            which is what the manuscript's Fig. 1(b) actually claims.
               "survivor" : the published behaviour -- the trace-decreasing state
                            that did NOT recombine, renormalised.
+              "singlet"  : as "product", but only the singlet channel hands its
+                           nuclei on: sigma ~ int k_S Tr_e(P_S rho P_S) dt.
     relax   = "depolarise": nuc -> (1-q) nuc + q I/D   (T1-type, destroys <I_z>)
               "dephase"   : per-nucleus Z dephasing    (T2-type, preserves <I_z>)
     """
@@ -108,6 +110,10 @@ def run_routes_v2(inputs, H_mhz, tau_us=1.0, T2e_ns=1000.0, kS=1.0, kT=0.2,
                 aS = P_S @ r @ P_S
                 aT = P_T @ r @ P_T
                 M_prod += (kS * _sub_trace_e(aS) + kT * _sub_trace_e(aT)) * dt
+            elif carrier == "singlet":
+                # only singlet recombination returns the ground state that is
+                # reduced again; the triplet channel leaves the cycle
+                M_prod += kS * _sub_trace_e(P_S @ r @ P_S) * dt
             if it in sample:
                 yS_t.append(yS); yT_t.append(yT)
         rows["YS_end"].append([yS])
@@ -117,7 +123,7 @@ def run_routes_v2(inputs, H_mhz, tau_us=1.0, T2e_ns=1000.0, kS=1.0, kT=0.2,
         rows["cidnp"].append(list(yS_t) + list(yIz / (yS if yS else 1.0)))
         rows["survival"].append([np.real(np.trace(v.reshape(DIM, DIM, order="F")))])
 
-        if carrier == "product":
+        if carrier in ("product", "singlet"):
             M_prod = 0.5 * (M_prod + M_prod.conj().T)
             tp = np.trace(M_prod).real
             nuc_next = M_prod / (tp if tp else 1.0)

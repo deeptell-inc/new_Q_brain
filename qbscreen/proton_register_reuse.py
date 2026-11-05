@@ -105,11 +105,27 @@ def ceiling_and_boundary(curve, min_memory=0.5, band=(1e-2, 1.0), reinjection_fr
     return res
 
 
+def budget_closed():
+    """Product register with the molecule budget closed: only the fraction that
+    recombined by tau (read from the closed-cycle scan) hands a register on.
+    Needs both scans on disk; rewrites the two product_selected keys."""
+    with open(os.path.join(OUT, "open8_proton_register_reuse.json")) as fh:
+        out = json.load(fh)
+    with open(os.path.join(OUT, "open12_closed_cycle.json")) as fh:
+        f = 1.0 - json.load(fh)["proton_only/product"]["unreacted_fraction_at_tau"]
+    for mm in (0.5, 0.2):
+        out[f"product_selected_criterion_mm{mm}"] = ceiling_and_boundary(
+            out["product"], min_memory=mm, reinjection_fraction=f)
+    return _save("open8_proton_register_reuse", out)
+
+
 if __name__ == "__main__":
     import time
     os.makedirs(OUT, exist_ok=True)
     t0 = time.time()
     import sys
+    if "budget" in sys.argv:
+        budget_closed(); sys.exit(0)
     closed = "closed" in sys.argv
     out = sweep(carriers=("closed",), name="open16_proton_register_closed") if closed else sweep()
     for carrier in list(out):

@@ -48,6 +48,11 @@ TAU_PROT = CRIT["tau_protein_ns"]
 PROTON = json.loads((PANEL / "open8_proton_register_reuse.json").read_text())["product_criterion"]
 PTRP = PROTON["per_nucleus"]["Trp H-beta (CH2, geminal partner)"]
 PSEL = json.loads((PANEL / "open8_proton_register_reuse.json").read_text())["product_selected_criterion_mm0.5"]["per_nucleus"]["Trp H-beta (CH2, geminal partner)"]
+# only the singlet product hands its nuclei on: conditional, and budget-closed
+_SING = json.loads((PANEL / "open18_singlet_register.json").read_text())
+SING = _SING["singlet_criterion"]["per_nucleus"]["Trp H-beta (CH2, geminal partner)"]
+SSEL = _SING["singlet_selected_criterion"]["per_nucleus"]["Trp H-beta (CH2, geminal partner)"]
+F_S = 100 * _SING["routes"]["proton_only"]["singlet_yield_at_tau"]
 
 
 def _text(rel):
@@ -75,6 +80,24 @@ def _agrees(printed, value):
 # historical figures are listed in WAIVED below with the reason.
 CLAIMS = [
     # --- README result 3: the proton-only product register -----------
+    ("README singlet register cap, no bath", "README.md",
+     r"flatter and the cap is \$([\d.]+)\$ \(\$[\d.]+\$\) ms", SING["dry"]["ceiling_ms"]),
+    ("README singlet register cap, with bath", "README.md",
+     r"flatter and the cap is \$[\d.]+\$ \(\$([\d.]+)\$\) ms", SING["wet"]["ceiling_ms"]),
+    ("README singlet register boundary, no bath", "README.md",
+     r"ms with \$\\tau_\{\\rm eff\}\\lesssim([\d.]+)\$ \(\$[\d.]+\$\) ns; with the budget", SING["dry"]["tau_crit_ns"]),
+    ("README singlet register boundary, with bath", "README.md",
+     r"ms with \$\\tau_\{\\rm eff\}\\lesssim[\d.]+\$ \(\$([\d.]+)\$\) ns; with the budget", SING["wet"]["tau_crit_ns"]),
+    ("README singlet-recombined fraction", "README.md",
+     r"closed over the ([\d.]+)% of molecules", F_S),
+    ("README singlet budget-closed cap, no bath", "README.md",
+     r"singlet channel it is \$([\d.]+)\$ \(\$[\d.]+\$\) ms", SSEL["dry"]["ceiling_ms"]),
+    ("README singlet budget-closed cap, with bath", "README.md",
+     r"singlet channel it is \$[\d.]+\$ \(\$([\d.]+)\$\) ms", SSEL["wet"]["ceiling_ms"]),
+    ("README singlet budget-closed boundary, no bath", "README.md",
+     r"ms and \$([\d.]+)\$ \(\$[\d.]+\$\) ns\. ", SSEL["dry"]["tau_crit_ns"]),
+    ("README singlet budget-closed boundary, with bath", "README.md",
+     r"ms and \$[\d.]+\$ \(\$([\d.]+)\$\) ns\. ", SSEL["wet"]["tau_crit_ns"]),
     ("README closed-budget cap, no bath", "README.md",
      r"tightens this to a cap of \$([\d.]+)\$ \(\$[\d.]+\$\) ms", PSEL["dry"]["ceiling_ms"]),
     ("README closed-budget cap, with bath", "README.md",
