@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Build the Journal of the Royal Society Interface submission bundle in manuscript/submission/.
+# Build the submission bundle in manuscript/submission/.
 #
 # The bundle is a COPY of files that are checked elsewhere, which is exactly how
 # a bundle goes stale: someone edits main.tex, forgets to re-run this, and ships
@@ -16,7 +16,7 @@
 set -u
 cd "$(dirname "$0")/.."
 OUT=manuscript/submission
-TAR=manuscript/rsif_submission.tar.gz
+TAR=manuscript/submission_bundle.tar.gz
 
 echo "=== gate: release_check ==="
 if ! bash scripts/release_check.sh; then

@@ -2,13 +2,13 @@
 
 Code, data and manuscript for
 
-> **A nuclear-register criterion for radical-pair computation in cryptochrome**
+> **Nuclear-spin memory across turnovers of a cryptochrome-type radical pair and its relaxation limit at the geomagnetic field**
 > Hikaru Wakaura and Taiki Tanimae, QIRI (Quantum Integrated Research Institute Inc.)
 
-Can the spin chemistry of a cryptochrome-type radical pair *process* information?
-Posed — as it must be for a warm, noisy system — as reservoir computing rather
-than gate-model computation, the answer turns out to be neither the optimistic
-nor the pessimistic one usually assumed.
+How much does a cryptochrome-type radical pair, regenerated repeatedly on the same
+molecule, remember of its earlier turnovers, and can ordinary chemistry read that
+memory back? The memory is measured with the capacity measures of reservoir
+computing; the answer bounds the conjecture that such chemistry computes in neurons.
 
 ## The three results
 
