@@ -75,7 +75,7 @@ for i, (v, e, f) in enumerate(zip(val, err, flo)):
 ax.set_xticks(range(7)); ax.set_xticklabels(lab, fontsize=7.64)
 ax.set_ylabel("information processing capacity")
 ax.set_ylim(0, 6.0)
-ax.set_title("What biology can read: excess over each route's own floor",
+ax.set_title("Readout routes: excess over each route's own memoryless floor",
              loc="left", fontweight="bold", fontsize=11.46)
 bars[5].set_label("capacity from a classical downstream integrator")
 ax.legend(fontsize=7.39, loc="upper left", framealpha=0.95)
@@ -97,7 +97,7 @@ h_corr = (mc8 - C0) * cyc
 e_naive, e_corr = sd8 * cyc, sd8 * cyc
 
 ax[0].axhspan(1e-2, 1.0, color="#ffe0b2", alpha=0.7, zorder=0)
-ax[0].text(2e-6, 3.0e-2, "neural band\n(10 ms - 1 s)", fontsize=8.27, color="#e65100")
+ax[0].text(1.5e-6, 1.25e-2, "neural rhythms (10 ms - 1 s), for reference", fontsize=7.0, color="#e65100")
 ax[0].errorbar(td, h_naive, yerr=e_naive, fmt="o-", c=GREY, ms=3.5, lw=1.1,
                capsize=2, zorder=3, label=r"$\mathrm{MC}\times T$  (counts $d\!=\!0$)")
 ax[0].errorbar(td, h_corr, yerr=e_corr, fmt="o-", c=GREEN, ms=4, lw=1.5,
@@ -122,10 +122,10 @@ ax[1].plot(q, dep, "o-", c=GREEN, ms=4, lw=1.5,
 ax[1].plot(q, deph, "^--", c=ORANGE, ms=4, lw=1.3,
            label="dephasing ($T_{2n}$): preserves $\\langle I_z\\rangle$")
 ax[1].axhline(1.0, color=RED, ls=":", lw=1)
-ax[1].text(0.97, 1.06, "memoryless floor (MC = 1)", color=RED, fontsize=7.89,
-           ha="right", va="bottom")
+ax[1].text(0.97, 0.95, "memoryless floor (MC = 1)", color=RED, fontsize=7.89,
+           ha="right", va="top")
 ax[1].annotate("the register stores\npopulations, not phase",
-               xy=(0.72, 2.88), xytext=(0.50, 2.28), fontsize=7.39, color=ORANGE,
+               xy=(0.72, 2.74), xytext=(0.62, 2.42), fontsize=7.39, color=ORANGE,
                ha="center",
                arrowprops=dict(arrowstyle="->", color=ORANGE, lw=0.8))
 ax[1].set_xlabel("nuclear relaxation per turnover  $q$")
@@ -133,7 +133,7 @@ ax[1].set_ylabel("memory capacity MC (8 ch)")
 ax[1].set_ylim(0.55, 3.3)
 ax[1].set_title("(b) the criterion: register reuse",
                 loc="left", fontweight="bold", fontsize=11.46)
-ax[1].legend(fontsize=7.39, loc="lower left", framealpha=0.95)
+ax[1].legend(fontsize=7.39, loc="lower left", bbox_to_anchor=(0.0, 0.2), framealpha=0.95)
 ax[1].grid(True, alpha=0.25)
 fig.tight_layout()
 fig.savefig("manuscript/figures/fig_criterion.pdf", bbox_inches="tight")

@@ -31,17 +31,17 @@ for ax in (axA, axB):
     ax.set_xlim(0, 10); ax.set_ylim(0, 10); ax.axis("off")
 
 # ---- Panel (a): one molecule, two functions ----
-axA.text(0.2, 9.5, "(a) one molecule, two functions", ha="left", fontsize=9.74,
+axA.text(0.2, 9.5, "(a) one molecule, two timescales", ha="left", fontsize=9.74,
          fontweight="bold")
 box(axA, 5, 5, 5.0, 1.5, "separated radical pair\n(cryptochrome: $J\\approx0$, $\\tau\\sim\\mu$s)",
     "#eef2f7", GREY, 7)
 box(axA, 2.6, 8.4, 3.6, 1.1, "magnetosensor", "#e3f0fb", BLUE, 7.5, BLUE)
-box(axA, 7.4, 8.4, 3.6, 1.1, "quantum reservoir", "#e7f3e7", GREEN, 7.5, GREEN)
+box(axA, 7.4, 8.4, 3.6, 1.1, "nuclear memory", "#e7f3e7", GREEN, 7.5, GREEN)
 arrow(axA, 4.0, 5.75, 2.7, 7.8, BLUE)
 arrow(axA, 6.0, 5.75, 7.3, 7.8, GREEN)
 axA.text(1.2, 6.7, "long $T_2^e$\n$\\to$ sensitive", ha="center", fontsize=7.32, color=BLUE)
-axA.text(8.8, 6.7, "fading memory\n$\\to$ computes", ha="center", fontsize=7.32, color=GREEN)
-axA.text(5, 2.7, "the open cycle — not electronic decoherence —\nsupplies the fading memory",
+axA.text(8.8, 6.7, "nuclei persist\n$\\to$ remembers", ha="center", fontsize=7.32, color=GREEN)
+axA.text(5, 2.7, "each cycle discards the electron pair\nand keeps the nuclei",
          ha="center", fontsize=7.68, color=RED, style="italic")
 
 # ---- Panel (b): three-layer reservoir ----
@@ -52,29 +52,28 @@ axB.text(0.5, 6.4, "input\n$s_k$", ha="center", fontsize=7.93, color="black")
 arrow(axB, 1.1, 6.4, 2.2, 6.4, "black")
 # Layer 2: radical-pair electrons (read/write head)
 box(axB, 3.3, 6.4, 2.0, 1.5, "$e_1\\!-\\!e_2$\nradical pair", "#e7f3e7", GREEN, 6.8, GREEN)
-axB.text(3.3, 5.35, "Layer 2: read/write head", ha="center", fontsize=7.07, color=GREEN)
+axB.text(3.3, 5.35, "writes and reads the register", ha="center", fontsize=7.07, color=GREEN)
 # Layer 1: nuclei (memory) above
 for i, dx in enumerate((-0.7, 0.0, 0.7)):
     axB.add_patch(Circle((3.3 + dx, 7.90), 0.30, fc="#e3f0fb", ec=BLUE, lw=1.1))
-axB.text(4.8, 8.40, "Layer 1: nuclear-spin memory\n(populations, long $T_{1n}$)",
+axB.text(4.8, 8.40, "nuclear spins: the register\n(populations, lifetime $T_{1n}$)",
          ha="center", fontsize=7.07, color=BLUE, linespacing=1.3)
 axB.add_patch(FancyArrowPatch((3.3, 7.18), (3.3, 7.56), arrowstyle="<|-|>",
              mutation_scale=8, lw=1.4, color=BLUE, shrinkA=0, shrinkB=0))
 axB.text(4.55, 7.15, "hyperfine\nwrite/read", ha="left", fontsize=6.71, color=BLUE)
 # Layer 3: readout
 box(axB, 6.7, 6.4, 2.3, 1.5, "product\nreadout\n(yield, CIDNP)", "#fdeaea", RED, 6.5, RED)
-axB.text(6.9, 4.45, "Layer 3: classical readout", ha="center", fontsize=7.07, color=RED)
 arrow(axB, 4.35, 6.4, 5.5, 6.4, "black")
 # linear map -> output
 arrow(axB, 7.9, 6.4, 9.1, 6.4, "black")
-axB.text(9.5, 6.4, "trained\nlinear\nmap", ha="center", fontsize=7.32, color="black")
+axB.text(9.5, 6.4, "linear\nfit", ha="center", fontsize=7.32, color="black")
 # memory-horizon caption strip
 axB.text(5, 3.9,
          "memory horizon $=(\\mathrm{MC}-C_0)\\times T_{\\rm turnover}$",
          ha="center", fontsize=8.29, color="black")
-axB.text(5, 3.15, "reaches ms–s only if the register is reused $\\it{and}$ survives:",
+axB.text(5, 3.15, "outlasts a turnover only if the register is reused $\\it{and}$ survives:",
          ha="center", fontsize=8.05, color=RED)
-axB.text(5, 1.75, "proton-carried ($^{14}$N is quadrupolar), $\\tau_{\\rm eff}\\lesssim2.6$–$4.0$ ns,\ncatalytic turnover 10–100 ms — not light-driven",
+axB.text(5, 1.75, "proton-carried ($^{14}$N is quadrupolar); reaching 10 ms needs\n$\\tau_{\\rm eff}\\lesssim2.6$–$4.0$ ns and a catalytic, not light-driven, turnover",
          ha="center", fontsize=7.32, color=RED)
 
 fig.tight_layout(h_pad=0.6)
