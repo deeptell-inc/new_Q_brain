@@ -48,6 +48,9 @@ manuscript/.stale_backup/
 manuscript/submission/
 manuscript/rsif_submission.tar.gz
 manuscript/submission_bundle.tar.gz
+manuscript/latex_source.zip
+# the publisher's class file: used to build main.pdf, not ours to redistribute
+manuscript/*.cls
 
 
 # the manuscript's own private history (see scripts/mgit.sh)
