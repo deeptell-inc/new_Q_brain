@@ -49,6 +49,7 @@ manuscript/submission/
 manuscript/rsif_submission.tar.gz
 manuscript/submission_bundle.tar.gz
 manuscript/latex_source.zip
+manuscript/*.txt
 # the publisher's class file: used to build main.pdf, not ours to redistribute
 manuscript/*.cls
 
