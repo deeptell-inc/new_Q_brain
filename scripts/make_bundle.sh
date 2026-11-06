@@ -29,7 +29,7 @@ fi
 
 rm -rf "$OUT"
 mkdir -p "$OUT/figures"
-# The bundle carries the REVTeX source, the figures as separate files, the compiled
+# The bundle carries the LaTeX source, the figures as separate files, the compiled
 # manuscript, the supplementary material as a separate PDF, and the cover letter.
 for f in main supplementary cover_letter data_availability; do
   cp -f "manuscript/$f.tex" "manuscript/$f.pdf" "$OUT/"
@@ -40,6 +40,10 @@ for g in $(grep -o 'includegraphics\[[^]]*\]{[^}]*}' manuscript/main.tex |
            sed 's/.*{//;s/}//' | sort -u); do
   cp -f "manuscript/figures/$g" "$OUT/figures/$g" || exit 1
 done
+# the class file main.tex is built with (Taylor & Francis Interact)
+cp -f manuscript/interact.cls "$OUT/" || exit 1
+# the journal wants the graphical abstract as a separate file with this name
+cp -f manuscript/figures/GraphicalAbstract1.png "$OUT/" || exit 1
 cp -f FREEZE_MANIFEST.txt "$OUT/"
 
 echo
